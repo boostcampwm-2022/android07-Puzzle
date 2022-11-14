@@ -6,7 +6,4 @@
         android:startColor="@color/primary_variant_color"
         android:endColor="@color/primary_color"/>
 
-    <corners
-        android:bottomLeftRadius="@dimen/toolbar_border_radius"
-        android:bottomRightRadius="@dimen/toolbar_border_radius"/>
 </shape>
