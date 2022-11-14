@@ -8,18 +8,18 @@
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.juniori.puzzle.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/main_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.juniori.puzzle.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/main_mygallery"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.juniori.puzzle.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/main_addvideo"
         tools:layout="@layout/fragment_notifications" />
 </navigation>
