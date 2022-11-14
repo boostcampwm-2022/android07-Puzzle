@@ -36,4 +36,13 @@
         <item name="android:background">@drawable/all_search_view_background</item>
     </style>
 
+    <style name="Theme.Puzzle.Splash" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.Puzzle</item>
+        <item name="android:windowBackground">@drawable/splash_background</item>
+
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:navigationBarColor">@color/white</item><!--Todo 바텀바색상 초록색으로-->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+    </style>
 </resources>
