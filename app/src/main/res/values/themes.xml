@@ -19,11 +19,15 @@
         <item name="colorOnPrimaryContainer">@color/onDisabled_color</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?colorPrimary</item>
+        <item name="android:statusBarColor">#FF71BF8B</item>
     </style>
 
     <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">@drawable/all_toolbar_background</item>
+        <item name="android:paddingTop">@dimen/toolbar_top_padding</item>
+        <item name="android:paddingBottom">@dimen/toolbar_bottom_padding</item>
+        <item name="android:paddingStart">@dimen/toolbar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/toolbar_horizontal_padding</item>
     </style>
 
     <style name="ShapeAppearance.Puzzle.Toolbar" parent="ShapeAppearance.MaterialComponents.LargeComponent">
@@ -32,7 +36,7 @@
         <item name="cornerSizeBottomLeft">10dp</item>
     </style>
 
-    <style name="Theme.Puzzle.SearchView" parent="">
+    <style name="Theme.Puzzle.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:background">@drawable/all_search_view_background</item>
     </style>
 
