@@ -15,11 +15,17 @@
         <item name="colorOnSecondary">@color/onSecondary_color</item>
         
         <!-- Disabled brand color. -->
-        <item name="colorContainer">@color/disabled_color</item>
-        <item name="colorOnContainer">@color/onDisabled_color</item>
+        <item name="colorPrimaryContainer">@color/disabled_color</item>
+        <item name="colorOnPrimaryContainer">@color/onDisabled_color</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
 
     </style>
+
+    <style name="Theme.Puzzle.SearchView" parent="">
+        <item name="android:radius">@dimen/toolbar_box_border_radius</item>
+    </style>
+
+
 </resources>
