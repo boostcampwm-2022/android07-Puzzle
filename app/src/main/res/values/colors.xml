@@ -7,6 +7,7 @@
     <color name="onSecondary_color">#FF69B38D</color>
     <color name="disabled_color">#FFE8EAEF</color>
     <color name="onDisabled_color">#FFAAAAAA</color>
+    <color name="status_bar_color">#FF71BF8B</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

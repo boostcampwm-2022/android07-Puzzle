@@ -19,15 +19,13 @@
         <item name="colorOnPrimaryContainer">@color/onDisabled_color</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">#FF71BF8B</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
     </style>
 
     <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">@drawable/all_toolbar_background</item>
         <item name="android:paddingTop">@dimen/toolbar_top_padding</item>
         <item name="android:paddingBottom">@dimen/toolbar_bottom_padding</item>
-
-        <item name="android:clipToPadding">false</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
     </style>
 

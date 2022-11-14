@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Puzzle.TextLarge" parent="">
+    <style name="Theme.Puzzle.TextLarge" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">32sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
