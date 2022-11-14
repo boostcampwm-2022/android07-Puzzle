@@ -13,19 +13,27 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/secondary_color</item>
         <item name="colorOnSecondary">@color/onSecondary_color</item>
-        
+
         <!-- Disabled brand color. -->
         <item name="colorPrimaryContainer">@color/disabled_color</item>
         <item name="colorOnPrimaryContainer">@color/onDisabled_color</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">?colorPrimary</item>
+    </style>
 
+    <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:background">@drawable/all_toolbar_background</item>
+    </style>
+
+    <style name="ShapeAppearance.Puzzle.Toolbar" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="background">@drawable/all_toolbar_background</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">10dp</item>
     </style>
 
     <style name="Theme.Puzzle.SearchView" parent="">
-        <item name="android:radius">@dimen/toolbar_box_border_radius</item>
+        <item name="android:background">@drawable/all_search_view_background</item>
     </style>
-
 
 </resources>

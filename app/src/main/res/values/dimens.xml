@@ -1,7 +1,7 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="toolbar_border_radius">20dp</dimen>
+    <dimen name="toolbar_border_radius">15dp</dimen>
     <dimen name="toolbar_text_horizontal_margin">24dp</dimen>
     <dimen name="toolbar_box_border_radius">16dp</dimen>
     <dimen name="toolbar_horizontal_padding">24dp</dimen>
