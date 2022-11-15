@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize">
 
-    <fragment
-        android:id="@+id/nav_host_fragment_activity_main"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentcontainerview"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,6 +36,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:itemTextAppearanceActive="@style/Theme.Puzzle.TextCaption"
         app:itemTextAppearanceInactive="@style/Theme.Puzzle.TextCaption"
-        app:menu="@menu/main_bottom_navigation" />
+        app:menu="@menu/main_bottomnavigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
