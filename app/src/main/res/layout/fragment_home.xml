@@ -61,7 +61,7 @@
             android:id="@+id/welcome_text_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오늘도 나이스샷^^"
+            app:setText="@{vm.welcomeText}"
             style="@style/Theme.Puzzle.TextMedium"
             android:textColor="@color/onPrimary_color"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
