@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Puzzle</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+    <!--activity_main-->
+    <string name="main_home">홈</string>
+    <string name="main_mygallery">내 갤러리</string>
+    <string name="main_addvideo">추가하기</string>
+    <string name="main_othersgallery">다른 갤러리</string>
+    <string name="main_mypage">마이 페이지</string>
 </resources>

@@ -27,4 +27,8 @@
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
+    <style name="Theme.Puzzle.TextCaption">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
 </resources>
