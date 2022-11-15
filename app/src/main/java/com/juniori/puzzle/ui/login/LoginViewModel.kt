@@ -2,7 +2,7 @@ package com.juniori.puzzle.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.AuthCredential
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseUser
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.auth.AuthRepository
@@ -25,9 +25,9 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun loginUser(credential: AuthCredential) = viewModelScope.launch {
+    fun loginUser(acct: GoogleSignInAccount) = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
-        val result = authRepository.login(credential)
+        val result = authRepository.login(acct)
         _loginFlow.value = result
     }
 

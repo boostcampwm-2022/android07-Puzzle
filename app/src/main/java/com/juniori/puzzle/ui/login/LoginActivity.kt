@@ -15,7 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.GoogleAuthProvider
 import com.juniori.puzzle.MainActivity
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
@@ -46,7 +45,7 @@ class LoginActivity : AppCompatActivity() {
                     GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 runCatching {
                     val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
-                    updateFirebaseAuthWithGoogleAccount(account)
+                    loginViewModel.loginUser(account)
                 }
             }
         }
@@ -88,8 +87,4 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateFirebaseAuthWithGoogleAccount(acct: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        loginViewModel.loginUser(credential)
-    }
 }
