@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.signInButton.setOnClickListener {
+        binding.signInBtn.setOnClickListener {
             signIn()
         }
 
@@ -64,10 +64,10 @@ class LoginActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loginViewModel.loginFlow.collectLatest {
                     if (it is Resource.Success) {
-                        binding.signInButton.isVisible = false
+                        binding.signInBtn.isVisible = false
                         moveToMainActivity()
                     } else {
-                        binding.signInButton.isVisible = true
+                        binding.signInBtn.isVisible = true
                     }
                 }
             }
