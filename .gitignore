@@ -154,3 +154,4 @@ fabric.properties
 ### AndroidStudio Patch ###
 !/gradle/wrapper/gradle-wrapper.jar
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin
+/app/src/main/java/com/juniori/puzzle/util/Const.kt
