@@ -6,7 +6,6 @@
     </style>
 
     <style name="Theme.Puzzle.TextLarge.Bold">
-        <item name="fontFamily">@font/noto_sans_kr_medium</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
@@ -16,7 +15,6 @@
     </style>
 
     <style name="Theme.Puzzle.TextMedium.Bold" parent="">
-        <item name="fontFamily">@font/noto_sans_kr_medium</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
@@ -26,7 +24,6 @@
     </style>
 
     <style name="Theme.Puzzle.TextSmall.Bold" parent="">
-        <item name="fontFamily">@font/noto_sans_kr_medium</item>
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
