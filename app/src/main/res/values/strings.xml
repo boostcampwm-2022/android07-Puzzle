@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="home_background_image_description">홈 배경이미지</string>
     <string-array name="welcome_text">
         <item>오늘도 나이스샷^^</item>
         <item>퍼팅은 즐겁다!</item>
