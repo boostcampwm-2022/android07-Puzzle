@@ -3,4 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string-array name="welcome_text">
+        <item>오늘도 나이스샷^^</item>
+        <item>퍼팅은 즐겁다!</item>
+        <item>환영합니다</item>
+        <item>당신의 퍼팅영상을 공유해보세요!</item>
+    </string-array>
 </resources>
