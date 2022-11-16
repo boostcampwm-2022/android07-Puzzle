@@ -2,11 +2,17 @@
     <string name="app_name">Puzzle</string>
     <string name="camera_capture_start">녹화</string>
     <string name="camera_capture_stop">중지</string>
-
-    <!--activity_main-->
     <string name="main_home">홈</string>
     <string name="main_mygallery">내 갤러리</string>
     <string name="main_addvideo">추가하기</string>
     <string name="main_othersgallery">다른 갤러리</string>
     <string name="main_mypage">마이 페이지</string>
+    <string name="home_background_image_description">홈 배경이미지</string>
+    <string-array name="welcome_text">
+        <item>오늘도 나이스샷^^</item>
+        <item>퍼팅은 즐겁다!</item>
+        <item>환영합니다</item>
+        <item>당신의 퍼팅영상을 공유해보세요!</item>
+    </string-array>
+
 </resources>
