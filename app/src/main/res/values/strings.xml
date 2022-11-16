@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Puzzle</string>
+    <string name="camera_capture_start">녹화</string>
+    <string name="camera_capture_stop">중지</string>
 
     <!--activity_main-->
     <string name="main_home">홈</string>
