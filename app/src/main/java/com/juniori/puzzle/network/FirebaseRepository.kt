@@ -9,11 +9,11 @@ import javax.inject.Inject
 class FirebaseRepository @Inject constructor(
     private val service: FirebaseService
 ) {
-    suspend fun getFirebaseItem(pageSize: Int): FireStoreResponse {
-        return service.getFirebaseItem(pageSize)
+    suspend fun getFirebaseItem(pageSize: Int, pageToken: String, orderBy: String): FireStoreResponse {
+        return service.getFirebaseItem(pageSize, pageToken, orderBy)
     }
 
-    suspend fun postFirebaseItem(fields: VideoDetail): Response<VideoItem> {
-        return service.postFirebaseItemInVideo("test", mapOf("fields" to fields) )
+    suspend fun postFirebaseItem(videoName: String, fields: VideoDetail): Response<VideoItem> {
+        return service.postFirebaseItemInVideo(videoName, mapOf("fields" to fields) )
     }
 }

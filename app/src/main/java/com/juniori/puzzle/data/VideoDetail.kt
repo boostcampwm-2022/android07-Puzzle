@@ -5,6 +5,3 @@ data class VideoDetail(
     val location: StringValue,
     val timeStamp: IntegerValue
 )
-
-
-
