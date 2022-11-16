@@ -17,7 +17,7 @@
         android:title="@string/main_addvideo" />
 
     <item
-        android:id="@+id/fragment_main_othersgallery2"
+        android:id="@+id/fragment_main_othersgallery"
         android:icon="@drawable/main_othersgalleryicon_24dp"
         android:title="@string/main_othersgallery" />
 

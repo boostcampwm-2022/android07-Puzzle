@@ -19,34 +19,21 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomnavigationview"
+        style="@style/Widget.MaterialComponents.BottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
-        app:labelVisibilityMode="labeled"
-        app:itemIconSize="20dp"
-        style="@style/Widget.MaterialComponents.BottomNavigationView"
-        app:itemRippleColor="@null"
-        app:itemIconTint="@drawable/main_bottommenucolorselector"
-        app:itemTextColor="@drawable/main_bottommenucolorselector"
         android:background="?android:attr/windowBackground"
+        app:itemIconSize="20dp"
+        app:itemIconTint="@drawable/main_bottommenucolorselector"
+        app:itemRippleColor="@null"
+        app:itemTextAppearanceActive="@style/Theme.Puzzle.TextCaption"
+        app:itemTextAppearanceInactive="@style/Theme.Puzzle.TextCaption"
+        app:itemTextColor="@drawable/main_bottommenucolorselector"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:itemTextAppearanceActive="@style/Theme.Puzzle.TextCaption"
-        app:itemTextAppearanceInactive="@style/Theme.Puzzle.TextCaption"
         app:menu="@menu/main_bottomnavigation" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/nav_host_fragment_activity_main"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomnavigationview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/main_bottomnavigation" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

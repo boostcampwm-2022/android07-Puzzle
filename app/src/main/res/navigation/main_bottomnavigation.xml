@@ -24,7 +24,7 @@
         tools:layout="@layout/bottomsheet_addvideo"/>
 
     <fragment
-        android:id="@+id/fragment_main_othersgallery2"
+        android:id="@+id/fragment_main_othersgallery"
         android:name="com.juniori.puzzle.ui.othersgallery.OthersGalleryFragment"
         android:label="@string/main_othersgallery"
         tools:layout="@layout/fragment_othersgallery" />
