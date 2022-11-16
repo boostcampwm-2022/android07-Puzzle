@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:itemTextAppearanceActive="@style/Theme.Puzzle.TextCaption"
         app:itemTextAppearanceInactive="@style/Theme.Puzzle.TextCaption"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/main_bottomnavigation" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_activity_main"
@@ -43,10 +43,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintBottom_toTopOf="@id/bottomnavigationview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/mobile_navigation" />
+        app:navGraph="@navigation/main_bottomnavigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
