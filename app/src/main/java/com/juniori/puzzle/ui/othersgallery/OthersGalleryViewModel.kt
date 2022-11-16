@@ -1,13 +1,13 @@
-package com.juniori.puzzle.ui.dashboard
+package com.juniori.puzzle.ui.othersgallery
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class OthersGalleryViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "This is others gallery Fragment"
     }
     val text: LiveData<String> = _text
 }
