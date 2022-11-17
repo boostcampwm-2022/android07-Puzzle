@@ -18,7 +18,7 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
     override suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
             videoList.filter { videoInfoEntity -> videoInfoEntity.ownerUid == uid }
-                .filter { videoInfoEntity -> videoInfoEntity.location.golfCourseInfo == keyword }
+                .filter { videoInfoEntity -> videoInfoEntity.location == keyword }
         )
     }
 
@@ -45,14 +45,14 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
                 Resource.Success(
                     videoList.sortedByDescending { it.updateTime }
                         .filter { it.isPrivate }
-                        .filter { it.location.golfCourseInfo == keyword }
+                        .filter { it.location == keyword }
                 )
             }
             SortType.LIKE -> {
                 Resource.Success(
                     videoList.sortedByDescending { it.likedUserUidList.size }
                         .filter { it.isPrivate }
-                        .filter { it.location.golfCourseInfo == keyword }
+                        .filter { it.location == keyword }
                 )
             }
         }
