@@ -13,6 +13,7 @@ import dagger.hilt.components.SingletonComponent
 object VideoModule {
     private val mockVideoList = getVideoListMockData()
 
+    @MockData
     @Provides
     fun provideMockRepository(): VideoRepository = VideoRepositoryMockImpl(mockVideoList)
 }
