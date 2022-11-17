@@ -1,38 +1,53 @@
 package com.juniori.puzzle.ui.mygallery
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
+
 
 class MyGalleryFragment : Fragment() {
 
     private var _binding: FragmentMygalleryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val binding get() = requireNotNull(_binding)
+    private val viewModel: MyGalleryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(MyGalleryViewModel::class.java)
-
         _binding = FragmentMygalleryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textDashboard
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recyclerAdapter = MyGalleryAdapter(viewModel)
+
+        binding.recycleMyGallery.apply {
+            adapter = recyclerAdapter
+            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+            layoutManager = gridLayoutManager
         }
-        return root
+
+        viewModel.list.observe(viewLifecycleOwner){
+            recyclerAdapter.setData(it)
+        }
+
+        viewModel.refresh.observe(viewLifecycleOwner){
+            if(it){
+                binding.progressMyGallery.visibility = View.VISIBLE
+            }else{
+                binding.progressMyGallery.visibility = View.GONE
+            }
+        }
     }
 
     override fun onDestroyView() {
