@@ -4,8 +4,9 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.SortType
 import java.io.File
+import javax.inject.Inject
 
-class VideoRepositoryMockImpl(private val videoList: List<VideoInfoEntity>, private val file: File? = null): VideoRepository {
+class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>): VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
             videoList.filter { videoInfoEntity -> videoInfoEntity.ownerUid == uid }
@@ -20,11 +21,39 @@ class VideoRepositoryMockImpl(private val videoList: List<VideoInfoEntity>, priv
     }
 
     override suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return when(sortType) {
+            SortType.NEW -> {
+                Resource.Success(
+                    videoList.sortedByDescending { it.updateTime }
+                        .filter { it.isPrivate }
+                )
+            }
+            SortType.LIKE -> {
+                Resource.Success(
+                    videoList.sortedByDescending { it.likedUserUidList.size }
+                        .filter { it.isPrivate }
+                )
+            }
+        }
     }
 
     override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return when(sortType) {
+            SortType.NEW -> {
+                Resource.Success(
+                    videoList.sortedByDescending { it.updateTime }
+                        .filter { it.isPrivate }
+                        .filter { it.location.golfCourseInfo == keyword }
+                )
+            }
+            SortType.LIKE -> {
+                Resource.Success(
+                    videoList.sortedByDescending { it.likedUserUidList.size }
+                        .filter { it.isPrivate }
+                        .filter { it.location.golfCourseInfo == keyword }
+                )
+            }
+        }
     }
 
     override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {
