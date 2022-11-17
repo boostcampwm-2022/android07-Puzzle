@@ -21,18 +21,14 @@ class MyGalleryViewModel : ViewModel() {
     fun getData(start : Int){
         if(query.isBlank()&&_refresh.value == false){
             _refresh.value = true
-            viewModelScope.launch {
-
-                withContext(Dispatchers.IO) {
-
-                    delay(1000)
-                    val tempList = list.value as MutableList
-                    VideoMockData.mockList(start).forEach {
-                        tempList.add(it)
-                    }
-                    _list.postValue(tempList)
-                    _refresh.postValue(false)
+            viewModelScope.launch(Dispatchers.IO) {
+                delay(1000)
+                val tempList = list.value as MutableList
+                VideoMockData.mockList(start).forEach {
+                    tempList.add(it)
                 }
+                _list.postValue(tempList)
+                _refresh.postValue(false)
             }
 
         }else{
