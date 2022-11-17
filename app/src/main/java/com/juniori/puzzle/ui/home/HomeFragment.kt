@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
+            lifecycleOwner= viewLifecycleOwner
             vm = homeViewModel
         }
         return binding.root
@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.setWelcomeText(welcomeTextArray.random(random))
-
+        homeViewModel.setDisplayName()
     }
 
     override fun onDestroyView() {
