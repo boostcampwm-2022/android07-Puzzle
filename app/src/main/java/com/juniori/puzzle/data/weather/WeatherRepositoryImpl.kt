@@ -1,7 +1,6 @@
 package com.juniori.puzzle.data.weather
 
 import com.juniori.puzzle.BuildConfig
-import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.network.WeatherService
 import javax.inject.Inject
 

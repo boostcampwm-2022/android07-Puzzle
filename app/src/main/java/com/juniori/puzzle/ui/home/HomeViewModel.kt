@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.BuildConfig
 import com.juniori.puzzle.data.auth.AuthRepository
 import com.juniori.puzzle.data.weather.WeatherRepository
-import com.juniori.puzzle.network.WeatherService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

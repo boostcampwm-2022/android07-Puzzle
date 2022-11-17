@@ -22,19 +22,9 @@ object WeatherModule {
 
     private const val WEATHER_BASE_URL = "https://api.openweathermap.org"
     private val gson = GsonBuilder().setLenient().create()
-//    private val client = OkHttpClient.Builder().addInterceptor(
-//        HttpLoggingInterceptor().apply {
-//            level = if (BuildConfig.DEBUG) {
-//                HttpLoggingInterceptor.Level.BODY
-//            } else {
-//                HttpLoggingInterceptor.Level.NONE
-//            }
-//        }
-//    ).build()
 
     private val weatherService = Retrofit.Builder()
         .baseUrl(WEATHER_BASE_URL)
-//        .client(client)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
