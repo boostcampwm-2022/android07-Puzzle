@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.auth.AuthRepository
+import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -25,6 +26,9 @@ class HomeViewModel @Inject constructor(
     private val _displayName = MutableLiveData("")
     val displayName: LiveData<String> = _displayName
 
+    private val _weatherList = MutableLiveData<List<WeatherItem>>(emptyList())
+    val weatherList: LiveData<List<WeatherItem>> = _weatherList
+
     fun setDisplayName() {
         _displayName.value = "${authRepository.currentUser?.displayName}님"
     }
@@ -40,6 +44,12 @@ class HomeViewModel @Inject constructor(
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             val result = repository.getWeather(latitude, longitude)
+            if (result.isSuccess) {
+                _weatherList.value = result.getOrNull()
+            } else {
+                _weatherInfoText.value = result.exceptionOrNull()?.message
+            }
+
         }
     }
 

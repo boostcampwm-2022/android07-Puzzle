@@ -58,13 +58,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_margin"
-            tools:text="000님"
-            app:setText="@{vm.displayName}"
             android:textColor="@color/onPrimary_color"
             app:layout_constraintBottom_toTopOf="@id/welcome_text_tv"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_chainStyle="packed"
+            app:setText="@{vm.displayName}"
+            tools:text="000님" />
 
         <TextView
             android:id="@+id/welcome_text_tv"
@@ -103,11 +103,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="2dp"
-            app:layout_constraintVertical_bias="0.3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="@id/bottom_guideline">
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            app:layout_constraintVertical_bias="0.3">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/weather_detail_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:setAdapter="@{vm.weatherList}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -116,11 +127,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="2dp"
-            app:layout_constraintVertical_bias="0.3"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="@id/bottom_guideline">
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
+            app:layout_constraintVertical_bias="0.3">
 
             <ImageView
                 android:id="@+id/weather_not_permitted_refresh_btn"
@@ -140,11 +151,12 @@
                 style="@style/Theme.Puzzle.TextMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:setText="@{vm.weatherInfoText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn" />
+                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn"
+                android:text="@{vm.weatherInfoText}" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
