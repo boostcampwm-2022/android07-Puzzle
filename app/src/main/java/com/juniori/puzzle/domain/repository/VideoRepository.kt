@@ -1,4 +1,4 @@
-package com.juniori.puzzle.data.video
+package com.juniori.puzzle.domain.repository
 
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity

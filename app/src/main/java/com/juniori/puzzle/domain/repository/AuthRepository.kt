@@ -1,4 +1,4 @@
-package com.juniori.puzzle.data.auth
+package com.juniori.puzzle.domain.repository
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.juniori.puzzle.data.Resource

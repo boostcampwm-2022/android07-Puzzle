@@ -2,11 +2,13 @@ package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
 import java.io.File
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(val videoRemoteDataSource: VideoRemoteDataSource): VideoRepository {
+class VideoRepositoryImpl @Inject constructor(val videoRemoteDataSource: VideoRemoteDataSource):
+    VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         TODO("Not yet implemented")
     }

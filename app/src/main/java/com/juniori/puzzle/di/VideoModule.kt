@@ -1,6 +1,6 @@
 package com.juniori.puzzle.di
 
-import com.juniori.puzzle.data.video.VideoRepository
+import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.data.video.VideoRepositoryMockImpl
 import com.juniori.puzzle.mock.getVideoListMockData
 import dagger.Module

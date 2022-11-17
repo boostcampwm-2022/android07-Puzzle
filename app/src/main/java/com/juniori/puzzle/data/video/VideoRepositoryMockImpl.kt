@@ -2,11 +2,13 @@ package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
 import java.io.File
 import javax.inject.Inject
 
-class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>): VideoRepository {
+class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>):
+    VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
             videoList.filter { videoInfoEntity -> videoInfoEntity.ownerUid == uid }

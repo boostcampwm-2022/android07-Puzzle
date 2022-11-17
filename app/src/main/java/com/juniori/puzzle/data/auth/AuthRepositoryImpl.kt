@@ -2,10 +2,10 @@ package com.juniori.puzzle.data.auth
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
+import com.juniori.puzzle.domain.repository.AuthRepository
 import com.juniori.puzzle.util.await
 import javax.inject.Inject
 

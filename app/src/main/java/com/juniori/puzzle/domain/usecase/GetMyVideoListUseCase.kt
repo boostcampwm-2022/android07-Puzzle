@@ -1,7 +1,7 @@
 package com.juniori.puzzle.domain.usecase
 
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.video.VideoRepository
+import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.di.MockData
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import javax.inject.Inject
