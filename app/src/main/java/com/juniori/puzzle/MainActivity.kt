@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.juniori.puzzle.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
