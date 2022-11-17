@@ -1,11 +1,11 @@
 package com.juniori.puzzle.data.auth
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.auth.FirebaseUser
 import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 
 interface AuthRepository {
-    val currentUser: FirebaseUser?
-    suspend fun login(acct: GoogleSignInAccount): Resource<FirebaseUser>
-    fun logout()
+    fun getCurrentUserInfo(): Resource<UserInfoEntity>
+    suspend fun requestLogin(acct: GoogleSignInAccount): Resource<UserInfoEntity>
+    fun requestLogout(): Resource<Unit>
 }
