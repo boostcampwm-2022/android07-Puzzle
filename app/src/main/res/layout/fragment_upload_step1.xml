@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.juniori.puzzle.ui.addvideo.AddVideoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.home.HomeFragment">
+
+        <View
+            android:id="@+id/container_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@drawable/all_toolbar_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/all_cancel"
+            android:textAppearance="@style/Theme.Puzzle.TextSmall"
+            android:textColor="@color/onPrimary_color"
+            app:elevation="0dp"
+            app:layout_constraintStart_toStartOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="@id/container_toolbar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:gravity="center"
+            android:text="@string/upload_title"
+            android:textAppearance="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintEnd_toEndOf="@id/container_toolbar"
+            app:layout_constraintStart_toStartOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_next"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:backgroundTint="@android:color/transparent"
+            android:elevation="0dp"
+            android:text="@string/all_next"
+            android:textAppearance="@style/Theme.Puzzle.TextSmall"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintEnd_toEndOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="@id/container_toolbar" />
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/videoplayer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:auto_show="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.55"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_toolbar"
+            app:resize_mode="fit"
+            app:surface_type="surface_view"
+            app:use_controller="true" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:gravity="start"
+            android:hint="@string/uploadstep1_saying"
+            android:textAlignment="gravity"
+            app:counterEnabled="true"
+            app:counterMaxLength="140"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/videoplayer">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@android:color/transparent"
+                android:gravity="start|top" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,6 +1,7 @@
 package com.juniori.puzzle
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.fragment.NavHostFragment
@@ -33,6 +34,14 @@ class MainActivity : AppCompatActivity() {
         // 추가하기 메뉴를 눌렀을 때 현재 프래그먼트를 유지하면서 다이얼로그를 보여준다.
         findViewById<BottomNavigationItemView>(R.id.bottomsheet_main_addvideo).setOnClickListener {
             navController.navigate(R.id.bottomsheet_main_addvideo)
+        }
+
+        navController.addOnDestinationChangedListener { controller, destination, _ ->
+            binding.bottomnavigationview.visibility = if (destination.id == R.id.fragment_upload_step1) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
         }
     }
 }
