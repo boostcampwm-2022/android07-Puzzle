@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.juniori.puzzle.ui.home.HomeViewModel" />
@@ -35,59 +36,102 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="@dimen/activity_horizontal_margin" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/activity_horizontal_margin" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/all_toolbar_background"
-            app:layout_constraintBottom_toTopOf="@id/top_guideline" />
+            app:layout_constraintBottom_toTopOf="@id/top_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/user_nickname_tv"
+            style="@style/Theme.Puzzle.TextLarge.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_vertical_margin"
             android:text="000님"
-            style="@style/Theme.Puzzle.TextLarge.Bold"
             android:textColor="@color/onPrimary_color"
+            app:layout_constraintBottom_toTopOf="@id/welcome_text_tv"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/welcome_text_tv"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:layout_marginBottom="@dimen/text_vertical_margin" />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/welcome_text_tv"
+            style="@style/Theme.Puzzle.TextMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:setText="@{vm.welcomeText}"
-            style="@style/Theme.Puzzle.TextMedium"
             android:textColor="@color/onPrimary_color"
+            app:layout_constraintBottom_toTopOf="@id/top_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/user_nickname_tv"
-            app:layout_constraintBottom_toTopOf="@id/top_guideline" />
+            app:setText="@{vm.welcomeText}" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:elevation="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_guideline"
             app:shapeAppearance="@style/ShapeAppearance.Puzzle.LargeComponent" />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/home_background_image_description"
             android:elevation="1dp"
             android:scaleType="fitXY"
             android:src="@drawable/home_background_image"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:contentDescription="@string/home_background_image_description" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/weather_not_permitted_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline">
+
+            <ImageView
+                android:id="@+id/weather_not_permitted_refresh_btn"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/text_vertical_margin"
+                android:src="@drawable/home_refresh_icon"
+                app:layout_constraintBottom_toTopOf="@id/weather_not_permitted_msg_tv"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="@id/weather_not_permitted_msg_tv"
+                app:layout_constraintStart_toStartOf="@id/weather_not_permitted_msg_tv"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/weather_not_permitted_msg_tv"
+                style="@style/Theme.Puzzle.TextMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:setText="@{vm.weatherInfoText}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

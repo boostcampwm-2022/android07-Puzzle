@@ -14,18 +14,25 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _welcomeText = MutableLiveData("")
     val welcomeText: LiveData<String> = _welcomeText
+
+    private val _weatherInfoText = MutableLiveData("날씨 보기")
+    val weatherInfoText: LiveData<String> = _weatherInfoText
 
     fun setWelcomeText(text: String) {
         _welcomeText.value = text
     }
 
-    fun getWeather(){
+    fun setWeatherInfoText(text: String) {
+        _weatherInfoText.value = text
+    }
+
+    fun getWeather(latitude: Int, longitude: Int) {
         viewModelScope.launch {
-            val result=repository.getWeather(55,127)
+            val result = repository.getWeather(latitude, longitude)
         }
     }
 
