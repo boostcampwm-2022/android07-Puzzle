@@ -3,7 +3,7 @@ package com.juniori.puzzle.data.firebase.dto
 import com.google.gson.annotations.SerializedName
 
 data class StringValue(
-    val stringValue: String
+    @SerializedName("stringValue") val stringValue: String
 )
 
 data class IntegerValue(
@@ -11,9 +11,13 @@ data class IntegerValue(
 )
 
 data class BooleanValue(
-    val booleanValue: Boolean
+    @SerializedName("booleanValue") val booleanValue: Boolean
 )
 
-data class EnumValue(
-    val enumValue: String
+data class ArrayValue(
+    @SerializedName("arrayValue") val arrayValue: StringValues
+)
+
+data class StringValues(
+    @SerializedName("values") val values: List<StringValue>
 )

@@ -1,8 +1,14 @@
 package com.juniori.puzzle.data.firebase.dto
 
 data class StructuredQuery(
-    val from: List<CollectionSelector>,
+    val from: List<CollectionSelector> = listOf(
+        CollectionSelector(
+            collectionId = "videoReal",
+            allDescendants = true
+        )
+    ),
     val where: Filter,
+    val orderBy: List<Order>? = null
 )
 
 data class CollectionSelector(
@@ -17,9 +23,14 @@ data class Filter(
 data class FieldFilter(
     val field: FieldReference,
     val op: String,
-    val value: IntegerValue
+    val value: BooleanValue
 )
 
 data class FieldReference(
     val fieldPath: String
+)
+
+data class Order(
+    val field: FieldReference,
+    val direction: String
 )
