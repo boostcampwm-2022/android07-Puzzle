@@ -10,7 +10,13 @@ data class VideoItem(
 )
 
 data class VideoDetail(
-    val likes: IntegerValue,
-    val location: StringValue,
-    val timeStamp: IntegerValue
+    @SerializedName("owner_uid") val ownerUid: StringValue,
+    @SerializedName("video_url") val videoUrl: StringValue,
+    @SerializedName("thumb_url") val thumbUrl: StringValue,
+    @SerializedName("is_private") val isPrivate: BooleanValue,
+    @SerializedName("like_count") val likeCount: IntegerValue,
+    @SerializedName("liked_user_list") val likedUserList: ArrayValue,
+    @SerializedName("update_time") val updateTime: IntegerValue,
+    @SerializedName("location") val location: StringValue,
+    @SerializedName("memo") val memo: StringValue,
 )
