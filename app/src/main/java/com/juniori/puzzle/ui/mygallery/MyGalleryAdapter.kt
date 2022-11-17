@@ -27,7 +27,7 @@ class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(dataList[position])
-        if(position==itemCount-1) {
+        if(position==itemCount-20) {
             viewModel.getData(itemCount)
         }
     }

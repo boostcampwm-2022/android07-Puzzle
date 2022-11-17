@@ -25,7 +25,7 @@ class MyGalleryViewModel : ViewModel() {
 
                 withContext(Dispatchers.IO) {
 
-                    delay(2000)
+                    delay(1000)
                     val tempList = list.value as MutableList
                     VideoMockData.mockList(start).forEach {
                         tempList.add(it)
