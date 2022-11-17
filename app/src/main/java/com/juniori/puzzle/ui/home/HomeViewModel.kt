@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
         _weatherInfoText.value = text
     }
 
-    fun getWeather(latitude: Int, longitude: Int) {
+    fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             val result = repository.getWeather(latitude, longitude)
         }

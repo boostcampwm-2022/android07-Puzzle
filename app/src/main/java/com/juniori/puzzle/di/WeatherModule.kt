@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object WeatherModule {
 
-    private const val WEATHER_BASE_URL = "http://apis.data.go.kr"
+    private const val WEATHER_BASE_URL = "https://api.openweathermap.org"
     private val gson = GsonBuilder().setLenient().create()
 //    private val client = OkHttpClient.Builder().addInterceptor(
 //        HttpLoggingInterceptor().apply {

@@ -8,9 +8,8 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val service: WeatherService
 ) : WeatherRepository {
-    override suspend fun getWeather(nx: Int, ny: Int): Boolean {
-        val response = service.getWeather(SERVICE_KEY, 1, 1000,
-            "JSON", "202221117", "1130", nx, ny)
+    override suspend fun getWeather(lat: Double, lon: Double): Boolean {
+        val response = service.getWeather(lat,lon,SERVICE_KEY)
 
         return response.isSuccessful
     }

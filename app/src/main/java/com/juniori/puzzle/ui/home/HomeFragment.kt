@@ -2,8 +2,6 @@ package com.juniori.puzzle.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,10 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentHomeBinding
-import com.juniori.puzzle.util.CurrentLocationManager
 import dagger.hilt.android.AndroidEntryPoint
-import java.security.Permission
-import java.util.jar.Manifest
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -36,20 +31,16 @@ class HomeFragment : Fragment() {
     ) { isPermitted ->
         if (isPermitted) {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-
                 locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 5000L, 30f
-                ) {
-                    val longitude = it.longitude.toInt()
-                    val latitude = it.latitude.toInt()
-                    homeViewModel.getWeather(latitude, longitude)
+                    LocationManager.NETWORK_PROVIDER, 3000L, 30f
+                ) { location ->
+                    homeViewModel.getWeather(location.latitude, location.longitude)
                 }
             } else {
                 homeViewModel.setWeatherInfoText("네트워크를 연결해주세요")
             }
         } else {
             homeViewModel.setWeatherInfoText("위치 권한을 허용해주세요")
-            println("isDenied")
         }
     }
 

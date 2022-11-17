@@ -1,38 +1,61 @@
 package com.juniori.puzzle.data.weather
 
-data class WeatherSealedResponse(
-    val response: WeatherResponse
-)
+import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
-    val header: WeatherHeaderResponse,
-    val body: WeatherBodyResponse
+    val cod: String,
+    val message: Int,
+    val cnt: Int,
+    val list: List<WeatherListResponse>
 )
 
-data class WeatherHeaderResponse(
-    val resultCode: String,
-    val resultMsg: String
+data class WeatherListResponse(
+    val dt: Long,
+    val main: WeatherMainResponse,
+    val weather: List<WeatherWeatherResponse>,
+    val cloud: WeatherCloudResponse,
+    val wind: WeatherWindResponse,
+    val visibility: Int,
+    val pop: Float,
+    val rain: WeatherRainResponse,
+    val sys: WeatherSysResponse,
+    @SerializedName("dt_txt") val dtTxt: String
 )
 
-data class WeatherBodyResponse(
-    val dataType: String,
-    val items: WeatherBodyItemsResponse,
-    val pageNo: Int,
-    val numOfRows: Int,
-    val totalCount: Int
+data class WeatherMainResponse(
+    val temp: Float,
+    @SerializedName("feels_like") val feelsLike: Float,
+    @SerializedName("temp_min") val tempMin: Float,
+    @SerializedName("temp_max") val tempMax: Float,
+    val pressure: Int,
+    @SerializedName("sea_level") val seaLevel: Int,
+    @SerializedName("grnd_level") val groundLevel: Int,
+    val humidity: Int,
+    @SerializedName("temp_kf") val tempKf: Float,
+
+    )
+
+data class WeatherWeatherResponse(
+    val id: Int,
+    val main: String,
+    val description: String,
+    val icon: String
 )
 
-data class WeatherBodyItemsResponse(
-    val item: List<WeatherItemResponse>
+data class WeatherCloudResponse(
+    val all: Int
 )
 
-data class WeatherItemResponse(
-    val baseDate: String,
-    val baseTime: String,
-    val category: String,
-    val fcstDate: String,
-    val fcstTime: String,
-    val fcstValue: String,
-    val nx: Int,
-    val ny: Int
+data class WeatherWindResponse(
+    val speed: Float,
+    val deg: Int,
+    val gust: Float
+)
+
+data class WeatherRainResponse(
+    @SerializedName("3h") val threeH: Float
+)
+
+data class WeatherSysResponse(
+    val pod: String
 )
