@@ -1,14 +1,12 @@
 package com.juniori.puzzle
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.juniori.puzzle.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,8 +22,26 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment =
+        initNavigationComponent()
+    }
+
+    private fun initNavigationComponent() {
+        val navController = NavHostFragment.findNavController(
             supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as NavHostFragment
-        binding.bottomnavigationview.setupWithNavController(navHostFragment.navController)
+        )
+
+        binding.bottomnavigationview.setupWithNavController(navController)
+        // 추가하기 메뉴를 눌렀을 때 현재 프래그먼트를 유지하면서 다이얼로그를 보여준다.
+        findViewById<BottomNavigationItemView>(R.id.bottomsheet_main_addvideo).setOnClickListener {
+            navController.navigate(R.id.bottomsheet_main_addvideo)
+        }
+
+        navController.addOnDestinationChangedListener { controller, destination, _ ->
+            binding.bottomnavigationview.visibility = if (destination.id == R.id.fragment_upload_step1) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
     }
 }
