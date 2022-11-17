@@ -8,13 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.random.Random
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
     private val binding get() = _binding!!
+
     private val random = Random(System.currentTimeMillis())
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -34,7 +36,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
 
-        homeViewModel.setWelcomText(welcomeTextArray.random(random))
+        homeViewModel.setWelcomeText(welcomeTextArray.random(random))
+
+        homeViewModel.getWeather()
     }
 
     override fun onDestroyView() {
