@@ -1,4 +1,4 @@
-package com.juniori.puzzle.network
+package com.juniori.puzzle.data.firebase
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
