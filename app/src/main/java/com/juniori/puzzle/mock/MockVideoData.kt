@@ -1,10 +1,8 @@
 package com.juniori.puzzle.mock
 
-import com.juniori.puzzle.domain.entity.LocationInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 
 private val imageList = mutableListOf<String>()
-val location = LocationInfoEntity("")
 
 fun getVideoListMockData(): List<VideoInfoEntity> {
     imageList.add("https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bas.ac.uk%2Fabout%2Fantarctica%2Fwildlife%2Fpenguins%2Fgentoo-penguin%2F&psig=AOvVaw0Y3OInta9o0_aG9uZa_c3Q&ust=1668739380989000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCMjuieKYtPsCFQAAAAAdAAAAABAE")

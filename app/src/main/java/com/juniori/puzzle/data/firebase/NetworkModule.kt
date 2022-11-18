@@ -53,6 +53,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseRepository(service: FirebaseService): FirebaseRepository =
-        FirebaseRepository(service)
+    fun provideFirebaseRepository(service: FirebaseService): FireStoreDataSource =
+        FireStoreDataSource(service)
 }
