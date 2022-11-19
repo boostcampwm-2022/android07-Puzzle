@@ -122,6 +122,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/text_horizontal_margin"
+                android:text="@{vm.currentAddress}"
                 app:layout_constraintStart_toEndOf="@id/weather_refresh_btn"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="경기도 성남시 판교동" />
@@ -134,7 +135,7 @@
                 android:layout_marginTop="@dimen/text_vertical_margin"
                 android:text="@{vm.weatherMainList.fullDate}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_refresh_btn" />
+                app:layout_constraintTop_toBottomOf="@id/weather_main_location_tv" />
 
             <ImageView
                 android:id="@+id/weather_main_icon_iv"

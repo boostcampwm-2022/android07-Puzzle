@@ -1,5 +1,6 @@
 package com.juniori.puzzle.ui.home
 
+import android.location.Address
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,10 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.auth.AuthRepository
 import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherRepository
-import com.juniori.puzzle.util.toTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,11 +27,14 @@ class HomeViewModel @Inject constructor(
     private val _displayName = MutableLiveData("")
     val displayName: LiveData<String> = _displayName
 
+    private val _currentAddress = MutableLiveData("")
+    val currentAddress: LiveData<String> = _currentAddress
+
     private val _weatherList = MutableLiveData<List<WeatherItem>>(emptyList())
     val weatherList: LiveData<List<WeatherItem>> = _weatherList
 
     private val _weatherMainList = MutableLiveData<WeatherItem>().apply {
-        WeatherItem("","", 0, 0, 0, 0, "", "")
+        WeatherItem("", "", 0, 0, 0, 0, "", "")
     }
     val weatherMainList: LiveData<WeatherItem> = _weatherMainList
 
@@ -48,8 +50,13 @@ class HomeViewModel @Inject constructor(
         _weatherInfoText.value = text
     }
 
+    fun setCurrentAddress(address: List<Address>) {
+    println("address $address")
+        _currentAddress.value =
+            "${address[0].adminArea} ${address[0].locality} ${address[0].thoroughfare}"
+    }
+
     fun getWeather(latitude: Double, longitude: Double) {
-        println("GeatWeather")
         viewModelScope.launch {
             val result = repository.getWeather(latitude, longitude)
             println("Result $result")
