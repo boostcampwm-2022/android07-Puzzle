@@ -20,14 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".35" />
+            app:layout_constraintGuide_percent=".33" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/bottom_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".3" />
+            app:layout_constraintGuide_percent=".28" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/start_guideline"
@@ -92,7 +92,6 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/home_background_image_description"
             android:elevation="1dp"
-            android:scaleType="fitXY"
             android:src="@drawable/home_background_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

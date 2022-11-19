@@ -51,7 +51,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setCurrentAddress(address: List<Address>) {
-    println("address $address")
         _currentAddress.value =
             "${address[0].adminArea} ${address[0].locality} ${address[0].thoroughfare}"
     }
@@ -59,15 +58,14 @@ class HomeViewModel @Inject constructor(
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             val result = repository.getWeather(latitude, longitude)
-            println("Result $result")
             if (result.isSuccess) {
                 val list = result.getOrDefault(emptyList())
                 _weatherMainList.value = list[0]
                 _weatherList.value = list.subList(1, list.size)
+                _weatherInfoText.value = ""
             } else {
                 _weatherInfoText.value = result.exceptionOrNull()?.message
             }
-
         }
     }
 

@@ -43,7 +43,9 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
         if (isPermitted) {
+            println("permitted")
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
                 var location = locationManager.getLastKnownLocation(
                     LocationManager.GPS_PROVIDER
                 )
@@ -54,11 +56,12 @@ class HomeFragment : Fragment() {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 3000L, 30f, locationListener
                 )
+                println("location available $location")
                 val latitude = location?.latitude ?: 37.0
                 val longitude = location?.longitude ?: 127.0
                 getWeatherInfo(latitude, longitude)
             } else {
-                homeViewModel.setWeatherInfoText("네트워크를 연결해주세요")
+                homeViewModel.setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
             }
         } else {
             homeViewModel.setWeatherInfoText("위치 권한을 허용해주세요")
@@ -98,9 +101,10 @@ class HomeFragment : Fragment() {
         homeViewModel.run {
             setWelcomeText(welcomeTextArray.random(random))
             setDisplayName()
-            weatherList.observe(viewLifecycleOwner) { list ->
-                binding.weatherLayout.isVisible = list.isNotEmpty()
-                binding.weatherNotPermittedLayout.isVisible = list.isEmpty()
+            weatherInfoText.observe(viewLifecycleOwner) { text ->
+                println("observe $text")
+                binding.weatherLayout.isVisible = text.isEmpty()
+                binding.weatherNotPermittedLayout.isVisible = text.isNotEmpty()
             }
         }
     }
