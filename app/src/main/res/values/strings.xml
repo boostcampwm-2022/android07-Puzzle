@@ -38,4 +38,5 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
+    <string name="weather_slash_divider">/</string>
 </resources>

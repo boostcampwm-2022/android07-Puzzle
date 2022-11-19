@@ -2,12 +2,16 @@ package com.juniori.puzzle.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getMainExecutor
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,6 +19,8 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.function.Consumer
+import kotlin.math.roundToInt
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -36,11 +42,13 @@ class HomeFragment : Fragment() {
             println("isPermitted")
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 println("isnetwork")
-                locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 3000L, 30f
-                ) { location ->
-                    homeViewModel.getWeather(location.latitude, location.longitude)
+                var location = locationManager.getLastKnownLocation(
+                    LocationManager.NETWORK_PROVIDER
+                )
+                if(location==null){
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                 }
+                homeViewModel.getWeather(location?.latitude ?: 55.0,location?.longitude ?: 127.0)
             } else {
                 homeViewModel.setWeatherInfoText("네트워크를 연결해주세요")
             }
