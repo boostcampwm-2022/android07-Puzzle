@@ -11,7 +11,7 @@
     <dimen name="card_padding">8dp</dimen>
     <dimen name="card_text_horizontal_margin">8dp</dimen>
     <dimen name="text_horizontal_margin">16dp</dimen>
-    <dimen name="text_vertical_margin">16dp</dimen>
+    <dimen name="text_vertical_margin">8dp</dimen>
     <dimen name="item_horizontal_margin">8dp</dimen>
     <dimen name="item_vertical_margin">8dp</dimen>
     <dimen name="item_elevation">8dp</dimen>
