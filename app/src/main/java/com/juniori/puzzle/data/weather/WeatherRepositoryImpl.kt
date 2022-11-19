@@ -11,7 +11,6 @@ class WeatherRepositoryImpl @Inject constructor(
     override suspend fun getWeather(lat: Double, lon: Double): Result<List<WeatherItem>> {
         val response = service.getWeather(lat,lon,SERVICE_KEY,"metric","kr")
 
-        println("response ${response.body()}")
         return if(response.isSuccessful){
             Result.success(response.body()?.toItem() ?: emptyList())
         }

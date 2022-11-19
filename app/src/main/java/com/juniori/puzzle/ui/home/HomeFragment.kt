@@ -33,7 +33,9 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
         if (isPermitted) {
+            println("isPermitted")
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                println("isnetwork")
                 locationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, 3000L, 30f
                 ) { location ->

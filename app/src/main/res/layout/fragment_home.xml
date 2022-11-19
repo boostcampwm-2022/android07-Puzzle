@@ -98,35 +98,133 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weather_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="@id/top_guideline"
-            app:layout_constraintVertical_bias="0.3">
+            app:layout_constraintTop_toTopOf="@id/top_guideline">
+
+            <ImageView
+                android:id="@+id/weather_refresh_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/home_refresh_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/weather_main_location_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/text_horizontal_margin"
+                app:layout_constraintStart_toEndOf="@id/weather_refresh_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="경기도 성남시 판교동" />
+
+            <TextView
+                android:id="@+id/weather_main_currentDate_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weather_refresh_btn"
+                android:layout_marginTop="@dimen/text_vertical_margin"
+                android:text="@{vm.weatherMainList.fullDate}" />
+
+            <ImageView
+                android:id="@+id/weather_main_icon_iv"
+                setImage="@{vm.weatherMainList.icon}"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="@dimen/text_vertical_margin"
+                android:src="@drawable/ic_launcher_foreground"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weather_main_currentDate_tv" />
+
+            <TextView
+                android:id="@+id/weather_main_temp_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/weather_temp_format(vm.weatherMainList.temp)}"
+                app:layout_constraintBottom_toBottomOf="@id/weather_main_icon_iv"
+                app:layout_constraintStart_toEndOf="@id/weather_main_icon_iv"
+                app:layout_constraintTop_toTopOf="@id/weather_main_icon_iv"
+                tools:text="19º" />
+
+            <TextView
+                android:id="@+id/weather_main_description_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vm.weatherMainList.description}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/weather_main_icon_iv"
+                tools:text="맑음" />
+
+            <TextView
+                android:id="@+id/weather_main_max_temp_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/text_horizontal_margin"
+                android:text="@{@string/weather_temp_format(vm.weatherMainList.maxTemp)}"
+                app:layout_constraintBottom_toBottomOf="@id/weather_main_slash_tv"
+                app:layout_constraintEnd_toStartOf="@id/weather_main_slash_tv"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintTop_toTopOf="@id/weather_main_slash_tv"
+                tools:text="18" />
+
+            <TextView
+                android:id="@+id/weather_main_slash_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/text_horizontal_margin"
+                app:layout_constraintBottom_toBottomOf="@id/weather_main_min_temp_tv"
+                app:layout_constraintEnd_toStartOf="@id/weather_main_min_temp_tv"
+                app:layout_constraintTop_toTopOf="@id/weather_main_min_temp_tv"
+                tools:text="/" />
+
+            <TextView
+                android:id="@+id/weather_main_min_temp_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_vertical_margin"
+                android:text="@{@string/weather_temp_format(vm.weatherMainList.minTemp)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weather_main_description_tv"
+                tools:text="17" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_vertical_margin"
+                android:text="@{@string/weather_feels_like_temp_format(vm.weatherMainList.feelsLike)}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weather_main_min_temp_tv"
+                tools:text="체감온도 19" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/weather_detail_recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_vertical_margin"
                 android:orientation="horizontal"
-                app:setAdapter="@{vm.weatherList}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                app:layout_constraintTop_toBottomOf="@id/weather_main_icon_iv"
+                app:setAdapter="@{vm.weatherList}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weather_not_permitted_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:elevation="2dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -151,11 +249,11 @@
                 style="@style/Theme.Puzzle.TextMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{vm.weatherInfoText}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn"
-                android:text="@{vm.weatherInfoText}" />
+                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

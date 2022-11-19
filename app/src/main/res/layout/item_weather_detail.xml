@@ -22,12 +22,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="오후 9시" />
+            android:text="@{item.time}" />
 
         <ImageView
             android:id="@+id/weather_icon_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            setImage="@{item.icon}"
             app:layout_constraintBottom_toTopOf="@id/temp_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +43,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/weather_icon_iv"
-            android:text="12도" />
+            android:text="@{@string/weather_temp_format(item.temp)}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
