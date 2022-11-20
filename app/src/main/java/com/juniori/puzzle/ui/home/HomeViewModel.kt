@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.auth.AuthRepository
 import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherRepository
+import com.juniori.puzzle.util.toAddressString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,11 +52,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setCurrentAddress(address: List<Address>) {
-        _currentAddress.value = if (address[0].locality == null) {
-            "${address[0].adminArea} ${address[0].thoroughfare}"
-        } else {
-            "${address[0].adminArea} ${address[0].locality} ${address[0].thoroughfare}"
-        }
+        _currentAddress.value = address[0].toAddressString()
     }
 
     fun getWeather(latitude: Double, longitude: Double) {
