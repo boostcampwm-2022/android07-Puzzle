@@ -51,8 +51,12 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setCurrentAddress(address: List<Address>) {
-        _currentAddress.value =
+        _currentAddress.value = if(address[0].locality==null){
+            "${address[0].adminArea} ${address[0].thoroughfare}"
+        }
+        else{
             "${address[0].adminArea} ${address[0].locality} ${address[0].thoroughfare}"
+        }
     }
 
     fun getWeather(latitude: Double, longitude: Double) {
