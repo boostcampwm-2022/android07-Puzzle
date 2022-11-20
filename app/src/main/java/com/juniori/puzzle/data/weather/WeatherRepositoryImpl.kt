@@ -9,12 +9,11 @@ class WeatherRepositoryImpl @Inject constructor(
     private val service: WeatherService
 ) : WeatherRepository {
     override suspend fun getWeather(lat: Double, lon: Double): Result<List<WeatherItem>> {
-        val response = service.getWeather(lat,lon,SERVICE_KEY,"metric","kr")
+        val response = service.getWeather(lat, lon, SERVICE_KEY, "metric", "kr")
 
-        return if(response.isSuccessful){
+        return if (response.isSuccessful) {
             Result.success(response.body()?.toItem() ?: emptyList())
-        }
-        else{
+        } else {
             Result.failure(Exception("네트워크 통신에 실패했습니다"))
         }
     }

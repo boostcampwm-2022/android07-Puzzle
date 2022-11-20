@@ -43,7 +43,6 @@ class HomeFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
         if (isPermitted) {
-            println("permitted")
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
                 var location = locationManager.getLastKnownLocation(
@@ -56,7 +55,6 @@ class HomeFragment : Fragment() {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 3000L, 30f, locationListener
                 )
-                println("location available $location")
                 val latitude = location?.latitude ?: 37.0
                 val longitude = location?.longitude ?: 127.0
                 getWeatherInfo(latitude, longitude)
@@ -102,7 +100,6 @@ class HomeFragment : Fragment() {
             setWelcomeText(welcomeTextArray.random(random))
             setDisplayName()
             weatherInfoText.observe(viewLifecycleOwner) { text ->
-                println("observe $text")
                 binding.weatherLayout.isVisible = text.isEmpty()
                 binding.weatherNotPermittedLayout.isVisible = text.isNotEmpty()
             }
