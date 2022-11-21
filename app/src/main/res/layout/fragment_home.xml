@@ -55,15 +55,16 @@
         <TextView
             android:id="@+id/user_nickname_tv"
             style="@style/Theme.Puzzle.TextLarge.Bold"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_margin"
             android:textColor="@color/onPrimary_color"
             app:layout_constraintBottom_toTopOf="@id/welcome_text_tv"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            app:setText="@{@string/display_name_format(vm.displayName)}"
+            setDisplayName="@{vm.displayName}"
             tools:text="000님" />
 
         <TextView
@@ -108,10 +109,10 @@
             app:layout_constraintTop_toTopOf="@id/top_guideline">
 
             <ImageView
-                android:contentDescription="@string/weather_refresh_btn_description"
                 android:id="@+id/weather_refresh_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/weather_refresh_btn_description"
                 android:src="@drawable/home_refresh_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -138,15 +139,15 @@
                 app:layout_constraintTop_toBottomOf="@id/weather_main_location_tv" />
 
             <ImageView
-                android:contentDescription="@{@string/weather_icon_description(vm.weatherMainList.temp,vm.weatherMainList.description)}"
                 android:id="@+id/weather_main_icon_iv"
                 setImage="@{vm.weatherMainList.icon}"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="@dimen/text_vertical_margin"
-                tools:src="@drawable/ic_launcher_foreground"
+                android:contentDescription="@{@string/weather_icon_description(vm.weatherMainList.temp,vm.weatherMainList.description)}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_main_currentDate_tv" />
+                app:layout_constraintTop_toBottomOf="@id/weather_main_currentDate_tv"
+                tools:src="@drawable/ic_launcher_foreground" />
 
             <TextView
                 android:id="@+id/weather_main_temp_tv"
@@ -243,11 +244,11 @@
             app:layout_constraintVertical_bias="0.3">
 
             <ImageView
-                android:contentDescription="@string/weather_refresh_btn_description"
                 android:id="@+id/weather_not_permitted_refresh_btn"
                 android:layout_width="40dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/text_vertical_margin"
+                android:contentDescription="@string/weather_refresh_btn_description"
                 android:src="@drawable/home_refresh_icon"
                 app:layout_constraintBottom_toTopOf="@id/weather_not_permitted_msg_tv"
                 app:layout_constraintDimensionRatio="1:1"

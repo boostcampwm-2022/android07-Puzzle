@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.data.auth.AuthRepository
 import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.util.toAddressString
 import com.juniori.puzzle.data.Resource
@@ -47,7 +46,7 @@ class HomeViewModel @Inject constructor(
             _displayName.value = userInfo.result.nickname
         }
         else {
-            _displayName.value = "익명햣"
+            _displayName.value = ""
         }
     }
 

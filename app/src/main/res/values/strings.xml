@@ -26,6 +26,7 @@
         <item>오늘은 신기록을 세울 수 있을 거예요!</item>
     </string-array>
     <string name="display_name_format">%s님</string>
+    <string name="display_anonymous">익명</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
     <string name="weather_slash_divider">/</string>
