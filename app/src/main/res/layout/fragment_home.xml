@@ -108,6 +108,7 @@
             app:layout_constraintTop_toTopOf="@id/top_guideline">
 
             <ImageView
+                android:contentDescription="@string/weather_refresh_btn_description"
                 android:id="@+id/weather_refresh_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,6 +138,7 @@
                 app:layout_constraintTop_toBottomOf="@id/weather_main_location_tv" />
 
             <ImageView
+                android:contentDescription="@{@string/weather_icon_description(vm.weatherMainList.temp,vm.weatherMainList.description)}"
                 android:id="@+id/weather_main_icon_iv"
                 setImage="@{vm.weatherMainList.icon}"
                 android:layout_width="80dp"
@@ -241,6 +243,7 @@
             app:layout_constraintVertical_bias="0.3">
 
             <ImageView
+                android:contentDescription="@string/weather_refresh_btn_description"
                 android:id="@+id/weather_not_permitted_refresh_btn"
                 android:layout_width="40dp"
                 android:layout_height="0dp"

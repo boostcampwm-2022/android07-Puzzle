@@ -18,7 +18,6 @@
     <string name="main_mypage">마이 페이지</string>
 
     <!--fragment_home-->
-    <string name="home_background_image_description">홈 배경이미지</string>
     <string-array name="welcome_text">
         <item>오늘도 나이스샷^^</item>
         <item>즐거운 퍼팅되세요!</item>
@@ -28,6 +27,7 @@
     </string-array>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
+    <string name="weather_slash_divider">/</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -44,5 +44,13 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
-    <string name="weather_slash_divider">/</string>
+
+    <!--network-->
+
+
+    <!--description-->
+    <string name="home_background_image_description">홈 배경이미지</string>
+    <string name="weather_icon_description">%d도 %s</string>
+    <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
+
 </resources>

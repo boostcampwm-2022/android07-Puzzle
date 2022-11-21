@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -18,9 +17,9 @@
         <TextView
             android:id="@+id/time_tv"
             style="@style/Theme.Puzzle.TextSmall.Bold"
+            setTime="@{item.date}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            setTime="@{item.date}"
             app:layout_constraintBottom_toTopOf="@id/weather_icon_iv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,6 +30,7 @@
             setImage="@{item.icon}"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:contentDescription="@{@string/weather_icon_description(item.temp,item.description)}"
             android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintBottom_toTopOf="@id/temp_tv"
             app:layout_constraintEnd_toEndOf="parent"
