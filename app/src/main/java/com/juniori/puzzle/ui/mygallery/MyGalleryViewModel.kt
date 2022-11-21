@@ -9,9 +9,10 @@ import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.GlobalScope.coroutineContext
+import javax.inject.Inject
 
 @HiltViewModel
-class MyGalleryViewModel(
+class MyGalleryViewModel @Inject constructor(
     val getMyVideoListUseCase: GetMyVideoListUseCase,
     val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
 ) : ViewModel() {
