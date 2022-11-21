@@ -4,25 +4,43 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope.coroutineContext
 
 @HiltViewModel
-class MyGalleryViewModel @Inject constructor(
-    private val getMyVideoListUseCase: GetMyVideoListUseCase,
-    private val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
+class MyGalleryViewModel(
+    val getMyVideoListUseCase: GetMyVideoListUseCase,
+    val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
 ) : ViewModel() {
-    private val _text = MutableLiveData<String>()
-    val text: LiveData<String> = _text
+    private val _list = MutableLiveData(VideoMockData.mockList(0))
+    val list: LiveData<List<VideoMockData>>
+        get() = _list
 
-     init {
-         viewModelScope.launch {
-             val mockText = (getMyVideoListUseCase("aaa", 0) as Resource.Success).result[0].toString()
-             _text.value = mockText
-         }
-     }
+    private val _refresh = MutableLiveData(false)
+    val refresh: LiveData<Boolean>
+        get() = _refresh
+
+    var query=""
+
+    fun getData(start : Int){
+        if(query.isBlank()&&_refresh.value == false){
+            _refresh.value = true
+            viewModelScope.launch(Dispatchers.IO) {
+                delay(1000)
+                val tempList = list.value as MutableList
+                VideoMockData.mockList(start).forEach {
+                    tempList.add(it)
+                }
+                _list.postValue(tempList)
+                _refresh.postValue(false)
+            }
+
+        }else{
+
+        }
+    }
+
 }

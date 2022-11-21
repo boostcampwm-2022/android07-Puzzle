@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
     <style name="Theme.Puzzle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/noto_sans_kr_regular</item>
@@ -49,5 +50,14 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+    <style name="Theme.Puzzle.Button.Inaddvideo" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
+        <item name="iconSize">28dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
     </style>
 </resources>

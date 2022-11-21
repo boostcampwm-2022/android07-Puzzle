@@ -23,8 +23,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".CameraActivity"
-            android:exported="true">
+            android:name=".ui.addvideo.camera.CameraActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Puzzle">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.juniori.puzzle.ui.addvideo.AddVideoViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.home.HomeFragment">
+
+        <View
+            android:id="@+id/container_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@drawable/all_toolbar_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_goback"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/all_go_back"
+            android:textAppearance="@style/Theme.Puzzle.TextSmall"
+            android:textColor="@color/onPrimary_color"
+            app:elevation="0dp"
+            app:layout_constraintStart_toStartOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="@id/container_toolbar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:gravity="center"
+            android:text="@string/upload_title"
+            android:textAppearance="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintEnd_toEndOf="@id/container_toolbar"
+            app:layout_constraintStart_toStartOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_save"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="?android:attr/actionBarSize"
+            android:backgroundTint="@android:color/transparent"
+            android:elevation="0dp"
+            android:text="@string/all_save"
+            android:textAppearance="@style/Theme.Puzzle.TextSmall"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintEnd_toEndOf="@id/container_toolbar"
+            app:layout_constraintTop_toTopOf="@id/container_toolbar" />
+
+        <TextView
+            android:id="@+id/text_isprivate_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/upload_isprivate_status"
+            android:textAppearance="@style/Theme.Puzzle.TextMedium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_toolbar" />
+
+        <RadioGroup
+            android:id="@+id/container_radiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:checkedButton="@id/radiobutton_set_private"
+            app:buttonTint="@color/primary_color"
+            app:layout_constraintStart_toStartOf="@id/text_isprivate_status_label"
+            app:layout_constraintTop_toBottomOf="@id/text_isprivate_status_label">
+
+            <RadioButton
+                android:id="@+id/radiobutton_set_public"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/primary_color"
+                android:text="@string/upload_set_public" />
+
+            <RadioButton
+                android:id="@+id/radiobutton_set_private"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:buttonTint="@color/primary_color"
+                android:text="@string/upload_set_private" />
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

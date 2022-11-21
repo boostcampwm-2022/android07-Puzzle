@@ -1,42 +1,149 @@
 package com.juniori.puzzle.ui.addvideo
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
+import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetAddvideoBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private val addVideoViewModel: AddVideoViewModel by activityViewModels()
+    private var videoPickActivityLauncher: ActivityResultLauncher<Intent>? = null
+    private var cameraActivityLauncher: ActivityResultLauncher<Intent>? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initActivityLauncher()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(AddVideoViewModel::class.java)
-
         _binding = BottomsheetAddvideoBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textHome
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonSearchGallery.setOnClickListener {
+            startVideoPickActivity()
         }
-        return root
+        binding.buttonTakeVideo.setOnClickListener {
+            startCameraActivity()
+        }
+    }
+
+    private fun startVideoPickActivity() {
+        Intent().apply {
+            type = "video/*"
+            action = Intent.ACTION_PICK
+            putExtra(MediaStore.EXTRA_DURATION_LIMIT, VIDEO_DURATION_LIMIT_SECONDS)
+        }.run {
+            videoPickActivityLauncher?.launch(this)
+        }
+    }
+
+    private fun startCameraActivity() {
+        cameraActivityLauncher?.launch(Intent(requireContext(), CameraActivity::class.java))
+    }
+
+    private fun initActivityLauncher() {
+        videoPickActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val videoUri = result.data?.data ?: return@registerForActivityResult
+                    val durationInSeconds: Long =
+                        getVideoDurationInSeconds(videoUri) ?: return@registerForActivityResult
+                    if (durationInSeconds > VIDEO_DURATION_LIMIT_SECONDS) {
+                        showDurationLimitFeedback()
+                        dismiss()
+                        return@registerForActivityResult
+                    }
+
+                    // TODO: 실제 비디오 형식으로 이름 변경
+                    lifecycleScope.launch {
+                        val videoName = "temporary_video_name"
+                        withContext(Dispatchers.IO) {
+                            saveVideoInCacheDir(videoUri, videoName)
+                        }
+                        addVideoViewModel.setVideoName(videoName)
+                        findNavController().navigate(R.id.fragment_upload_step1)
+                    }
+                }
+            }
+
+        cameraActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val videoNameInCacheDir = result.data?.getStringExtra(VIDEO_NAME_KEY)
+                        ?: return@registerForActivityResult
+                    addVideoViewModel.setVideoName(videoNameInCacheDir)
+                    findNavController().navigate(R.id.fragment_upload_step1)
+                }
+            }
+    }
+
+    private fun getVideoDurationInSeconds(videoUri: Uri): Long? {
+        val metaDataRetriever = MediaMetadataRetriever()
+        metaDataRetriever.setDataSource(context, videoUri)
+        return metaDataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+            ?.let { milliseconds: String ->
+                milliseconds.toLong() / 1000
+            }
+    }
+
+    private fun showDurationLimitFeedback() {
+        Toast.makeText(
+            context,
+            getString(R.string.addvideo_error_durationlimit),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun saveVideoInCacheDir(videoUri: Uri, videoName: String) {
+        val videoCachePath = "${requireContext().cacheDir.path}/$videoName.mp4"
+
+        requireContext().contentResolver.openInputStream(videoUri)?.use { inputStream ->
+            val file = File(videoCachePath)
+            FileOutputStream(file).use { fileOutputStream ->
+                fileOutputStream.write(inputStream.readBytes())
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val VIDEO_DURATION_LIMIT_SECONDS = 20
+        const val VIDEO_NAME_KEY = "VIDEO_NAME_KEY"
     }
 }
