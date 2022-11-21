@@ -7,7 +7,7 @@
     <data>
         <variable
             name="data"
-            type="com.juniori.puzzle.ui.mygallery.VideoMockData" />
+            type="com.juniori.puzzle.domain.entity.VideoInfoEntity" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -30,7 +30,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                setImage="@{data.thumbnailUrl}"
+                setImage="@{data.thumbnailImage}"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="#D5D5D5"

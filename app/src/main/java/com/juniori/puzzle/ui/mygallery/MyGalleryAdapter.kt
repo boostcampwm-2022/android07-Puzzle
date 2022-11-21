@@ -1,18 +1,19 @@
 package com.juniori.puzzle.ui.mygallery
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 
 
 class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var dataList = listOf<VideoMockData>()
+    private var dataList = mutableListOf<VideoInfoEntity>()
 
     class ViewHolder(val binding: ItemGalleryRecyclerBinding, val height: Int) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: VideoMockData) {
+        fun bind(item: VideoInfoEntity) {
             binding.root.layoutParams.height = height/3
             binding.data = item
         }
@@ -27,18 +28,21 @@ class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as ViewHolder).bind(dataList[position])
-        if(position==itemCount-20) {
-            viewModel.getData(itemCount)
-        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(list: List<VideoMockData>){
-        dataList = list
-        notifyDataSetChanged()//todo notify -> diffutil
+    private fun calDiff(newData: List<VideoInfoEntity>) {
+        val diffCallBack = GalleryDiffCallBack(dataList, newData)
+        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(diffCallBack)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    fun setData(newData: List<VideoInfoEntity>) {
+        calDiff(newData)
+        dataList.clear()
+        dataList.addAll(newData)
     }
 }
