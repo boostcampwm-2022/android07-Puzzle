@@ -93,7 +93,7 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                             saveVideoInCacheDir(videoUri, videoName)
                         }
                         addVideoViewModel.setVideoName(videoName)
-                        findNavController().navigate(R.id.fragment_upload_step1)
+                        findNavController().navigate(R.id.fragment_upload_step1, arguments)
                     }
                 }
             }
@@ -104,7 +104,7 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                     val videoNameInCacheDir = result.data?.getStringExtra(VIDEO_NAME_KEY)
                         ?: return@registerForActivityResult
                     addVideoViewModel.setVideoName(videoNameInCacheDir)
-                    findNavController().navigate(R.id.fragment_upload_step1)
+                    findNavController().navigate(R.id.fragment_upload_step1, arguments)
                 }
             }
     }
