@@ -36,4 +36,10 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
+
+    <!--mypage-->
+    <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
+    <string name="change_nickname">닉네임 변경</string>
+    <string name="logout">로그아웃</string>
+    <string name="setting">계정 관리</string>
 </resources>
