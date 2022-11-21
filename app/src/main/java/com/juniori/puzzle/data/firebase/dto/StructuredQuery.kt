@@ -8,7 +8,9 @@ data class StructuredQuery(
         )
     ),
     val where: Filter,
-    val orderBy: List<Order>? = null
+    val orderBy: List<Order>? = null,
+    val offset: Int?,
+    val limit: Int?
 )
 
 data class CollectionSelector(

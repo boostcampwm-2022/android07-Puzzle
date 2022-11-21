@@ -67,7 +67,11 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    suspend fun getMyVideoItems(uid: String): Resource<List<RunQueryResponseDTO>> {
+    suspend fun getMyVideoItems(
+        uid: String,
+        offset: Int? = null,
+        limit: Int? = null
+    ): Resource<List<RunQueryResponseDTO>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
@@ -85,7 +89,9 @@ class FirestoreDataSource @Inject constructor(
                                     field = FieldReference("update_time"),
                                     direction = "DESCENDING"
                                 )
-                            )
+                            ),
+                            offset = offset,
+                            limit = limit
                         )
                     )
                 )
@@ -96,7 +102,10 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    suspend fun getPublicVideoItemsOrderByLikeDescending(): Resource<List<RunQueryResponseDTO>> {
+    suspend fun getPublicVideoItemsOrderByLikeDescending(
+        offset: Int? = null,
+        limit: Int? = null
+    ): Resource<List<RunQueryResponseDTO>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
@@ -114,7 +123,9 @@ class FirestoreDataSource @Inject constructor(
                                     field = FieldReference("like_count"),
                                     direction = "DESCENDING"
                                 )
-                            )
+                            ),
+                            offset = offset,
+                            limit = limit
                         )
                     )
                 )
@@ -125,7 +136,10 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    suspend fun getPublicVideoItemsOrderByUpdateTimeDescending(): Resource<List<RunQueryResponseDTO>> {
+    suspend fun getPublicVideoItemsOrderByUpdateTimeDescending(
+        offset: Int?,
+        limit: Int?
+    ): Resource<List<RunQueryResponseDTO>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
@@ -143,7 +157,9 @@ class FirestoreDataSource @Inject constructor(
                                     field = FieldReference("update_time"),
                                     direction = "DESCENDING"
                                 )
-                            )
+                            ),
+                            offset = offset,
+                            limit = limit
                         )
                     )
                 )
