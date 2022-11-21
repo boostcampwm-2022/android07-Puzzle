@@ -1,7 +1,5 @@
 package com.juniori.puzzle.ui.addvideo
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
@@ -23,11 +21,21 @@ class AddVideoViewModel @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource
 ) : ViewModel() {
 
-    private val _videoName = MutableLiveData<String>()
-    val videoName: LiveData<String> get() = _videoName
+    var videoName: String = ""
+        private set
+
+    var playPosition: Long = 0
+        private set
+    var playWhenReady = true
+        private set
 
     fun setVideoName(targetName: String) {
-        _videoName.value = targetName
+        videoName = targetName
+    }
+
+    fun saveVideoState(playBackPosition: Long, wasBeingPlayed: Boolean) {
+        playPosition = playBackPosition
+        playWhenReady = wasBeingPlayed
     }
 
     private val _uploadFlow = MutableStateFlow<Resource<VideoItem>?>(null)

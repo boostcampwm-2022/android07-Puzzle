@@ -19,7 +19,10 @@ class UploadStep1Fragment : Fragment() {
     private val binding get() = _binding!!
 
     private val addVideoViewModel: AddVideoViewModel by activityViewModels()
-    private lateinit var exoPlayer: ExoPlayer
+    private var exoPlayer: ExoPlayer? = null
+    private val mediaItem: MediaItem by lazy {
+        MediaItem.fromUri("${requireContext().cacheDir.path}/${addVideoViewModel.videoName}.mp4")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,11 +30,6 @@ class UploadStep1Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUploadStep1Binding.inflate(inflater, container, false)
-
-        addVideoViewModel.videoName.observe(viewLifecycleOwner) { videoName ->
-            val videoUriPath = "${requireContext().cacheDir.path}/$videoName.mp4"
-            initVideoPlayer(videoUriPath)
-        }
         return binding.root
     }
 
@@ -46,17 +44,36 @@ class UploadStep1Fragment : Fragment() {
         }
     }
 
-    private fun initVideoPlayer(uri: String) {
-        exoPlayer = ExoPlayer.Builder(requireContext()).build().apply {
-            setMediaItem(MediaItem.fromUri(uri))
-            prepare()
+    override fun onStart() {
+        super.onStart()
+        initVideoPlayer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        releaseVideoPlayer()
+    }
+
+    private fun initVideoPlayer() {
+        exoPlayer = ExoPlayer.Builder(requireContext()).build().also { player ->
+            player.setMediaItem(mediaItem)
+            player.seekTo(addVideoViewModel.playPosition)
+            player.playWhenReady = addVideoViewModel.playWhenReady
+            player.prepare()
+            binding.videoplayer.player = player
         }
-        binding.videoplayer.player = exoPlayer
+    }
+
+    private fun releaseVideoPlayer() {
+        exoPlayer?.let { player ->
+            addVideoViewModel.saveVideoState(player.currentPosition, player.playWhenReady)
+            player.release()
+            exoPlayer = null
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        exoPlayer.release()
     }
 }
