@@ -2,7 +2,6 @@ package com.juniori.puzzle.ui.addvideo
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,11 +18,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
 import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
+import com.juniori.puzzle.util.VideoMetaDataUtil
+import com.juniori.puzzle.util.readBytes
+import com.juniori.puzzle.util.saveInFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
@@ -33,6 +33,8 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
     private val addVideoViewModel: AddVideoViewModel by activityViewModels()
     private var videoPickActivityLauncher: ActivityResultLauncher<Intent>? = null
     private var cameraActivityLauncher: ActivityResultLauncher<Intent>? = null
+
+    private val videoMetaDataUtil get() = VideoMetaDataUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +81,8 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                 if (result.resultCode == RESULT_OK) {
                     val videoUri = result.data?.data ?: return@registerForActivityResult
                     val durationInSeconds: Long =
-                        getVideoDurationInSeconds(videoUri) ?: return@registerForActivityResult
+                        videoMetaDataUtil.getVideoDurationInSeconds(requireContext(), videoUri)
+                            ?: return@registerForActivityResult
                     if (durationInSeconds > VIDEO_DURATION_LIMIT_SECONDS) {
                         showDurationLimitFeedback()
                         dismiss()
@@ -109,15 +112,6 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
             }
     }
 
-    private fun getVideoDurationInSeconds(videoUri: Uri): Long? {
-        val metaDataRetriever = MediaMetadataRetriever()
-        metaDataRetriever.setDataSource(context, videoUri)
-        return metaDataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            ?.let { milliseconds: String ->
-                milliseconds.toLong() / 1000
-            }
-    }
-
     private fun showDurationLimitFeedback() {
         Toast.makeText(
             context,
@@ -127,13 +121,9 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun saveVideoInCacheDir(videoUri: Uri, videoName: String) {
-        val videoCachePath = "${requireContext().cacheDir.path}/$videoName.mp4"
-
-        requireContext().contentResolver.openInputStream(videoUri)?.use { inputStream ->
-            val file = File(videoCachePath)
-            FileOutputStream(file).use { fileOutputStream ->
-                fileOutputStream.write(inputStream.readBytes())
-            }
+        videoUri.readBytes(requireContext().contentResolver)?.let { videoBytes ->
+            val videoCachePath = "${requireContext().cacheDir.path}/$videoName.mp4"
+            videoBytes.saveInFile(videoCachePath)
         }
     }
 
