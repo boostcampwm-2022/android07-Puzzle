@@ -4,7 +4,6 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.dto.ArrayValue
 import com.juniori.puzzle.data.firebase.dto.BooleanValue
 import com.juniori.puzzle.data.firebase.dto.IntegerValue
-import com.juniori.puzzle.data.firebase.dto.ListDocumentsResponseDTO
 import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
 import com.juniori.puzzle.data.firebase.dto.RunQueryResponseDTO
 import com.juniori.puzzle.data.firebase.dto.StringValue
@@ -13,24 +12,12 @@ import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.VideoItem
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
+import com.juniori.puzzle.util.SortType
 import javax.inject.Inject
 
 class FirestoreDataSource @Inject constructor(
     private val service: FirestoreService
 ) {
-    suspend fun getVideoItems(
-        pageSize: Int,
-        pageToken: String,
-        orderBy: String
-    ): Resource<ListDocumentsResponseDTO> {
-        return try {
-            Resource.Success(service.listVideoItemDocuments(pageSize, pageToken, orderBy))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Resource.Failure(e)
-        }
-    }
-
     suspend fun postVideoItem(
         uid: String,
         videoName: String,
@@ -81,15 +68,18 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    suspend fun getPublicVideoItemsOrderByLikeDescending(
-        offset: Int? = null,
-        limit: Int? = null
+    suspend fun getMyVideoItemsWithKeyword(
+        uid: String,
+        toSearch: String,
+        keyword: String,
+        offset: Int?,
+        limit: Int?
     ): Resource<List<RunQueryResponseDTO>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        QueryUtil.getPublicVideoQuery("like_count", offset, limit)
+                        QueryUtil.getMyVideoWithKeywordQuery(uid, toSearch, keyword, offset, limit)
                     )
                 )
             )
@@ -99,15 +89,43 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
-    suspend fun getPublicVideoItemsOrderByUpdateTimeDescending(
-        offset: Int?,
-        limit: Int?
+    suspend fun getPublicVideoItemsOrderBy(
+        orderBy: SortType,
+        offset: Int? = null,
+        limit: Int? = null
     ): Resource<List<RunQueryResponseDTO>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        QueryUtil.getPublicVideoQuery("update_time", offset, limit)
+                        QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
+                    )
+                )
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun getPublicVideoItemsWithKeywordOrderBy(
+        orderBy: SortType,
+        toSearch: String,
+        keyword: String,
+        offset: Int? = null,
+        limit: Int? = null
+    ): Resource<List<RunQueryResponseDTO>> {
+        return try {
+            Resource.Success(
+                service.getFirebaseItemByQuery(
+                    RunQueryRequestDTO(
+                        QueryUtil.getPublicVideoWithKeywordQuery(
+                            orderBy.value,
+                            toSearch,
+                            keyword,
+                            offset,
+                            limit
+                        )
                     )
                 )
             )

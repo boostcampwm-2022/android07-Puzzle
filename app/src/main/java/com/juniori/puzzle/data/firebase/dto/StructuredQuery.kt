@@ -7,7 +7,7 @@ data class StructuredQuery(
             allDescendants = true
         )
     ),
-    val where: Filter,
+    val where: Filters,
     val orderBy: List<Order>? = null,
     val offset: Int?,
     val limit: Int?
@@ -18,9 +18,16 @@ data class CollectionSelector(
     val allDescendants: Boolean = false
 )
 
+sealed interface Filters
+
+data class CompositeFilter(
+    val filters: List<Filter>,
+    val op: String
+) : Filters
+
 data class Filter(
     val fieldFilter: FieldFilter
-)
+) : Filters
 
 sealed interface FieldFilter
 
