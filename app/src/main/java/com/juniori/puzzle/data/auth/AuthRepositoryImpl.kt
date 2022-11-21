@@ -18,7 +18,7 @@ class AuthRepositoryImpl @Inject constructor(
             Resource.Success(
                 UserInfoEntity(
                     firebaseUser.uid,
-                    firebaseUser.email ?: "",
+                    firebaseUser.displayName ?: "",
                     firebaseUser.photoUrl?.toString() ?: ""
                 )
             )

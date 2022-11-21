@@ -15,6 +15,7 @@ import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
 import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 
 class UploadStep2Fragment : Fragment() {
 
@@ -36,9 +37,10 @@ class UploadStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val filePath = "${requireContext().cacheDir.path}/${viewModel.videoName.value}.mp4"
 
         binding.buttonSave.setOnClickListener {
-            viewModel.uploadVideo("${requireContext().cacheDir.path}/${viewModel.videoName.value}.mp4")
+            viewModel.uploadVideo(filePath)
         }
         binding.buttonGoback.setOnClickListener {
             findNavController().navigateUp()
@@ -55,6 +57,7 @@ class UploadStep2Fragment : Fragment() {
                     resource?.let {
                         when (it) {
                             is Resource.Success -> {
+                                File(filePath).delete()
                                 arguments?.let { bundle ->
                                     findNavController().navigate(
                                         bundle.getInt(
