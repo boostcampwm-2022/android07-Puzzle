@@ -129,10 +129,10 @@
             <TextView
                 android:id="@+id/weather_main_currentDate_tv"
                 style="@style/Theme.Puzzle.TextSmall.Bold"
+                setFullDate="@{vm.weatherMainList.date}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_vertical_margin"
-                android:text="@{vm.weatherMainList.fullDate}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/weather_main_location_tv" />
 
@@ -215,6 +215,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/weather_detail_recyclerView"
+                setAdapter="@{vm.weatherList}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/text_vertical_margin"
@@ -223,8 +224,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_main_icon_iv"
-                app:setAdapter="@{vm.weatherList}" />
+                app:layout_constraintTop_toBottomOf="@id/weather_main_icon_iv" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 

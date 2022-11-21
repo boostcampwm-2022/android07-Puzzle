@@ -5,6 +5,11 @@
     <string name="all_go_back">뒤로</string>
     <string name="all_save">저장</string>
 
+    <!--date-->
+    <string name="full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
+    <string name="time_AM_date_format">오전 %d시</string>
+    <string name="time_PM_date_format">오후 %d시</string>
+
     <!--activity_main-->
     <string name="main_home">홈</string>
     <string name="main_mygallery">내 갤러리</string>
@@ -21,7 +26,6 @@
         <item>당신의 퍼팅영상을 공유해보세요!</item>
         <item>오늘은 신기록을 세울 수 있을 거예요!</item>
     </string-array>
-    <string name="weather_full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
 
