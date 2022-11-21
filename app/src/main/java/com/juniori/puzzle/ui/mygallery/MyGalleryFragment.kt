@@ -10,8 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MyGalleryFragment : Fragment() {
 
     private var _binding: FragmentMygalleryBinding? = null

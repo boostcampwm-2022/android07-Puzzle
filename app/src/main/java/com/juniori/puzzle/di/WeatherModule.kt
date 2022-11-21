@@ -6,6 +6,7 @@ import com.juniori.puzzle.BuildConfig
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.data.weather.WeatherRepositoryImpl
 import com.juniori.puzzle.network.WeatherService
+import com.juniori.puzzle.util.WEATHER_BASE_URL
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object WeatherModule {
 
-    private const val WEATHER_BASE_URL = "https://api.openweathermap.org"
     private val gson = GsonBuilder().setLenient().create()
 
     private val weatherService = Retrofit.Builder()

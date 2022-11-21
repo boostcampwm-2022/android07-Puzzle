@@ -6,7 +6,8 @@ data class WeatherResponse(
     val cod: String,
     val message: Int,
     val cnt: Int,
-    val list: List<WeatherListResponse>
+    val list: List<WeatherListResponse>,
+    val city: WeatherCityResponse
 )
 
 data class WeatherListResponse(
@@ -58,4 +59,20 @@ data class WeatherRainResponse(
 
 data class WeatherSysResponse(
     val pod: String
+)
+
+data class WeatherCityResponse(
+    val id: Int,
+    val name: String,
+    val coord: WeatherCoordResponse,
+    val country: String,
+    val population: Int,
+    val timezone: Int,
+    val sunrise: Long,
+    val sunset: Long
+)
+
+data class WeatherCoordResponse(
+    val lat: Float,
+    val lon: Float
 )

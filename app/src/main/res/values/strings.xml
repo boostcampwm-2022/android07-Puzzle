@@ -16,10 +16,14 @@
     <string name="home_background_image_description">홈 배경이미지</string>
     <string-array name="welcome_text">
         <item>오늘도 나이스샷^^</item>
-        <item>퍼팅은 즐겁다!</item>
+        <item>즐거운 퍼팅되세요!</item>
         <item>환영합니다</item>
         <item>당신의 퍼팅영상을 공유해보세요!</item>
+        <item>오늘은 신기록을 세울 수 있을 거예요!</item>
     </string-array>
+    <string name="weather_full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
+    <string name="weather_temp_format">%dº</string>
+    <string name="weather_feels_like_temp_format">체감온도 %dº</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -36,6 +40,7 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
+    <string name="weather_slash_divider">/</string>
 
     <!--mypage-->
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
