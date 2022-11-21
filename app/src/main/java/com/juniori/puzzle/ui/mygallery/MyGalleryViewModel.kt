@@ -4,11 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
+import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.GlobalScope.coroutineContext
+import javax.inject.Inject
 
-class MyGalleryViewModel : ViewModel() {
-    private val _list = MutableLiveData<List<VideoMockData>>(VideoMockData.mockList(0))
+@HiltViewModel
+class MyGalleryViewModel @Inject constructor(
+    val getMyVideoListUseCase: GetMyVideoListUseCase,
+    val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
+) : ViewModel() {
+    private val _list = MutableLiveData(VideoMockData.mockList(0))
     val list: LiveData<List<VideoMockData>>
         get() = _list
 

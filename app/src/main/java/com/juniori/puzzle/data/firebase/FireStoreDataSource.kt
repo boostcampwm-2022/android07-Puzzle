@@ -18,7 +18,7 @@ import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.VideoItem
 import javax.inject.Inject
 
-class FirebaseRepository @Inject constructor(
+class FireStoreDataSource @Inject constructor(
     private val service: FirebaseService
 ) {
     suspend fun getVideoItems(

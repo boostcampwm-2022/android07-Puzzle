@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.auth.AuthRepository
 import com.juniori.puzzle.data.weather.WeatherItem
-import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.util.toAddressString
+import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.data.weather.WeatherRepository
+import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
-    private val authRepository: AuthRepository
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
 
     private val _welcomeText = MutableLiveData("")
@@ -40,7 +42,13 @@ class HomeViewModel @Inject constructor(
     val weatherMainList: LiveData<WeatherItem> = _weatherMainList
 
     fun setDisplayName() {
-        _displayName.value = "${authRepository.currentUser?.displayName}님"
+        val userInfo = getUserInfoUseCase()
+        if (userInfo is Resource.Success) {
+            _displayName.value = "${userInfo.result.nickname}님"
+        }
+        else {
+            _displayName.value = "누구세요?"
+        }
     }
 
     fun setWelcomeText(text: String) {
