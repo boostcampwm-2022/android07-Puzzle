@@ -1,6 +1,8 @@
-package com.juniori.puzzle.data.auth
+package com.juniori.puzzle.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.juniori.puzzle.domain.repository.AuthRepository
+import com.juniori.puzzle.data.auth.AuthRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
