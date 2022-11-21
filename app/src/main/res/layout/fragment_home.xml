@@ -63,7 +63,7 @@
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            app:setText="@{vm.displayName}"
+            app:setText="@{@string/display_name_format(vm.displayName)}"
             tools:text="000님" />
 
         <TextView
@@ -144,7 +144,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="@dimen/text_vertical_margin"
-                android:src="@drawable/ic_launcher_foreground"
+                tools:src="@drawable/ic_launcher_foreground"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/weather_main_currentDate_tv" />
 

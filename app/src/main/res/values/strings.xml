@@ -25,6 +25,7 @@
         <item>당신의 퍼팅영상을 공유해보세요!</item>
         <item>오늘은 신기록을 세울 수 있을 거예요!</item>
     </string-array>
+    <string name="display_name_format">%s님</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
     <string name="weather_slash_divider">/</string>
@@ -46,7 +47,11 @@
     <string name="uploadstep1_saying">문구</string>
 
     <!--network-->
+    <string name="network_fail">네트워크 통신에 실패했습니다</string>
 
+    <!--permission-->
+    <string name="location_permission">위치 권한을 허용해주세요</string>
+    <string name="location_service_off">네트워크 및 위치 서비스를 연결해주세요</string>
 
     <!--description-->
     <string name="home_background_image_description">홈 배경이미지</string>
