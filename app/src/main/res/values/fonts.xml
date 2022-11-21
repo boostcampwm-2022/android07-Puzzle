@@ -9,21 +9,21 @@
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
-    <style name="Theme.Puzzle.TextMedium" parent="">
+    <style name="Theme.Puzzle.TextMedium" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Theme.Puzzle.TextMedium.Bold" parent="">
+    <style name="Theme.Puzzle.TextMedium.Bold">
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
-    <style name="Theme.Puzzle.TextSmall" parent="">
+    <style name="Theme.Puzzle.TextSmall" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="Theme.Puzzle.TextSmall.Bold" parent="">
+    <style name="Theme.Puzzle.TextSmall.Bold">
         <item name="android:fontFamily">@font/noto_sans_kr_medium</item>
     </style>
 
