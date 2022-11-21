@@ -20,11 +20,19 @@ data class Filter(
     val fieldFilter: FieldFilter
 )
 
-data class FieldFilter(
+sealed interface FieldFilter
+
+data class BooleanFieldFilter(
     val field: FieldReference,
     val op: String,
     val value: BooleanValue
-)
+) : FieldFilter
+
+data class StringFieldFilter(
+    val field: FieldReference,
+    val op: String,
+    val value: StringValue
+) : FieldFilter
 
 data class FieldReference(
     val fieldPath: String
