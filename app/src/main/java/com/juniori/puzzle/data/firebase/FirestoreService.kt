@@ -10,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface FirebaseService {
+interface FirestoreService {
     @GET("databases/(default)/documents/videoReal")
     suspend fun listVideoItemDocuments(
         @Query("pageSize") pageSize: Int,

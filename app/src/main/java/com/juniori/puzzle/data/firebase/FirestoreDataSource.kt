@@ -18,8 +18,8 @@ import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.VideoItem
 import javax.inject.Inject
 
-class FireStoreDataSource @Inject constructor(
-    private val service: FirebaseService
+class FirestoreDataSource @Inject constructor(
+    private val service: FirestoreService
 ) {
     suspend fun getVideoItems(
         pageSize: Int,
