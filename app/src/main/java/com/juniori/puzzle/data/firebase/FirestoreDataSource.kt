@@ -2,21 +2,16 @@ package com.juniori.puzzle.data.firebase
 
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.dto.ArrayValue
-import com.juniori.puzzle.data.firebase.dto.BooleanFieldFilter
 import com.juniori.puzzle.data.firebase.dto.BooleanValue
-import com.juniori.puzzle.data.firebase.dto.FieldReference
-import com.juniori.puzzle.data.firebase.dto.Filter
 import com.juniori.puzzle.data.firebase.dto.IntegerValue
 import com.juniori.puzzle.data.firebase.dto.ListDocumentsResponseDTO
-import com.juniori.puzzle.data.firebase.dto.Order
 import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
 import com.juniori.puzzle.data.firebase.dto.RunQueryResponseDTO
-import com.juniori.puzzle.data.firebase.dto.StringFieldFilter
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StringValues
-import com.juniori.puzzle.data.firebase.dto.StructuredQuery
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.VideoItem
+import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
 import javax.inject.Inject
 
@@ -76,23 +71,7 @@ class FirestoreDataSource @Inject constructor(
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        StructuredQuery(
-                            where = Filter(
-                                fieldFilter = StringFieldFilter(
-                                    field = FieldReference("owner_uid"),
-                                    op = "EQUAL",
-                                    value = StringValue(uid)
-                                )
-                            ),
-                            orderBy = listOf(
-                                Order(
-                                    field = FieldReference("update_time"),
-                                    direction = "DESCENDING"
-                                )
-                            ),
-                            offset = offset,
-                            limit = limit
-                        )
+                        QueryUtil.getMyVideoQuery(uid, offset, limit)
                     )
                 )
             )
@@ -110,23 +89,7 @@ class FirestoreDataSource @Inject constructor(
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        StructuredQuery(
-                            where = Filter(
-                                fieldFilter = BooleanFieldFilter(
-                                    field = FieldReference("is_private"),
-                                    op = "EQUAL",
-                                    value = BooleanValue(false)
-                                )
-                            ),
-                            orderBy = listOf(
-                                Order(
-                                    field = FieldReference("like_count"),
-                                    direction = "DESCENDING"
-                                )
-                            ),
-                            offset = offset,
-                            limit = limit
-                        )
+                        QueryUtil.getPublicVideoQuery("like_count", offset, limit)
                     )
                 )
             )
@@ -144,23 +107,7 @@ class FirestoreDataSource @Inject constructor(
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        StructuredQuery(
-                            where = Filter(
-                                fieldFilter = BooleanFieldFilter(
-                                    field = FieldReference("is_private"),
-                                    op = "EQUAL",
-                                    value = BooleanValue(false)
-                                )
-                            ),
-                            orderBy = listOf(
-                                Order(
-                                    field = FieldReference("update_time"),
-                                    direction = "DESCENDING"
-                                )
-                            ),
-                            offset = offset,
-                            limit = limit
-                        )
+                        QueryUtil.getPublicVideoQuery("update_time", offset, limit)
                     )
                 )
             )
