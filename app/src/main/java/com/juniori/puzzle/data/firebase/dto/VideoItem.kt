@@ -1,13 +1,18 @@
 package com.juniori.puzzle.data.firebase.dto
 
 import com.google.gson.annotations.SerializedName
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 
 data class VideoItem(
     @SerializedName("name") val videoName: String,
     @SerializedName("fields") val videoDetail: VideoDetail,
     @SerializedName("createTime") val createTime: String? = null,
     @SerializedName("updateTime") val updateTime: String? = null
-)
+) {
+    fun getVideoInfoEntity(): VideoInfoEntity {
+        return videoDetail.toVideoInfoEntity()
+    }
+}
 
 data class VideoDetail(
     @SerializedName("owner_uid") val ownerUid: StringValue,
@@ -19,4 +24,18 @@ data class VideoDetail(
     @SerializedName("update_time") val updateTime: IntegerValue,
     @SerializedName("location") val location: StringValue,
     @SerializedName("memo") val memo: StringValue,
-)
+) {
+    fun toVideoInfoEntity(): VideoInfoEntity {
+        return VideoInfoEntity(
+            ownerUid.stringValue,
+            videoUrl.stringValue,
+            thumbUrl.stringValue,
+            isPrivate.booleanValue,
+            likeCount.integerValue.toInt(),
+            likedUserList.arrayValue.values ?: listOf(),
+            updateTime.integerValue,
+            location.stringValue,
+            memo.stringValue
+        )
+    }
+}

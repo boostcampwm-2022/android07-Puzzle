@@ -5,11 +5,10 @@ import com.juniori.puzzle.data.firebase.dto.ArrayValue
 import com.juniori.puzzle.data.firebase.dto.BooleanValue
 import com.juniori.puzzle.data.firebase.dto.IntegerValue
 import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
-import com.juniori.puzzle.data.firebase.dto.RunQueryResponseDTO
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StringValues
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
-import com.juniori.puzzle.data.firebase.dto.VideoItem
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
 import com.juniori.puzzle.util.SortType
@@ -24,7 +23,7 @@ class FirestoreDataSource @Inject constructor(
         isPrivate: Boolean,
         location: String,
         memo: String
-    ): Resource<VideoItem> {
+    ): Resource<VideoInfoEntity> {
         return try {
             service.createVideoItemDocument(
                 mapOf(
@@ -41,7 +40,7 @@ class FirestoreDataSource @Inject constructor(
                     )
                 )
             ).let {
-                Resource.Success(it)
+                Resource.Success(it.getVideoInfoEntity())
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -53,14 +52,14 @@ class FirestoreDataSource @Inject constructor(
         uid: String,
         offset: Int? = null,
         limit: Int? = null
-    ): Resource<List<RunQueryResponseDTO>> {
+    ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoQuery(uid, offset, limit)
                     )
-                )
+                ).map { it.videoItem.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -74,14 +73,14 @@ class FirestoreDataSource @Inject constructor(
         keyword: String,
         offset: Int?,
         limit: Int?
-    ): Resource<List<RunQueryResponseDTO>> {
+    ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoWithKeywordQuery(uid, toSearch, keyword, offset, limit)
                     )
-                )
+                ).map { it.videoItem.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -93,14 +92,14 @@ class FirestoreDataSource @Inject constructor(
         orderBy: SortType,
         offset: Int? = null,
         limit: Int? = null
-    ): Resource<List<RunQueryResponseDTO>> {
+    ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
                     )
-                )
+                ).map { it.videoItem.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -114,7 +113,7 @@ class FirestoreDataSource @Inject constructor(
         keyword: String,
         offset: Int? = null,
         limit: Int? = null
-    ): Resource<List<RunQueryResponseDTO>> {
+    ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
@@ -127,7 +126,7 @@ class FirestoreDataSource @Inject constructor(
                             limit
                         )
                     )
-                )
+                ).map { it.videoItem.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
