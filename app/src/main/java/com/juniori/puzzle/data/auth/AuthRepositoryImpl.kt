@@ -54,4 +54,14 @@ class AuthRepositoryImpl @Inject constructor(
             Resource.Failure(exception)
         }
     }
+
+    override fun requestWithdraw(): Resource<Unit> {
+        return try {
+            firebaseAuth.currentUser?.delete() ?: throw java.lang.Exception()
+            Resource.Success(Unit)
+        }
+        catch (e: java.lang.Exception) {
+            Resource.Failure(Exception())
+        }
+    }
 }

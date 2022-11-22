@@ -35,6 +35,10 @@ class MyPageFragment : Fragment() {
         viewModel.navigateToIntroPageEvent.observe(viewLifecycleOwner) { result ->
             navigateToIntroPageEvent(result)
         }
+
+        viewModel.finishApplicationEvent.observe(viewLifecycleOwner) { result ->
+            finishApplication(result)
+        }
     }
 
     private fun navigateToIntroPageEvent(result: Resource<Unit>) {
@@ -42,6 +46,12 @@ class MyPageFragment : Fragment() {
             val intent = Intent(context, LoginActivity::class.java)
             activity?.finishAffinity()
             startActivity(intent)
+        }
+    }
+
+    private fun finishApplication(result: Resource<Unit>) {
+        if (result is Resource.Success) {
+            activity?.finishAffinity()
         }
     }
 
