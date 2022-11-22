@@ -7,6 +7,18 @@ import javax.inject.Inject
 class StorageDataSource @Inject constructor(
     private val service: StorageService
 ) {
+    suspend fun deleteVideo(
+        name: String
+    ): Result<Unit> {
+        return service.delete("video/$name")
+    }
+
+    suspend fun deleteThumbnail(
+        name: String
+    ): Result<Unit> {
+        return service.delete("thumb/$name")
+    }
+
     suspend fun insertVideo(
         name: String,
         fileByteArray: ByteArray
