@@ -7,7 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.View
 
 class DialogManager constructor(
-    private val context: Context
+    context: Context
 ) {
     private val builder = AlertDialog.Builder(context)
     private var dialog: AlertDialog? = null
@@ -16,7 +16,6 @@ class DialogManager constructor(
         dialog = builder.setView(view).create().apply{
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
-        println("Dialog")
     }
 
     fun showDialog() {

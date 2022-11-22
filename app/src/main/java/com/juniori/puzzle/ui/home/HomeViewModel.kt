@@ -11,6 +11,7 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -70,6 +71,7 @@ class HomeViewModel @Inject constructor(
 
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
+            delay(1000)
             val result = repository.getWeather(latitude, longitude)
             if (result.isSuccess) {
                 val list = result.getOrDefault(emptyList())
