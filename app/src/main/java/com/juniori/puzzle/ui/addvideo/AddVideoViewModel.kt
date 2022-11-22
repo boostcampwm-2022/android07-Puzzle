@@ -8,7 +8,6 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.data.firebase.dto.VideoItem
-import com.juniori.puzzle.domain.repository.AuthRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,16 +37,16 @@ class AddVideoViewModel @Inject constructor(
         val currentUserInfo = getUserInfoUseCase()
         val uid =
             if (currentUserInfo is Resource.Success) currentUserInfo.result.uid else return@launch
-        val videoNameToPost =
+        val nameToPost =
             "${uid}_${System.currentTimeMillis()}"
         _uploadFlow.emit(Resource.Loading)
         storageDataSource.insertVideo(
-            videoNameToPost,
+            nameToPost,
             File(filePath).readBytes()
         ).onSuccess {
             val result = firestoreDataSource.postVideoItem(
                 uid = uid,
-                videoName = videoNameToPost,
+                videoName = nameToPost,
                 isPrivate = false,
                 location = "test",
                 memo = "test"

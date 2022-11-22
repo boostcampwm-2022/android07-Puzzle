@@ -18,4 +18,16 @@ class StorageDataSource @Inject constructor(
             )
         )
     }
+
+    suspend fun insertThumbnail(
+        name: String,
+        fileByteArray: ByteArray
+    ): Result<Nothing> {
+        return service.insert(
+            "thumb/$name", body = RequestBody.create(
+                MediaType.parse("image/jpeg"),
+                fileByteArray
+            )
+        )
+    }
 }
