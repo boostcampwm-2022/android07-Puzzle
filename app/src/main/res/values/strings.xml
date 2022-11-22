@@ -3,6 +3,7 @@
     <string name="all_cancel">취소</string>
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
+    <string name="all_setting">설정</string>
     <string name="all_save">저장</string>
 
     <!--activity_main-->
