@@ -17,6 +17,45 @@ import javax.inject.Inject
 class FirestoreDataSource @Inject constructor(
     private val service: FirestoreService
 ) {
+    suspend fun deleteVideoItem(documentId: String): Resource<Unit> {
+        return try {
+            Resource.Success(service.deleteVideoItemDocument(documentId))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun changeVideoItemPrivacy(
+        documentId: String,
+        documentInfo: VideoInfoEntity
+    ): Resource<VideoInfoEntity> {
+        return try {
+            service.patchVideoItemDocument(
+                documentId,
+                mapOf(
+                    with(documentInfo) {
+                        "fields" to VideoDetail(
+                            ownerUid = StringValue(ownerUid),
+                            videoUrl = StringValue(videoUrl),
+                            thumbUrl = StringValue(thumbnailUrl),
+                            isPrivate = BooleanValue(isPrivate.not()),
+                            likeCount = IntegerValue(likedCount.toLong()),
+                            likedUserList = ArrayValue(StringValues(likedUserUidList)),
+                            updateTime = IntegerValue(updateTime),
+                            location = StringValue(location),
+                            memo = StringValue(memo)
+                        )
+                    }
+                )
+            ).let {
+                Resource.Success(it.getVideoInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     suspend fun postVideoItem(
         uid: String,
         videoName: String,
