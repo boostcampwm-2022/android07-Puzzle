@@ -72,68 +72,66 @@
 
         <TextView
             android:id="@+id/nickname_change"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/change_nickname"
-            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:padding="@dimen/activity_vertical_margin"
+            android:background="?android:attr/selectableItemBackground"
             style="@style/Theme.Puzzle.TextMedium"
-            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/bottom_guideline"
-            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/divider_nickname"/>
 
-        <TextView
+        <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_nickname"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/text_vertical_margin"
-            android:background="@color/disabled_color"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/nickname_change"
             app:layout_constraintBottom_toTopOf="@id/logout"/>
 
         <TextView
             android:id="@+id/logout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/logout"
-            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:padding="@dimen/activity_vertical_margin"
             android:onClick="@{() -> viewModel.requestLogout()}"
+            android:background="?android:attr/selectableItemBackground"
             style="@style/Theme.Puzzle.TextMedium"
-            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/divider_nickname"
-            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/divider_logout"/>
 
-        <TextView
+        <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_logout"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/text_vertical_margin"
-            android:background="@color/disabled_color"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/logout"/>
 
         <TextView
-            android:id="@+id/setting"
-            android:layout_width="wrap_content"
+            android:id="@+id/withdraw_account"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/setting"
-            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:text="@string/withdraw"
+            android:padding="@dimen/activity_vertical_margin"
+            android:background="?android:attr/selectableItemBackground"
             style="@style/Theme.Puzzle.TextMedium"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/divider_logout"
-            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/divider_setting"/>
 
-        <TextView
+        <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider_setting"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/text_vertical_margin"
-            android:background="@color/disabled_color"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toBottomOf="@id/setting"/>
+            app:layout_constraintTop_toBottomOf="@id/withdraw_account"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

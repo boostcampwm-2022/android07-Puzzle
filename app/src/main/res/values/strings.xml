@@ -46,5 +46,6 @@
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
     <string name="change_nickname">닉네임 변경</string>
     <string name="logout">로그아웃</string>
-    <string name="setting">계정 관리</string>
+    <string name="withdraw">회원 탈퇴</string>
+    <string name="open_source_lib">오픈소스 라이브러리</string>
 </resources>
