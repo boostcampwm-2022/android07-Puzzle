@@ -9,8 +9,8 @@ data class VideoItem(
     @SerializedName("createTime") val createTime: String? = null,
     @SerializedName("updateTime") val updateTime: String? = null
 ) {
-    fun toVideoInfoEntity(): VideoInfoEntity {
-        return this.videoDetail.toVideoInfoEntity()
+    fun getVideoInfoEntity(): VideoInfoEntity {
+        return videoDetail.toVideoInfoEntity()
     }
 }
 

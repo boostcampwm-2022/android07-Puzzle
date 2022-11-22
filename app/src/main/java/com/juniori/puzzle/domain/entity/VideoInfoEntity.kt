@@ -1,5 +1,9 @@
 package com.juniori.puzzle.domain.entity
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class VideoInfoEntity(
     val ownerUid: String,
     val videoUrl: String,
@@ -10,4 +14,4 @@ data class VideoInfoEntity(
     val updateTime: Long,
     val location: String,
     val memo: String
-)
+) : Parcelable
