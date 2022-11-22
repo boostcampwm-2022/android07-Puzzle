@@ -7,37 +7,103 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
+import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
-import com.juniori.puzzle.mock.getVideoListMockData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MyGalleryViewModel @Inject constructor(
     val getMyVideoListUseCase: GetMyVideoListUseCase,
-    val getUserInfoUseCase: GetUserInfoUseCase
+    val getUserInfoUseCase: GetUserInfoUseCase,
+    val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
 ) : ViewModel() {
-    private var myData = listOf<VideoInfoEntity>()
-
     private val _list = MutableLiveData<List<VideoInfoEntity>>()
     val list: LiveData<List<VideoInfoEntity>>
         get() = _list
 
+    private val _refresh = MutableLiveData(false)
+    val refresh: LiveData<Boolean>
+        get() = _refresh
+
+    var query = ""
+
     fun setQueryText(nowQuery: String?) {
         if (nowQuery.isNullOrBlank()) {
-            _list.value = myData
+            query = ""
+            getMyData()
             return
         }
 
-        val regex = """.*$nowQuery.*""".toRegex()
-        val targetList = myData.filter {
-            regex.matches(it.location)
+        query = nowQuery
+        val uid = getUid()
+
+        if (uid == null) {
+            //todo network err
+        } else {
+            viewModelScope.launch {
+                val data = getSearchedMyVideoUseCase(uid, 0, query)
+                if (data is Resource.Success) {
+                    val result = data.result
+                    _list.value = result
+                } else {
+                    //todo network err
+                }
+            }
         }
-        _list.value = targetList
+    }
+
+    fun getPaging(start: Int) {
+        if (refresh.value == true) {
+            return
+        }
+
+        val uid = getUid()
+        if (uid == null) {
+            //todo network err
+        } else {
+            viewModelScope.launch {
+                _refresh.value = true
+                delay(500)
+                val data = if (query.isBlank()) {
+                    getMyVideoListUseCase(uid, start)
+                } else {
+                    getSearchedMyVideoUseCase(uid, start, query)
+                }
+
+                if (data is Resource.Success) {
+                    val result = data.result
+                    addItems(result)
+                } else {
+                    //todo network err
+                }
+
+                _refresh.value = false
+            }
+        }
     }
 
     fun getMyData() {
+        val uid = getUid()
+
+        if (uid == null) {
+            //todo network err
+        } else {
+            viewModelScope.launch {
+                val data = getMyVideoListUseCase(uid, 0)
+                if (data is Resource.Success) {
+                    val result = data.result
+                    _list.postValue(result)
+                } else {
+                    //todo network err
+                }
+            }
+        }
+    }
+
+    private fun getUid(): String? {
         val userInfo = getUserInfoUseCase()
         val uid: String? = if (userInfo is Resource.Success) {
             userInfo.result.uid
@@ -45,18 +111,19 @@ class MyGalleryViewModel @Inject constructor(
             null
         }
 
-        if (uid==null){
-            //todo network err
-        }else {
-            viewModelScope.launch {
-                val data = getMyVideoListUseCase(uid,0)
-                if(data is Resource.Success){
-                    myData = data.result
-                }else{
-                    //todo network err
-                }
-                _list.postValue(myData)
-            }
+        return uid
+    }
+
+    private fun addItems(items: List<VideoInfoEntity>) {
+        val newList = mutableListOf<VideoInfoEntity>()
+        _list.value?.forEach {
+            newList.add(it)
         }
+
+        items.forEach {
+            newList.add(it)
+        }
+
+        _list.value = newList
     }
 }
