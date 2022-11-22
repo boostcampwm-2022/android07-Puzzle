@@ -76,7 +76,8 @@
             app:layout_constraintBottom_toTopOf="@id/top_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/user_nickname_tv"
-            app:setText="@{vm.welcomeText}" />
+            setText="@{vm.welcomeText}"
+            tools:text="환영합니다!"/>
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"

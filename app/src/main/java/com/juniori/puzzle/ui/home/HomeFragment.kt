@@ -16,8 +16,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
+import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentHomeBinding
+import com.juniori.puzzle.databinding.LoadingLayoutBinding
+import com.juniori.puzzle.util.DialogManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -28,6 +32,9 @@ class HomeFragment : Fragment() {
 
     private val random = Random(System.currentTimeMillis())
     private val homeViewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var dialogManager: DialogManager
     private val locationManager: LocationManager by lazy {
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
@@ -56,6 +63,7 @@ class HomeFragment : Fragment() {
     ) { isPermitted ->
         if (isPermitted) {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                homeViewModel.setUiState(Resource.Loading)
                 getWeatherByLocation()
             } else {
                 homeViewModel.setWeatherInfoText(getString(R.string.location_service_off))
@@ -74,6 +82,7 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             vm = homeViewModel
         }
+        dialogManager.createLoadingDialog(LoadingLayoutBinding.inflate(inflater, container, false).root)
         return binding.root
 
     }
@@ -81,16 +90,16 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
-        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        checkPermission()
 
         adapter = WeatherRecyclerViewAdapter()
 
         binding.weatherNotPermittedLayout.setOnClickListener {
-            locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            checkPermission()
         }
 
         binding.weatherRefreshBtn.setOnClickListener {
-            locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            checkPermission()
         }
 
         binding.weatherDetailRecyclerView.adapter = adapter
@@ -102,7 +111,31 @@ class HomeFragment : Fragment() {
                 binding.weatherLayout.isVisible = text.isEmpty()
                 binding.weatherNotPermittedLayout.isVisible = text.isNotEmpty()
             }
+
+            uiState.observe(viewLifecycleOwner) { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        dialogManager.dismissDialog()
+                    }
+                    is Resource.Failure -> {
+
+                    }
+                    is Resource.Loading -> {
+                        dialogManager.showDialog()
+                    }
+                    is Resource.Empty -> TODO()
+                    is Resource.Wait -> {
+                        dialogManager.dismissDialog()
+                    }
+                }
+            }
         }
+
+    }
+
+    private fun checkPermission(){
+        homeViewModel.setUiState(Resource.Wait)
+        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     @SuppressLint("MissingPermission")
@@ -115,7 +148,10 @@ class HomeFragment : Fragment() {
                 locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         }
         locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME_INTERVAL, LOCATION_MIN_DISTANCE_INTERVAL, locationListener
+            LocationManager.GPS_PROVIDER,
+            LOCATION_MIN_TIME_INTERVAL,
+            LOCATION_MIN_DISTANCE_INTERVAL,
+            locationListener
         )
         val latitude = location?.latitude ?: DEFAULT_LATITUDE
         val longitude = location?.longitude ?: DEFAULT_LONGITUDE

@@ -8,10 +8,8 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.util.toAddressString
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
-import com.juniori.puzzle.util.toAddressString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -22,6 +20,9 @@ class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
+
+    private val _uiState = MutableLiveData<Resource<List<WeatherItem>>>(Resource.Loading)
+    val uiState = _uiState
 
     private val _welcomeText = MutableLiveData("")
     val welcomeText: LiveData<String> = _welcomeText
@@ -42,12 +43,15 @@ class HomeViewModel @Inject constructor(
         MutableLiveData(WeatherItem(Date(), 0, 0, 0, 0, "", ""))
     val weatherMainList: LiveData<WeatherItem> = _weatherMainList
 
+    fun setUiState(state: Resource<List<WeatherItem>>) {
+        _uiState.value = state
+    }
+
     fun setDisplayName() {
         val userInfo = getUserInfoUseCase()
         if (userInfo is Resource.Success) {
             _displayName.value = userInfo.result.nickname
-        }
-        else {
+        } else {
             _displayName.value = ""
         }
     }
@@ -72,8 +76,10 @@ class HomeViewModel @Inject constructor(
                 _weatherMainList.value = list[0]
                 _weatherList.value = list.subList(1, list.size)
                 _weatherInfoText.value = ""
+                uiState.value = Resource.Success(list)
             } else {
                 _weatherInfoText.value = result.exceptionOrNull()?.message
+                uiState.value = Resource.Failure(Exception(""))
             }
         }
     }
