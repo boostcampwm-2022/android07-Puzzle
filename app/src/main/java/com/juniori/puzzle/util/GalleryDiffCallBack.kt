@@ -1,4 +1,4 @@
-package com.juniori.puzzle.ui.mygallery
+package com.juniori.puzzle.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
