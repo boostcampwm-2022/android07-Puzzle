@@ -7,10 +7,10 @@
     tools:context=".ui.playvideo.PlayVideoActivity">
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
-        style="@style/Theme.Puzzle.Toolbar"
+        style="@style/Theme.Puzzle.PlayToolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:menu="@menu/play_video_menu"
+        app:menu="@menu/playvideo_menu"
         app:navigationIcon="@drawable/play_go_back"
         app:navigationIconTint="@color/white"
         tools:title="사용자 이름"

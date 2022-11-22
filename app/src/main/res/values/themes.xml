@@ -33,6 +33,15 @@
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
     </style>
 
+    <style name="Theme.Puzzle.PlayToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="backgroundColor">@android:color/transparent</item>
+        <item name="android:background">@drawable/all_toolbar_background</item>
+        <item name="android:paddingStart">@dimen/toolbar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/toolbar_horizontal_padding</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
+    </style>
+
     <style name="Theme.Puzzle.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:background">@drawable/all_search_view_background</item>
         <item name="searchIcon">@drawable/all_search_icon</item>

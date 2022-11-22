@@ -42,4 +42,9 @@
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
     <string name="weather_slash_divider">/</string>
+
+    <!--acitivty_camera-->
+    <string name="playvideo_to_private">나만 보기</string>
+    <string name="playvideo_to_public">공유하기</string>
+    <string name="playvideo_delete">삭제</string>
 </resources>

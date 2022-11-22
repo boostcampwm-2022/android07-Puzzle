@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/video_private"
+        android:title="@string/playvideo_to_private" />
+    <item
+        android:id="@+id/video_public"
+        android:title="@string/playvideo_to_public" />
+    <item
+        android:id="@+id/video_delete"
+        android:title="@string/playvideo_delete" />
+</menu>
