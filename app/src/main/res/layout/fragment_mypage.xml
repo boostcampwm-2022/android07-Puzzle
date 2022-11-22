@@ -1,127 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/bottom_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".3" />
+    <data>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@id/start_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/activity_horizontal_margin"/>
+        <variable
+            name="viewModel"
+            type="com.juniori.puzzle.ui.mypage.MyPageViewModel" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/end_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/activity_horizontal_margin" />
+    </data>
 
-    <View
-        android:id="@+id/top_bar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/all_toolbar_background"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_guideline"/>
-
-    <TextView
-        android:id="@+id/user_nickname"
-        style="@style/Theme.Puzzle.TextLarge.Bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/text_vertical_margin"
-        tools:text="000님"
-        android:textColor="@color/onPrimary_color"
-        app:layout_constraintBottom_toTopOf="@id/welcome_text"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toTopOf="@id/top_bar"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/welcome_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="오늘도 한 퍼팅 하셨나요?"
-        style="@style/Theme.Puzzle.TextMedium"
-        android:textColor="@color/onPrimary_color"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@id/user_nickname"
-        app:layout_constraintBottom_toBottomOf="@id/top_bar"/>
-
-    <TextView
-        android:id="@+id/nickname_change"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/change_nickname"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        style="@style/Theme.Puzzle.TextMedium"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/bottom_guideline"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintBottom_toTopOf="@id/divider_nickname"/>
-
-    <TextView
-        android:id="@+id/divider_nickname"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        android:background="@color/disabled_color"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@id/nickname_change"
-        app:layout_constraintBottom_toTopOf="@id/logout"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/logout"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        style="@style/Theme.Puzzle.TextMedium"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/divider_nickname"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintBottom_toTopOf="@id/divider_logout"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/bottom_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".3" />
 
-    <TextView
-        android:id="@+id/divider_logout"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        android:background="@color/disabled_color"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@id/logout"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@id/start_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/activity_horizontal_margin"/>
 
-    <TextView
-        android:id="@+id/setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setting"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        style="@style/Theme.Puzzle.TextMedium"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/divider_logout"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintBottom_toTopOf="@id/divider_setting"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/activity_horizontal_margin" />
 
-    <TextView
-        android:id="@+id/divider_setting"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/text_vertical_margin"
-        android:background="@color/disabled_color"
-        app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@id/setting"/>
+        <View
+            android:id="@+id/top_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/all_toolbar_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_guideline"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/user_nickname"
+            style="@style/Theme.Puzzle.TextLarge.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/text_vertical_margin"
+            tools:text="000님"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintBottom_toTopOf="@id/welcome_text"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_bar"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/welcome_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="오늘도 한 퍼팅 하셨나요?"
+            style="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/onPrimary_color"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_nickname"
+            app:layout_constraintBottom_toBottomOf="@id/top_bar"/>
+
+        <TextView
+            android:id="@+id/nickname_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_nickname"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            style="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/bottom_guideline"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintBottom_toTopOf="@id/divider_nickname"/>
+
+        <TextView
+            android:id="@+id/divider_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:background="@color/disabled_color"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/nickname_change"
+            app:layout_constraintBottom_toTopOf="@id/logout"/>
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:onClick="@{() -> viewModel.requestLogout()}"
+            style="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/divider_nickname"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintBottom_toTopOf="@id/divider_logout"/>
+
+        <TextView
+            android:id="@+id/divider_logout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:background="@color/disabled_color"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/logout"/>
+
+        <TextView
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            style="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/divider_logout"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintBottom_toTopOf="@id/divider_setting"/>
+
+        <TextView
+            android:id="@+id/divider_setting"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/text_vertical_margin"
+            android:background="@color/disabled_color"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/setting"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
