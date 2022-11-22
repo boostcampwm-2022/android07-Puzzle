@@ -26,6 +26,7 @@ class FirestoreDataSource @Inject constructor(
     ): Resource<VideoInfoEntity> {
         return try {
             service.createVideoItemDocument(
+                videoName,
                 mapOf(
                     "fields" to VideoDetail(
                         ownerUid = StringValue(uid),

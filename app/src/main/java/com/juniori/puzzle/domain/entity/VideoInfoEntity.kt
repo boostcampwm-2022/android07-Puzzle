@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class VideoInfoEntity(
+    val documentId: String,
     val ownerUid: String,
     val videoUrl: String,
     val thumbnailUrl: String,
