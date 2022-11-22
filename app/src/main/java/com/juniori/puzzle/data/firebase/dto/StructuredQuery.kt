@@ -7,8 +7,10 @@ data class StructuredQuery(
             allDescendants = true
         )
     ),
-    val where: Filter,
-    val orderBy: List<Order>? = null
+    val where: Filters,
+    val orderBy: List<Order>? = null,
+    val offset: Int?,
+    val limit: Int?
 )
 
 data class CollectionSelector(
@@ -16,15 +18,30 @@ data class CollectionSelector(
     val allDescendants: Boolean = false
 )
 
+sealed interface Filters
+
+data class CompositeFilter(
+    val filters: List<Filter>,
+    val op: String
+) : Filters
+
 data class Filter(
     val fieldFilter: FieldFilter
-)
+) : Filters
 
-data class FieldFilter(
+sealed interface FieldFilter
+
+data class BooleanFieldFilter(
     val field: FieldReference,
     val op: String,
     val value: BooleanValue
-)
+) : FieldFilter
+
+data class StringFieldFilter(
+    val field: FieldReference,
+    val op: String,
+    val value: StringValue
+) : FieldFilter
 
 data class FieldReference(
     val fieldPath: String
