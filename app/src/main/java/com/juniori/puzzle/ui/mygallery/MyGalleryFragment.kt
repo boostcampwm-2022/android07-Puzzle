@@ -1,5 +1,6 @@
 package com.juniori.puzzle.ui.mygallery
 
+import android.annotation.SuppressLint
 import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -41,7 +42,11 @@ class MyGalleryFragment : Fragment() {
         }
 
         viewModel.list.observe(viewLifecycleOwner){ dataList ->
-            recyclerAdapter.setData(dataList)
+            recyclerAdapter.submitList(dataList)
+        }
+
+        viewModel.refresh.observe(viewLifecycleOwner){ isRefresh ->
+            binding.progressMyGallery.isVisible = isRefresh
         }
 
         viewModel.getMyData()
