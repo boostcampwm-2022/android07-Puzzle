@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
-import com.juniori.puzzle.data.firebase.dto.VideoItem
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +30,8 @@ class AddVideoViewModel @Inject constructor(
         _videoName.value = targetName
     }
 
-    private val _uploadFlow = MutableStateFlow<Resource<VideoItem>?>(null)
-    val uploadFlow: StateFlow<Resource<VideoItem>?> = _uploadFlow
+    private val _uploadFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
+    val uploadFlow: StateFlow<Resource<VideoInfoEntity>?> = _uploadFlow
 
     fun uploadVideo(filePath: String) = viewModelScope.launch {
         val currentUserInfo = getUserInfoUseCase()
