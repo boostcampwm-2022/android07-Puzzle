@@ -52,7 +52,9 @@ class AddVideoViewModel @Inject constructor(
                 memo = "test"
             )
             _uploadFlow.emit(result)
+        }.onFailure {
+            _uploadFlow.emit(Resource.Failure(it as Exception))
         }
-
+        _uploadFlow.emit(null)
     }
 }
