@@ -14,6 +14,7 @@ import androidx.core.location.LocationListenerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
@@ -21,6 +22,8 @@ import com.juniori.puzzle.databinding.FragmentHomeBinding
 import com.juniori.puzzle.databinding.LoadingLayoutBinding
 import com.juniori.puzzle.util.DialogManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -61,9 +64,9 @@ class HomeFragment : Fragment() {
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
+        homeViewModel.setUiState(Resource.Loading)
         if (isPermitted) {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                homeViewModel.setUiState(Resource.Loading)
                 getWeatherByLocation()
             } else {
                 homeViewModel.setWeatherInfoText(getString(R.string.location_service_off))
@@ -118,14 +121,13 @@ class HomeFragment : Fragment() {
                         dialogManager.dismissDialog()
                     }
                     is Resource.Failure -> {
-
+                        lifecycleScope.launch {
+                            delay(1000)
+                            dialogManager.dismissDialog()
+                        }
                     }
                     is Resource.Loading -> {
                         dialogManager.showDialog()
-                    }
-                    is Resource.Empty -> TODO()
-                    is Resource.Wait -> {
-                        dialogManager.dismissDialog()
                     }
                 }
             }
@@ -133,8 +135,12 @@ class HomeFragment : Fragment() {
 
     }
 
+    override fun onPause() {
+        super.onPause()
+        dialogManager.dismissDialog()
+    }
+
     private fun checkPermission(){
-        homeViewModel.setUiState(Resource.Wait)
         locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
