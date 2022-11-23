@@ -18,7 +18,6 @@ import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
 import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.File
 
 class UploadStep2Fragment : Fragment() {
 
@@ -61,14 +60,7 @@ class UploadStep2Fragment : Fragment() {
                     resource?.let {
                         when (it) {
                             is Resource.Success -> {
-                                File(filePath).delete()
-                                arguments?.let { bundle ->
-                                    findNavController().navigate(
-                                        bundle.getInt(
-                                            "previousFragment"
-                                        )
-                                    )
-                                }
+                                findNavController().popBackStack(R.id.fragment_upload_step1, true)
                             }
                             is Resource.Failure -> {
                                 /** upload video가 실패했을때의 ui 처리 */

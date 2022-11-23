@@ -29,30 +29,16 @@ class MainActivity : AppCompatActivity() {
         val navController = NavHostFragment.findNavController(
             supportFragmentManager.findFragmentById(R.id.fragmentcontainerview) as NavHostFragment
         )
-
-        val previousFragmentId = Bundle()
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.bottomsheet_main_addvideo, R.id.fragment_upload_step1, R.id.fragment_upload_step2 -> {
-                    return@addOnDestinationChangedListener
-                }
-            }
-            previousFragmentId.putInt("previousFragment", destination.id)
-
-        }
-
         binding.bottomnavigationview.setupWithNavController(navController)
         // 추가하기 메뉴를 눌렀을 때 현재 프래그먼트를 유지하면서 다이얼로그를 보여준다.
         findViewById<BottomNavigationItemView>(R.id.bottomsheet_main_addvideo).setOnClickListener {
-            navController.navigate(R.id.bottomsheet_main_addvideo, previousFragmentId)
+            navController.navigate(R.id.bottomsheet_main_addvideo)
         }
 
-        navController.addOnDestinationChangedListener { controller, destination, _ ->
-            binding.bottomnavigationview.visibility = if (destination.id == R.id.fragment_upload_step1) {
-                View.GONE
-            } else {
-                View.VISIBLE
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomnavigationview.visibility = when (destination.id) {
+                R.id.fragment_upload_step1, R.id.fragment_upload_step2 -> View.GONE
+                else -> View.VISIBLE
             }
         }
     }
