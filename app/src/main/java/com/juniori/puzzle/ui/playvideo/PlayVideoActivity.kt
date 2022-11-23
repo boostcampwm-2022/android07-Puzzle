@@ -36,7 +36,7 @@ class PlayVideoActivity : AppCompatActivity() {
         setContentView(binding.root)
         currentVideoItem = intent.extras?.get("videoInfo") as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
-        setMenuItemOnClickListener()
+        setItemOnClickListener()
         initCollector()
     }
 
@@ -133,7 +133,7 @@ class PlayVideoActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMenuItemOnClickListener() {
+    private fun setItemOnClickListener() {
         with(binding.materialToolbar) {
             menu.findItem(R.id.video_privacy).setOnMenuItemClickListener {
                 viewModel.updateVideoPrivacy(currentVideoItem)
@@ -145,6 +145,16 @@ class PlayVideoActivity : AppCompatActivity() {
             }
             setNavigationOnClickListener {
                 finish()
+            }
+        }
+        with(binding) {
+            buttonComment.setOnClickListener {
+                PlayVideoBottomSheet().apply {
+                    arguments = Bundle().apply {
+                        putParcelable("videoInfo", currentVideoItem)
+                        putString("nickName", currentUserInfo.nickname)
+                    }
+                }.show(supportFragmentManager, null)
             }
         }
     }
