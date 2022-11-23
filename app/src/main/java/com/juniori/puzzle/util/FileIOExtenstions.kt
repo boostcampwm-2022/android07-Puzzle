@@ -27,3 +27,12 @@ fun Bitmap.compressToBytes(format: Bitmap.CompressFormat, quality: Int): ByteArr
         outputStream.toByteArray()
     }
 }
+
+fun String.deleteIfFileUri(): Boolean =
+    File(this).let { file ->
+        if (file.exists()) {
+            file.delete()
+        } else {
+            false
+        }
+    }

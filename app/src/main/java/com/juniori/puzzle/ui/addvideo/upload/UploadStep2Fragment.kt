@@ -25,7 +25,7 @@ class UploadStep2Fragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: AddVideoViewModel by activityViewModels()
 
-    private val saveDialog: AlertDialog by lazy {
+    private val uploadDialog: AlertDialog by lazy {
         createSaveDialog()
     }
 
@@ -40,10 +40,9 @@ class UploadStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filePath = "${requireContext().cacheDir.path}/${viewModel.videoName.value}.mp4"
 
         binding.buttonSave.setOnClickListener {
-            saveDialog.show()
+            uploadDialog.show()
         }
         binding.buttonGoback.setOnClickListener {
             findNavController().navigateUp()
@@ -87,15 +86,14 @@ class UploadStep2Fragment : Fragment() {
                 if (binding.radiobuttonSetPrivate.isChecked) {
                     R.string.upload_savedialog_supporting_text_private
                 } else {
-                    R.string.upload_savedialog_supporting_text_private
+                    R.string.upload_savedialog_supporting_text_public
                 }
             )
             .setPositiveButton(R.string.all_yes) { _, _ ->
-                val filePath = "${requireContext().cacheDir.path}/${viewModel.videoName.value}.mp4"
-                viewModel.uploadVideo(filePath)
+                viewModel.uploadVideo()
             }
             .setNegativeButton(R.string.all_no) { _, _ ->
-                saveDialog.dismiss()
+                uploadDialog.dismiss()
             }
             .create()
     }
