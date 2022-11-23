@@ -2,7 +2,8 @@ package com.juniori.puzzle.data.firebase
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.juniori.puzzle.util.BASE_URL
+import com.juniori.puzzle.util.FIRESTORE_BASE_URL
+import com.juniori.puzzle.util.STORAGE_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +12,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -40,19 +42,42 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .baseUrl(BASE_URL)
-        .build()
+    @Named("Firestore")
+    fun provideFireStoreRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(FIRESTORE_BASE_URL)
+            .build()
 
     @Singleton
     @Provides
-    fun provideFirebaseService(retrofit: Retrofit): FirebaseService =
-        retrofit.create(FirebaseService::class.java)
+    @Named("Storage")
+    fun provideStorageRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(STORAGE_BASE_URL)
+            .build()
 
     @Singleton
     @Provides
-    fun provideFirebaseRepository(service: FirebaseService): FireStoreDataSource =
-        FireStoreDataSource(service)
+    fun provideFirebaseService(@Named("Firestore") retrofit: Retrofit): FirestoreService =
+        retrofit.create(FirestoreService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideFirebaseRepository(service: FirestoreService): FirestoreDataSource =
+        FirestoreDataSource(service)
+
+    @Singleton
+    @Provides
+    fun provideStorageService(@Named("Storage") retrofit: Retrofit): StorageService =
+        retrofit.create(StorageService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideStorageRepository(service: StorageService): StorageDataSource =
+        StorageDataSource(service)
 }
+

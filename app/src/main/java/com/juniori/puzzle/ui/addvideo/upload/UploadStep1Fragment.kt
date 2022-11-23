@@ -39,7 +39,7 @@ class UploadStep1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNext.setOnClickListener {
-            findNavController().navigate(R.id.action_uploadstep1_to_uploadstep2)
+            findNavController().navigate(R.id.action_uploadstep1_to_uploadstep2, arguments)
         }
         binding.buttonCancel.setOnClickListener {
             findNavController().navigateUp()

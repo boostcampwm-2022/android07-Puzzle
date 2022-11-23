@@ -14,15 +14,15 @@ fun getVideoListMockData(): List<VideoInfoEntity> {
     imageList.add("https://post-phinf.pstatic.net/MjAxOTA3MjRfMjcw/MDAxNTYzOTI3ODc2NTUy.DfC_wCMby4GxvJss2Q2gFxeZd6KMAziG_xG0a5VyNSEg.P5v_AulrhVk1OR-ai69TMvVaijsUyNeh6dsIIGQngS0g.JPEG/photo-1544460848-32344b7004ec.jpg?type=w1200")
 
     return listOf(
-        VideoInfoEntity("aaa", "aaa_300", imageList[0], false, 0, emptyList(), 105, "서대문구A", "젠투펭귄"),
-        VideoInfoEntity("bbb", "bbb_400", imageList[1], true, 0, emptyList(), 101, "서대문구B", "황제펭귄"),
-        VideoInfoEntity("aaa", "aaa_500", imageList[2], false, 0, emptyList(), 103, "마포구", "킹펭귄"),
-        VideoInfoEntity("ddd", "ddd_100", imageList[3], true, 0, emptyList(), 102, "은평구", "턱끈펭귄"),
-        VideoInfoEntity("eee", "eee_700", imageList[4], false, 0, emptyList(), 100, "동대문구", "청둥오리"),
-        VideoInfoEntity("fff", "fff_600", imageList[5], true, 0, emptyList(), 104, "동작구", "노랑오리"),
-        VideoInfoEntity("aaa", "aaa_800", imageList[1], true, 0, emptyList(), 106, "서대문구A", "도시오리"),
-        VideoInfoEntity("aaa", "aaa_900", imageList[2], false, 0, emptyList(), 106, "서대문구B", "어라?"),
-        VideoInfoEntity("aaa", "aaa_950", imageList[3], true, 0, emptyList(), 106, "종로구", "어?")
+        VideoInfoEntity("a","aaa", "aaa_300", imageList[0], false, 0, emptyList(), 105, "서대문구A", "젠투펭귄"),
+        VideoInfoEntity("b","bbb", "bbb_400", imageList[1], true, 0, emptyList(), 101, "서대문구B", "황제펭귄"),
+        VideoInfoEntity("a","aaa", "aaa_500", imageList[2], false, 0, emptyList(), 103, "마포구", "킹펭귄"),
+        VideoInfoEntity("d","ddd", "ddd_100", imageList[3], true, 0, emptyList(), 102, "은평구", "턱끈펭귄"),
+        VideoInfoEntity("e","eee", "eee_700", imageList[4], false, 0, emptyList(), 100, "동대문구", "청둥오리"),
+        VideoInfoEntity("f","fff", "fff_600", imageList[5], true, 0, emptyList(), 104, "동작구", "노랑오리"),
+        VideoInfoEntity("a","aaa", "aaa_800", imageList[1], true, 0, emptyList(), 106, "서대문구A", "도시오리"),
+        VideoInfoEntity("a","aaa", "aaa_900", imageList[2], false, 0, emptyList(), 106, "서대문구B", "어라?"),
+        VideoInfoEntity("a","aaa", "aaa_950", imageList[3], true, 0, emptyList(), 106, "종로구", "어?")
    )
 }
 
