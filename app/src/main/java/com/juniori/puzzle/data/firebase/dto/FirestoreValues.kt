@@ -19,5 +19,5 @@ data class ArrayValue(
 )
 
 data class StringValues(
-    @SerializedName("values") val values: List<StringValue>
+    @SerializedName("values") val values: List<String>?
 )
