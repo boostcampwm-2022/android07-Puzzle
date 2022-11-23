@@ -29,13 +29,19 @@ class AddVideoViewModel @Inject constructor(
     var playWhenReady = true
         private set
 
+    var comments: String = ""
+
     fun setVideoName(targetName: String) {
         videoName = targetName
     }
 
-    fun saveVideoState(playBackPosition: Long, wasBeingPlayed: Boolean) {
+    fun saveVideoPlayState(playBackPosition: Long, wasBeingPlayed: Boolean) {
         playPosition = playBackPosition
         playWhenReady = wasBeingPlayed
+    }
+
+    fun saveComments(comments: String) {
+        this.comments = comments
     }
 
     private val _uploadFlow = MutableStateFlow<Resource<VideoItem>?>(null)
@@ -61,6 +67,5 @@ class AddVideoViewModel @Inject constructor(
             )
             _uploadFlow.emit(result)
         }
-
     }
 }

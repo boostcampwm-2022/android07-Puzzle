@@ -23,7 +23,7 @@ class UploadStep1Fragment : Fragment() {
     private val addVideoViewModel: AddVideoViewModel by activityViewModels()
     private var exoPlayer: ExoPlayer? = null
     private val mediaItem: MediaItem by lazy {
-        MediaItem.fromUri(addVideoViewModel.videoFilePath)
+        MediaItem.fromUri("${requireContext().cacheDir.path}/${addVideoViewModel.videoName}.mp4")
     }
 
     private val cancelDialog: AlertDialog by lazy {
@@ -35,7 +35,9 @@ class UploadStep1Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUploadStep1Binding.inflate(inflater, container, false)
+        _binding = FragmentUploadStep1Binding.inflate(inflater, container, false).apply {
+            vm = addVideoViewModel
+        }
         return binding.root
     }
 
@@ -43,6 +45,7 @@ class UploadStep1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNext.setOnClickListener {
+            addVideoViewModel.saveComments(binding.comments.text.toString())
             findNavController().navigate(R.id.fragment_upload_step2)
         }
         binding.buttonCancel.setOnClickListener {
@@ -58,6 +61,7 @@ class UploadStep1Fragment : Fragment() {
     override fun onStop() {
         super.onStop()
         releaseVideoPlayer()
+        addVideoViewModel.saveComments(binding.comments.text.toString())
     }
 
     private fun initVideoPlayer() {
