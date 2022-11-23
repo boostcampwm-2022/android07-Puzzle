@@ -64,4 +64,10 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
     </style>
+
+    <style name="Theme.Puzzle.Dialog" parent="MaterialAlertDialog.Material3">
+        <item name="cornerSize">28dp</item>
+        <item name="colorSurface">?attr/colorSecondary</item>>
+        <item name="colorPrimary">?attr/colorOnSecondary</item>
+    </style>
 </resources>

@@ -4,6 +4,8 @@
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
     <string name="all_save">저장</string>
+    <string name="all_yes">네</string>
+    <string name="all_no">아니요</string>
 
     <!--activity_main-->
     <string name="main_home">홈</string>
@@ -24,6 +26,7 @@
     <string name="weather_full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
+    <string name="weather_slash_divider">/</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -40,5 +43,6 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
-    <string name="weather_slash_divider">/</string>
+    <string name="upload_canceldialog_title">정말로 취소하시겠어요?</string>
+    <string name="upload_canceldialog_supporting_text">영상은 저장되지 않습니다.</string>
 </resources>
