@@ -9,14 +9,32 @@ class StorageDataSource @Inject constructor(
 ) {
     suspend fun deleteVideo(
         name: String
-    ): Result<Unit> {
-        return service.delete("video/$name")
+    ): Result<Int> {
+        return try {
+            val result = service.delete("video/$name")
+            if (result.code() >= 400) {
+                Result.failure(Exception(result.message()))
+            } else {
+                Result.success(result.code())
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun deleteThumbnail(
         name: String
-    ): Result<Unit> {
-        return service.delete("thumb/$name")
+    ): Result<Int> {
+        return try {
+            val result = service.delete("thumb/$name")
+            if (result.code() >= 400) {
+                Result.failure(Exception(result.message()))
+            } else {
+                Result.success(result.code())
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun insertVideo(
