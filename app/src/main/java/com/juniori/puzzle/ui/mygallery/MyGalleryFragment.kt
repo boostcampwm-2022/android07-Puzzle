@@ -1,10 +1,12 @@
 package com.juniori.puzzle.ui.mygallery
 
+import android.annotation.SuppressLint
 import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,12 +42,28 @@ class MyGalleryFragment : Fragment() {
         }
 
         viewModel.list.observe(viewLifecycleOwner){ dataList ->
-            recyclerAdapter.setData(dataList)
+            recyclerAdapter.submitList(dataList)
         }
 
         viewModel.refresh.observe(viewLifecycleOwner){ isRefresh ->
             binding.progressMyGallery.isVisible = isRefresh
         }
+
+        viewModel.getMyData()
+
+        binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.setQueryText(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                if(newText.isNullOrBlank()){
+                    viewModel.setQueryText(newText)
+                }
+                return false
+            }
+        })
     }
 
     override fun onDestroyView() {
