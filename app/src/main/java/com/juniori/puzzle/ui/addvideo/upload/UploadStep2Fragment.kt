@@ -28,13 +28,19 @@ class UploadStep2Fragment : Fragment() {
     private val uploadDialog: AlertDialog by lazy {
         createSaveDialog()
     }
+    private val publicModeDialog: AlertDialog by lazy {
+        createPublicModeDialog()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUploadStep2Binding.inflate(inflater, container, false)
+        _binding = FragmentUploadStep2Binding.inflate(inflater, container, false).apply {
+            vm = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         return binding.root
     }
 
@@ -48,8 +54,11 @@ class UploadStep2Fragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.containerRadiogroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-            if (checkedId == binding.radiobuttonSetPublic.id) {
-            } else if (checkedId == binding.radiobuttonSetPrivate.id) {
+            if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicMode.not()) {
+                viewModel.isPublicMode = true
+                publicModeDialog.show()
+            } else if (checkedId == binding.radiobuttonSetPrivate.id && viewModel.isPublicMode) {
+                viewModel.isPublicMode = false
             }
         }
 
@@ -79,12 +88,12 @@ class UploadStep2Fragment : Fragment() {
 
     private fun createSaveDialog(): AlertDialog {
         return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
-            .setTitle(R.string.upload_savedialog_title)
+            .setTitle(R.string.upload2_savedialog_title)
             .setMessage(
                 if (binding.radiobuttonSetPrivate.isChecked) {
-                    R.string.upload_savedialog_supporting_text_private
+                    R.string.upload2_savedialog_supporting_text_private
                 } else {
-                    R.string.upload_savedialog_supporting_text_public
+                    R.string.upload2_savedialog_supporting_text_public
                 }
             )
             .setPositiveButton(R.string.all_yes) { _, _ ->
@@ -92,6 +101,19 @@ class UploadStep2Fragment : Fragment() {
             }
             .setNegativeButton(R.string.all_no) { _, _ ->
                 uploadDialog.dismiss()
+            }
+            .create()
+    }
+
+    private fun createPublicModeDialog(): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
+            .setTitle(R.string.upload2_publicmodedialog_title)
+            .setMessage(R.string.upload2_publicmodedialog_supporting_text)
+            .setPositiveButton(R.string.all_yes) { _, _ ->
+                publicModeDialog.dismiss()
+            }
+            .setNegativeButton(R.string.all_no) { _, _ ->
+                binding.radiobuttonSetPrivate.isChecked = true
             }
             .create()
     }

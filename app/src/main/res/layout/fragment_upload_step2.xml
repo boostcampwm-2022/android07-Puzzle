@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:checkedButton="@id/radiobutton_set_private"
+            android:checkedButton="@{vm.isPublicMode ? @id/radiobutton_set_public : @id/radiobutton_set_private}"
             app:buttonTint="@color/primary_color"
             app:layout_constraintStart_toStartOf="@id/text_isprivate_status_label"
             app:layout_constraintTop_toBottomOf="@id/text_isprivate_status_label">
