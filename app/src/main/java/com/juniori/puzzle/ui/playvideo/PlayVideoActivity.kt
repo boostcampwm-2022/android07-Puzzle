@@ -46,6 +46,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
                     if (resource is Resource.Success) {
                         currentUserInfo = resource.result
+                        binding.materialToolbar.title = currentUserInfo.nickname
                         setMenuItems()
                     }
                 }

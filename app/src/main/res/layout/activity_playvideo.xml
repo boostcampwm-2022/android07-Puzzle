@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.playvideo.PlayVideoActivity">
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         style="@style/Theme.Puzzle.PlayToolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playerView"
+        app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/playvideo_menu"
         app:navigationIcon="@drawable/play_go_back"
         app:navigationIconTint="@color/white"
-        tools:title="사용자 이름"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playerView">
+        tools:title="사용자 이름">
 
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -25,12 +26,36 @@
         android:id="@+id/playerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/materialToolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:use_controller="true"
         app:auto_show="true"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/materialToolbar"
+        app:use_controller="true" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/button_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".50" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_like"
+        style="@style/Theme.Puzzle.Button.Inplayvideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/play_like_not_selected"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_guideline" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_comment"
+        style="@style/Theme.Puzzle.Button.Inplayvideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/play_comment_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_like" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
