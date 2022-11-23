@@ -5,6 +5,8 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,9 +21,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentHomeBinding
-import com.juniori.puzzle.databinding.LoadingLayoutBinding
-import com.juniori.puzzle.databinding.NetworkFailLayoutBinding
-import com.juniori.puzzle.util.DialogManager
+import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,7 +38,22 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by viewModels()
 
     @Inject
-    lateinit var dialogManager: DialogManager
+    lateinit var stateManager: StateManager
+
+    private val networkCallback: ConnectivityManager.NetworkCallback by lazy {
+        object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                checkPermission()
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                homeViewModel.setUiState(Resource.Failure(Exception()))
+            }
+        }
+    }
+
     private val locationManager: LocationManager by lazy {
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
@@ -86,7 +101,7 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             vm = homeViewModel
         }
-        dialogManager.createLoadingDialog(container)
+        stateManager.createLoadingDialog(container)
         return binding.root
     }
 
@@ -97,10 +112,6 @@ class HomeFragment : Fragment() {
 
         adapter = WeatherRecyclerViewAdapter()
 
-        binding.weatherNotPermittedLayout.setOnClickListener {
-            checkPermission()
-        }
-
         binding.weatherRefreshBtn.setOnClickListener {
             checkPermission()
         }
@@ -110,24 +121,24 @@ class HomeFragment : Fragment() {
         homeViewModel.run {
             setWelcomeText(welcomeTextArray.random(random))
             setDisplayName()
-            weatherInfoText.observe(viewLifecycleOwner) { text ->
-                binding.weatherLayout.isVisible = text.isEmpty()
-                binding.weatherNotPermittedLayout.isVisible = text.isNotEmpty()
-            }
 
             uiState.observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        dialogManager.dismissLoadingDialog()
+                        stateManager.dismissLoadingDialog()
+                        stateManager.removeNetworkDialog()
+                        binding.weatherLayout.isVisible = true
                     }
                     is Resource.Failure -> {
-                        lifecycleScope.launch {
-                            delay(1000)
-                            dialogManager.dismissLoadingDialog()
-                        }
+                        stateManager.dismissLoadingDialog()
+                        binding.weatherLayout.isVisible = false
+                        stateManager.showNetworkDialog(
+                            binding.homeBottomCardView,
+                            resource.exception.message ?: "네트워크 통신에 실패했습니다"
+                        )
                     }
                     is Resource.Loading -> {
-                        dialogManager.showLoadingDialog()
+                        stateManager.showLoadingDialog()
                     }
                 }
             }
@@ -137,7 +148,7 @@ class HomeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        dialogManager.dismissLoadingDialog()
+        stateManager.dismissLoadingDialog()
     }
 
     override fun onDestroyView() {
@@ -146,7 +157,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun checkPermission(){
+    private fun checkPermission() {
         locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 

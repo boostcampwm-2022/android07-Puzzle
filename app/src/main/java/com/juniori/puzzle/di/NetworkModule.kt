@@ -1,11 +1,12 @@
-package com.juniori.puzzle.data.firebase
+package com.juniori.puzzle.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-<<<<<<< HEAD
+import com.juniori.puzzle.data.firebase.FirestoreDataSource
+import com.juniori.puzzle.data.firebase.FirestoreService
+import com.juniori.puzzle.data.firebase.StorageDataSource
+import com.juniori.puzzle.data.firebase.StorageService
 import com.juniori.puzzle.util.FIRESTORE_BASE_URL
-=======
->>>>>>> 4fdae40 (feat: 로딩 dialog 화면 생성 #60)
 import com.juniori.puzzle.util.STORAGE_BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -45,7 +46,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-<<<<<<< HEAD
     @Named("Firestore")
     fun provideFireStoreRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
@@ -53,13 +53,6 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl(FIRESTORE_BASE_URL)
             .build()
-=======
-    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .baseUrl(STORAGE_BASE_URL)
-        .build()
->>>>>>> 4fdae40 (feat: 로딩 dialog 화면 생성 #60)
 
     @Singleton
     @Provides

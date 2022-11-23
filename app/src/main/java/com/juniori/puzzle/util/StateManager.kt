@@ -8,14 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.juniori.puzzle.R
+import com.juniori.puzzle.databinding.NetworkFailLayoutBinding
 
-class DialogManager constructor(
+class StateManager constructor(
     private val context: Context
 ) {
     private val builder = AlertDialog.Builder(context)
     private var dialog: AlertDialog? = null
     private var networkParent: ViewGroup? = null
-    private var networkView: View? = null
+    private var networkView: NetworkFailLayoutBinding? = null
 
     fun createLoadingDialog(parent: ViewGroup?) {
         val view = LayoutInflater.from(context).inflate(R.layout.loading_layout, parent, false)
@@ -34,15 +35,18 @@ class DialogManager constructor(
         dialog?.dismiss()
     }
 
-    fun showNetworkDialog(parent: ViewGroup) {
+    fun showNetworkDialog(parent: ViewGroup, msg: String) {
         networkView =
-            LayoutInflater.from(context).inflate(R.layout.network_fail_layout, parent, true)
+            NetworkFailLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, true)
+                .apply {
+                    infoText.text = msg
+                }
         networkParent = parent
     }
 
     fun removeNetworkDialog() {
         networkParent ?: return
 
-        networkParent?.removeView(networkView)
+        networkParent?.removeView(networkView?.root)
     }
 }

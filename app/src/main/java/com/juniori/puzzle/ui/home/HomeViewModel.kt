@@ -73,16 +73,26 @@ class HomeViewModel @Inject constructor(
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             delay(1000)
-            val result = repository.getWeather(latitude, longitude)
-            if (result.isSuccess) {
-                val list = result.getOrDefault(emptyList())
-                _weatherMainList.value = list[0]
-                _weatherList.value = list.subList(1, list.size)
-                _weatherInfoText.value = ""
-                uiState.value = Resource.Success(list)
-            } else {
-                _weatherInfoText.value = result.exceptionOrNull()?.message
-                uiState.value = Resource.Failure(Exception(""))
+            when(val result = repository.getWeather(latitude, longitude)){
+                is Resource.Success->{
+                    val list = result.result
+                    println("list $list")
+                    if(list.isNotEmpty()){
+                        _weatherMainList.value = list[0]
+                        _weatherList.value = list.subList(1, list.size)
+                        _weatherInfoText.value = ""
+                        uiState.value = Resource.Success(list)
+                    }
+                    else{
+                        _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
+                        uiState.value = Resource.Failure(Exception())
+                    }
+                }
+                is Resource.Failure -> {
+                    _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
+                    uiState.value = Resource.Failure(Exception())
+                }
+                is Resource.Loading -> TODO()
             }
         }
     }

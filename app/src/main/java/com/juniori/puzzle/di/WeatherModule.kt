@@ -6,6 +6,7 @@ import com.juniori.puzzle.BuildConfig
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.data.weather.WeatherRepositoryImpl
 import com.juniori.puzzle.network.WeatherService
+import com.juniori.puzzle.util.STORAGE_BASE_URL
 import com.juniori.puzzle.util.WEATHER_BASE_URL
 import dagger.Binds
 import dagger.Module
@@ -21,20 +22,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object WeatherModule {
 
-    private val gson = GsonBuilder().setLenient().create()
-
-    private val weatherService = Retrofit.Builder()
-        .baseUrl(WEATHER_BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-
     @Singleton
     @Provides
     fun providesWeatherRepository(impl: WeatherRepositoryImpl): WeatherRepository = impl
 
     @Singleton
     @Provides
-    fun providesWeatherService(): WeatherService {
-        return weatherService.create(WeatherService::class.java)
-    }
+    @Weather
+    fun providesWeatherRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit =
+        Retrofit.Builder()
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .baseUrl(WEATHER_BASE_URL)
+            .build()
+
+    @Singleton
+    @Provides
+    fun providesWeatherService(retrofit: Retrofit): WeatherService =
+        retrofit.create(WeatherService::class.java)
+
 }
