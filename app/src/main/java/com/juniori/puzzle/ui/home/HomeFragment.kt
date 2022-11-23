@@ -20,6 +20,7 @@ import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentHomeBinding
 import com.juniori.puzzle.databinding.LoadingLayoutBinding
+import com.juniori.puzzle.databinding.NetworkFailLayoutBinding
 import com.juniori.puzzle.util.DialogManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -85,9 +86,8 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             vm = homeViewModel
         }
-        dialogManager.createLoadingDialog(LoadingLayoutBinding.inflate(inflater, container, false).root)
+        dialogManager.createLoadingDialog(container)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,16 +118,16 @@ class HomeFragment : Fragment() {
             uiState.observe(viewLifecycleOwner) { resource ->
                 when (resource) {
                     is Resource.Success -> {
-                        dialogManager.dismissDialog()
+                        dialogManager.dismissLoadingDialog()
                     }
                     is Resource.Failure -> {
                         lifecycleScope.launch {
                             delay(1000)
-                            dialogManager.dismissDialog()
+                            dialogManager.dismissLoadingDialog()
                         }
                     }
                     is Resource.Loading -> {
-                        dialogManager.showDialog()
+                        dialogManager.showLoadingDialog()
                     }
                 }
             }
@@ -137,7 +137,13 @@ class HomeFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        dialogManager.dismissDialog()
+        dialogManager.dismissLoadingDialog()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        locationManager.removeUpdates(locationListener)
+        _binding = null
     }
 
     private fun checkPermission(){
@@ -168,12 +174,6 @@ class HomeFragment : Fragment() {
         val address = geoCoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT)
         homeViewModel.setCurrentAddress(address)
         homeViewModel.getWeather(latitude, longitude)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        locationManager.removeUpdates(locationListener)
-        _binding = null
     }
 
     companion object {
