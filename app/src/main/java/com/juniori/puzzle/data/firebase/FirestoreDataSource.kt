@@ -26,12 +26,11 @@ class FirestoreDataSource @Inject constructor(
     }
 
     suspend fun changeVideoItemPrivacy(
-        documentId: String,
         documentInfo: VideoInfoEntity
     ): Resource<VideoInfoEntity> {
         return try {
             service.patchVideoItemDocument(
-                documentId,
+                documentInfo.documentId,
                 mapOf(
                     with(documentInfo) {
                         "fields" to VideoDetail(

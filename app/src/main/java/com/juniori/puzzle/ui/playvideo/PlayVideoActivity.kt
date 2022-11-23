@@ -28,15 +28,19 @@ class PlayVideoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayvideoBinding
     private val viewModel: PlayVideoViewModel by viewModels()
     private lateinit var exoPlayer: ExoPlayer
-    private val currentVideoItem: VideoInfoEntity by lazy { intent.extras?.get("videoInfo") as VideoInfoEntity }
+    private lateinit var currentVideoItem: VideoInfoEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        currentVideoItem = intent.extras?.get("videoInfo") as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
         setMenuItemOnClickListener()
+        initCollector()
+    }
 
+    private fun initCollector() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
@@ -64,6 +68,32 @@ class PlayVideoActivity : AppCompatActivity() {
                                 Snackbar.make(
                                     binding.root,
                                     "동영상 삭제에 실패했습니다.",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.updateFlow.collectLatest { resource ->
+                    if (resource != null) {
+                        when (resource) {
+                            is Resource.Success -> {
+                                currentVideoItem = resource.result
+                                setMenuItems()
+                            }
+                            is Resource.Loading -> {
+                                /** loading 화면 보여주기 */
+                            }
+                            is Resource.Failure -> {
+                                resource.exception.printStackTrace()
+                                Snackbar.make(
+                                    binding.root,
+                                    "동영상 공유상태 전환에 실패했습니다.",
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                             }
@@ -103,14 +133,17 @@ class PlayVideoActivity : AppCompatActivity() {
     }
 
     private fun setMenuItemOnClickListener() {
-        with(binding.materialToolbar.menu) {
-            findItem(R.id.video_privacy).setOnMenuItemClickListener {
-                // Update video isPrivate to Public
+        with(binding.materialToolbar) {
+            menu.findItem(R.id.video_privacy).setOnMenuItemClickListener {
+                viewModel.updateVideoPrivacy(currentVideoItem)
                 true
             }
-            findItem(R.id.video_delete).setOnMenuItemClickListener {
+            menu.findItem(R.id.video_delete).setOnMenuItemClickListener {
                 viewModel.deleteVideo(currentVideoItem.documentId)
                 true
+            }
+            setNavigationOnClickListener {
+                finish()
             }
         }
     }
