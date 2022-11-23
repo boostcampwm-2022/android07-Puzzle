@@ -40,20 +40,6 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var stateManager: StateManager
 
-    private val networkCallback: ConnectivityManager.NetworkCallback by lazy {
-        object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                super.onAvailable(network)
-                checkPermission()
-            }
-
-            override fun onLost(network: Network) {
-                super.onLost(network)
-                homeViewModel.setUiState(Resource.Failure(Exception()))
-            }
-        }
-    }
-
     private val locationManager: LocationManager by lazy {
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
@@ -63,6 +49,7 @@ class HomeFragment : Fragment() {
     }
     private val locationListener = object : LocationListenerCompat {
         override fun onLocationChanged(loc: Location) {
+            println("onlocationchanged")
             getWeatherInfo(loc.latitude, loc.longitude)
         }
 
@@ -109,7 +96,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
         checkPermission()
-
         adapter = WeatherRecyclerViewAdapter()
 
         binding.weatherRefreshBtn.setOnClickListener {
@@ -131,6 +117,7 @@ class HomeFragment : Fragment() {
                     }
                     is Resource.Failure -> {
                         stateManager.dismissLoadingDialog()
+                        stateManager.removeNetworkDialog()
                         binding.weatherLayout.isVisible = false
                         stateManager.showNetworkDialog(
                             binding.homeBottomCardView,

@@ -64,6 +64,13 @@ object NetworkModule {
             .baseUrl(STORAGE_BASE_URL)
             .build()
 
+    @Storage
+    fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit = Retrofit.Builder()
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .baseUrl(STORAGE_BASE_URL)
+        .build()
+
     @Singleton
     @Provides
     fun provideFirebaseService(@Named("Firestore") retrofit: Retrofit): FirestoreService =

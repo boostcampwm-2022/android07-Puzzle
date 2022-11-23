@@ -76,7 +76,6 @@ class HomeViewModel @Inject constructor(
             when(val result = repository.getWeather(latitude, longitude)){
                 is Resource.Success->{
                     val list = result.result
-                    println("list $list")
                     if(list.isNotEmpty()){
                         _weatherMainList.value = list[0]
                         _weatherList.value = list.subList(1, list.size)

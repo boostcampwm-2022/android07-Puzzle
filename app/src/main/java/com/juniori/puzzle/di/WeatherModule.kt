@@ -1,14 +1,10 @@
 package com.juniori.puzzle.di
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.juniori.puzzle.BuildConfig
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.data.weather.WeatherRepositoryImpl
 import com.juniori.puzzle.network.WeatherService
-import com.juniori.puzzle.util.STORAGE_BASE_URL
 import com.juniori.puzzle.util.WEATHER_BASE_URL
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +34,7 @@ object WeatherModule {
 
     @Singleton
     @Provides
-    fun providesWeatherService(retrofit: Retrofit): WeatherService =
+    fun providesWeatherService(@Weather retrofit: Retrofit): WeatherService =
         retrofit.create(WeatherService::class.java)
 
 }
