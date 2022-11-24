@@ -78,6 +78,7 @@
         <item name="cornerSize">28dp</item>
         <item name="colorSurface">?attr/colorSecondary</item>>
         <item name="colorPrimary">?attr/colorOnSecondary</item>
+    </style>
 
     <style name="Theme.Puzzle.Button.Inplayvideo" parent="Widget.Material3.Button.IconButton">
         <item name="iconGravity">textStart</item>

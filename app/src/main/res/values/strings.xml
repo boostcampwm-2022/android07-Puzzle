@@ -7,6 +7,7 @@
     <string name="all_save">저장</string>
     <string name="all_yes">네</string>
     <string name="all_no">아니요</string>
+    <string name="all_golf_course">골프장</string>
 
     <!--date-->
     <string name="full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
@@ -52,11 +53,13 @@
     <string name="uploadstep1_saying">문구</string>
     <string name="upload_canceldialog_title">정말로 취소하시겠어요?</string>
     <string name="upload_canceldialog_supporting_text">영상은 저장되지 않습니다.</string>
-    <string name="upload_savedialog_title">저장 하시겠어요?</string>
-    <string name="upload_savedialog_supporting_text_private">영상은 비공개로 저장됩니다.</string>
-    <string name="upload_savedialog_supporting_text_public">영상은 공개로 저장됩니다.</string>
-    <string name="upload2_publicmodedialog_title">영상을 공개로 전환합니다</string>
-    <string name="upload2_publicmodedialog_supporting_text">• 다른 사용자의 피드에 영상이 표시됩니다.\n• 다른 사용자가 반응을 남길 수 있습니다.</string>
+    <string name="upload2_savedialog_title">저장 하시겠어요?</string>
+    <string name="upload2_savedialog_supporting_text_private">영상은 비공개로 저장됩니다.</string>
+    <string name="upload2_savedialog_supporting_text_public">영상은 공개로 저장됩니다.</string>
+    <string name="upload2_publicuploaddialog_title">영상을 공개로 전환합니다</string>
+    <string name="upload2_publicuploaddialog_supporting_text">• 다른 사용자의 피드에 영상이 표시됩니다.\n• 다른 사용자가 반응을 남길 수 있습니다.</string>
+    <string name="upload2_golf_hole_number">홀번호</string>
+    <string name="upload2_dates">%d년 %02d월 %02d일</string>
 
     <!--network-->
     <string name="network_fail">네트워크 통신에 실패했습니다</string>

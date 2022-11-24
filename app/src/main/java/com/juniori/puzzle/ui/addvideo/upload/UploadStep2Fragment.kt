@@ -46,19 +46,14 @@ class UploadStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initOnClickListener()
 
-        binding.buttonSave.setOnClickListener {
-            uploadDialog.show()
-        }
-        binding.buttonGoback.setOnClickListener {
-            findNavController().navigateUp()
-        }
         binding.containerRadiogroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-            if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicMode.not()) {
-                viewModel.isPublicMode = true
+            if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicUpload.not()) {
+                viewModel.isPublicUpload = true
                 publicModeDialog.show()
-            } else if (checkedId == binding.radiobuttonSetPrivate.id && viewModel.isPublicMode) {
-                viewModel.isPublicMode = false
+            } else if (checkedId == binding.radiobuttonSetPrivate.id && viewModel.isPublicUpload) {
+                viewModel.isPublicUpload = false
             }
         }
 
@@ -67,7 +62,7 @@ class UploadStep2Fragment : Fragment() {
                 viewModel.uploadFlow.collectLatest { resource ->
                     when (resource) {
                         is Resource.Success -> {
-                              findNavController().popBackStack(R.id.fragment_upload_step1, true)
+                            findNavController().popBackStack(R.id.fragment_upload_step1, true)
                         }
                         is Resource.Failure -> {
                             /** upload video가 실패했을때의 ui 처리 */
@@ -79,11 +74,38 @@ class UploadStep2Fragment : Fragment() {
                 }
             }
         }
+
+        binding.datespicker.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            binding.datesButton.text = getString(R.string.upload2_dates, year, month + 1, dayOfMonth)
+        }
+
+        binding.timepicker.setOnTimeChangedListener { _, hourOfDay, minute ->
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun initOnClickListener() {
+        binding.buttonSave.setOnClickListener {
+            uploadDialog.show()
+        }
+
+        binding.buttonGoback.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.datesButton.setOnClickListener {
+            binding.datespicker.visibility = View.VISIBLE
+            binding.timepicker.visibility = View.GONE
+        }
+
+        binding.timeButton.setOnClickListener {
+            binding.datespicker.visibility = View.GONE
+            binding.timepicker.visibility = View.VISIBLE
+        }
     }
 
     private fun createSaveDialog(): AlertDialog {
@@ -107,8 +129,8 @@ class UploadStep2Fragment : Fragment() {
 
     private fun createPublicModeDialog(): AlertDialog {
         return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
-            .setTitle(R.string.upload2_publicmodedialog_title)
-            .setMessage(R.string.upload2_publicmodedialog_supporting_text)
+            .setTitle(R.string.upload2_publicuploaddialog_title)
+            .setMessage(R.string.upload2_publicuploaddialog_supporting_text)
             .setPositiveButton(R.string.all_yes) { _, _ ->
                 publicModeDialog.dismiss()
             }
