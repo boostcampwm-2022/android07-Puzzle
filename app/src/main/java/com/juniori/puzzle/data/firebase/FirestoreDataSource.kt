@@ -8,6 +8,7 @@ import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StringValues
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
+import com.juniori.puzzle.data.firebase.dto.getVideoInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
@@ -98,9 +99,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoQuery(uid, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -121,9 +120,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoWithKeywordQuery(uid, toSearch, keyword, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -142,9 +139,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -171,9 +166,7 @@ class FirestoreDataSource @Inject constructor(
                             limit
                         )
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
