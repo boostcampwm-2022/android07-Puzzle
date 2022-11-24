@@ -143,11 +143,9 @@ class CameraActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main){
                     binding.progressCamera.setProgressCompat(i*100/20, true)
                 }
-                if(i==20){
-                    recording?.stop()
-                    recording = null
-                }
             }
+            recording?.stop()
+            recording = null
         }
 
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA) // todo 이름
