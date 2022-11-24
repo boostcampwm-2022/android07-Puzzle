@@ -8,6 +8,7 @@ import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StringValues
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
+import com.juniori.puzzle.data.firebase.dto.getVideoInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
@@ -17,6 +18,44 @@ import javax.inject.Inject
 class FirestoreDataSource @Inject constructor(
     private val service: FirestoreService
 ) {
+    suspend fun deleteVideoItem(documentId: String): Resource<Unit> {
+        return try {
+            Resource.Success(service.deleteVideoItemDocument(documentId))
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun changeVideoItemPrivacy(
+        documentInfo: VideoInfoEntity
+    ): Resource<VideoInfoEntity> {
+        return try {
+            service.patchVideoItemDocument(
+                documentInfo.documentId,
+                mapOf(
+                    with(documentInfo) {
+                        "fields" to VideoDetail(
+                            ownerUid = StringValue(ownerUid),
+                            videoUrl = StringValue(videoUrl),
+                            thumbUrl = StringValue(thumbnailUrl),
+                            isPrivate = BooleanValue(isPrivate.not()),
+                            likeCount = IntegerValue(likedCount.toLong()),
+                            likedUserList = ArrayValue(StringValues(likedUserUidList)),
+                            updateTime = IntegerValue(updateTime),
+                            location = StringValue(location),
+                            memo = StringValue(memo)
+                        )
+                    }
+                )
+            ).let {
+                Resource.Success(it.getVideoInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     suspend fun postVideoItem(
         uid: String,
         videoName: String,
@@ -60,9 +99,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoQuery(uid, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -83,9 +120,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoWithKeywordQuery(uid, toSearch, keyword, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -104,9 +139,7 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -133,9 +166,7 @@ class FirestoreDataSource @Inject constructor(
                             limit
                         )
                     )
-                ).filter {
-                    it.videoItem != null
-                }.map { it.videoItem!!.getVideoInfoEntity() }
+                ).getVideoInfoEntity()
             )
         } catch (e: Exception) {
             e.printStackTrace()
