@@ -163,11 +163,7 @@ class CameraActivity : AppCompatActivity() {
                                 "${recordEvent.outputResults.outputUri}"
                             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
                                 .show()
-
-                            val intent = Intent().apply {
-                                putExtra(AddVideoBottomSheet.VIDEO_NAME_KEY, name)
-                            }
-                            setResult(RESULT_OK, intent)
+                            setVideoNameInActivityResult(name)
                             finish()
                         } else {
                             recording?.close()
@@ -180,6 +176,13 @@ class CameraActivity : AppCompatActivity() {
                     }
                 }
             }
+    }
+
+    private fun setVideoNameInActivityResult(videoName: String) {
+        Intent().also { intent ->
+            intent.putExtra(AddVideoBottomSheet.VIDEO_NAME_KEY, videoName)
+            setResult(RESULT_OK, intent)
+        }
     }
 
     companion object {

@@ -1,59 +1,128 @@
 package com.juniori.puzzle.ui.addvideo
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
+import com.juniori.puzzle.di.LocalCacheModule
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.util.VideoMetaDataUtil
+import com.juniori.puzzle.util.deleteIfFileUri
+import com.juniori.puzzle.util.saveInFile
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class AddVideoViewModel @Inject constructor(
+    @Named(LocalCacheModule.CACHE_DIR_PATH)
+    private val cacheDirPath: String,
+    private val videoMetaDataUtil: VideoMetaDataUtil,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val storageDataSource: StorageDataSource,
     private val firestoreDataSource: FirestoreDataSource
-) : ViewModel() {
+) : ViewModel(), DefaultLifecycleObserver {
 
-    private val _videoName = MutableLiveData<String>()
-    val videoName: LiveData<String> get() = _videoName
+    private var videoName: String = ""
+    val videoFilePath get() = "$cacheDirPath/$videoName.mp4"
+    var playPosition: Long = 0
+        private set
+    var playWhenReady = true
+        private set
 
-    fun setVideoName(targetName: String) {
-        _videoName.value = targetName
-    }
+    var comments: String = ""
 
     private val _uploadFlow = MutableSharedFlow<Resource<VideoInfoEntity>>(replay = 0)
     val uploadFlow: SharedFlow<Resource<VideoInfoEntity>> = _uploadFlow
 
-    fun uploadVideo(filePath: String) = viewModelScope.launch {
-        val currentUserInfo = getUserInfoUseCase()
-        val uid =
-            if (currentUserInfo is Resource.Success) currentUserInfo.result.uid else return@launch
-        val nameToPost =
-            "${uid}_${System.currentTimeMillis()}"
-        _uploadFlow.emit(Resource.Loading)
-        storageDataSource.insertVideo(
-            nameToPost,
-            File(filePath).readBytes()
-        ).onSuccess {
-            val result = firestoreDataSource.postVideoItem(
-                uid = uid,
-                videoName = nameToPost,
-                isPrivate = false,
-                location = "test",
-                memo = "test"
-            )
-            _uploadFlow.emit(result)
-        }.onFailure {
-            _uploadFlow.emit(Resource.Failure(it as Exception))
+    private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
+    val uiState: LiveData<AddVideoUiState> get() = _uiState
+
+    fun setVideoName(targetName: String) {
+        videoName = targetName
+    }
+
+    fun saveVideoPlayState(playBackPosition: Long, wasBeingPlayed: Boolean) {
+        playPosition = playBackPosition
+        playWhenReady = wasBeingPlayed
+    }
+
+    fun notifyAction(actionState: AddVideoActionState) {
+        when (actionState) {
+            is AddVideoActionState.VideoPicked -> {
+                val durationInSeconds: Long =
+                    videoMetaDataUtil.getVideoDurationInSeconds(actionState.uri) ?: return
+                if (durationInSeconds > AddVideoBottomSheet.VIDEO_DURATION_LIMIT_SECONDS) {
+                    _uiState.value = AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK
+                    return
+                }
+
+                val uid = getUid() ?: return
+                videoName = "${uid}_${System.currentTimeMillis()}"
+                viewModelScope.launch(Dispatchers.IO) {
+                    actionState.videoBytes.saveInFile(videoFilePath)
+                    _uiState.postValue(AddVideoUiState.GO_TO_UPLOAD)
+                }
+            }
+            is AddVideoActionState.TakingVideoCompleted -> {
+                videoName = actionState.videoName
+            }
         }
+    }
+
+    fun uploadVideo() = viewModelScope.launch {
+        val uid = getUid() ?: return@launch
+        val videoName = videoName
+        val thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
+        _uploadFlow.emit(Resource.Loading)
+        storageDataSource.insertThumbnail(videoName, thumbnailBytes).onSuccess {
+            storageDataSource.insertVideo(
+                videoName,
+                File(videoFilePath).readBytes()
+            ).onSuccess {
+                val result = firestoreDataSource.postVideoItem(
+                    uid = uid,
+                    videoName = videoName,
+                    isPrivate = false,
+                    location = "test",
+                    memo = "test"
+                )
+                _uploadFlow.emit(result)
+            }.onFailure {
+                _uploadFlow.emit(Resource.Failure(it as Exception))
+            }
+        }
+    }
+
+    private fun getUid(): String? {
+        val currentUserInfo = getUserInfoUseCase()
+        return if (currentUserInfo is Resource.Success) {
+            currentUserInfo.result.uid
+        } else {
+            null
+        }
+    }
+
+    fun saveComments(comments: String) {
+        this.comments = comments
+    }
+
+    private fun initializeUploading() {
+        videoName = ""
+        playPosition = 0
+        playWhenReady = true
+        comments = ""
+        _uiState.value = AddVideoUiState.NONE
+        videoFilePath.deleteIfFileUri()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        initializeUploading()
     }
 }

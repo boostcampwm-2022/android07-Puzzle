@@ -5,6 +5,8 @@
     <string name="all_go_back">뒤로</string>
     <string name="all_setting">설정</string>
     <string name="all_save">저장</string>
+    <string name="all_yes">네</string>
+    <string name="all_no">아니요</string>
 
     <!--date-->
     <string name="full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
@@ -48,6 +50,11 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
+    <string name="upload_canceldialog_title">정말로 취소하시겠어요?</string>
+    <string name="upload_canceldialog_supporting_text">영상은 저장되지 않습니다.</string>
+    <string name="upload_savedialog_title">저장 하시겠어요?</string>
+    <string name="upload_savedialog_supporting_text_private">영상은 비공개로 저장됩니다.</string>
+    <string name="upload_savedialog_supporting_text_public">영상은 공개로 저장됩니다.</string>
 
     <!--network-->
     <string name="network_fail">네트워크 통신에 실패했습니다</string>

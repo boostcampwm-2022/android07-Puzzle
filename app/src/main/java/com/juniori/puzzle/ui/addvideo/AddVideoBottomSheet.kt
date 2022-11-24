@@ -2,8 +2,6 @@ package com.juniori.puzzle.ui.addvideo
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.media.MediaMetadataRetriever
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -13,17 +11,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
 import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
+import com.juniori.puzzle.util.readBytes
 
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
@@ -57,6 +50,18 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
         binding.buttonTakeVideo.setOnClickListener {
             startCameraActivity()
         }
+
+        addVideoViewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK -> {
+                    showDurationLimitFeedback()
+                    dismiss()
+                }
+                AddVideoUiState.GO_TO_UPLOAD -> findNavController().navigate(R.id.fragment_upload_step1)
+                AddVideoUiState.NONE -> {
+                }
+            }
+        }
     }
 
     private fun startVideoPickActivity() {
@@ -78,23 +83,11 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val videoUri = result.data?.data ?: return@registerForActivityResult
-                    val durationInSeconds: Long =
-                        getVideoDurationInSeconds(videoUri) ?: return@registerForActivityResult
-                    if (durationInSeconds > VIDEO_DURATION_LIMIT_SECONDS) {
-                        showDurationLimitFeedback()
-                        dismiss()
-                        return@registerForActivityResult
-                    }
-
-                    // TODO: 실제 비디오 형식으로 이름 변경
-                    lifecycleScope.launch {
-                        val videoName = "temporary_video_name"
-                        withContext(Dispatchers.IO) {
-                            saveVideoInCacheDir(videoUri, videoName)
-                        }
-                        addVideoViewModel.setVideoName(videoName)
-                        findNavController().navigate(R.id.fragment_upload_step1, arguments)
-                    }
+                    val videoBytes = videoUri.readBytes(requireContext().contentResolver)
+                        ?: return@registerForActivityResult
+                    addVideoViewModel.notifyAction(
+                        AddVideoActionState.VideoPicked(videoUri, videoBytes)
+                    )
                 }
             }
 
@@ -109,15 +102,6 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
             }
     }
 
-    private fun getVideoDurationInSeconds(videoUri: Uri): Long? {
-        val metaDataRetriever = MediaMetadataRetriever()
-        metaDataRetriever.setDataSource(context, videoUri)
-        return metaDataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-            ?.let { milliseconds: String ->
-                milliseconds.toLong() / 1000
-            }
-    }
-
     private fun showDurationLimitFeedback() {
         Toast.makeText(
             context,
@@ -126,24 +110,13 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
         ).show()
     }
 
-    private fun saveVideoInCacheDir(videoUri: Uri, videoName: String) {
-        val videoCachePath = "${requireContext().cacheDir.path}/$videoName.mp4"
-
-        requireContext().contentResolver.openInputStream(videoUri)?.use { inputStream ->
-            val file = File(videoCachePath)
-            FileOutputStream(file).use { fileOutputStream ->
-                fileOutputStream.write(inputStream.readBytes())
-            }
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     companion object {
-        private const val VIDEO_DURATION_LIMIT_SECONDS = 20
+        const val VIDEO_DURATION_LIMIT_SECONDS = 20
         const val VIDEO_NAME_KEY = "VIDEO_NAME_KEY"
     }
 }

@@ -90,8 +90,10 @@
             app:layout_constraintTop_toBottomOf="@id/videoplayer">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/comments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:text="@{vm.comments}"
                 android:backgroundTint="@android:color/transparent"
                 android:gravity="start|top" />
         </com.google.android.material.textfield.TextInputLayout>

@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentUploadStep1Binding
 import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
@@ -19,18 +21,27 @@ class UploadStep1Fragment : Fragment() {
     private val binding get() = _binding!!
 
     private val addVideoViewModel: AddVideoViewModel by activityViewModels()
-    private lateinit var exoPlayer: ExoPlayer
+    private var exoPlayer: ExoPlayer? = null
+    private val mediaItem: MediaItem by lazy {
+        MediaItem.fromUri(addVideoViewModel.videoFilePath)
+    }
+
+    private val cancelDialog: AlertDialog by lazy {
+        createCancelDialog()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(addVideoViewModel)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUploadStep1Binding.inflate(inflater, container, false)
-
-        addVideoViewModel.videoName.observe(viewLifecycleOwner) { videoName ->
-            val videoUriPath = "${requireContext().cacheDir.path}/$videoName.mp4"
-            initVideoPlayer(videoUriPath)
+        _binding = FragmentUploadStep1Binding.inflate(inflater, container, false).apply {
+            vm = addVideoViewModel
         }
         return binding.root
     }
@@ -39,24 +50,58 @@ class UploadStep1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNext.setOnClickListener {
-            findNavController().navigate(R.id.action_uploadstep1_to_uploadstep2, arguments)
+            addVideoViewModel.saveComments(binding.comments.text.toString())
+            findNavController().navigate(R.id.fragment_upload_step2)
         }
         binding.buttonCancel.setOnClickListener {
-            findNavController().navigateUp()
+            cancelDialog.show()
         }
     }
 
-    private fun initVideoPlayer(uri: String) {
-        exoPlayer = ExoPlayer.Builder(requireContext()).build().apply {
-            setMediaItem(MediaItem.fromUri(uri))
-            prepare()
-        }
-        binding.videoplayer.player = exoPlayer
+    override fun onStart() {
+        super.onStart()
+        initVideoPlayer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        releaseVideoPlayer()
+        addVideoViewModel.saveComments(binding.comments.text.toString())
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        exoPlayer.release()
+    }
+
+    private fun initVideoPlayer() {
+        exoPlayer = ExoPlayer.Builder(requireContext()).build().also { player ->
+            player.setMediaItem(mediaItem)
+            player.seekTo(addVideoViewModel.playPosition)
+            player.playWhenReady = addVideoViewModel.playWhenReady
+            player.prepare()
+            binding.videoplayer.player = player
+        }
+    }
+
+    private fun releaseVideoPlayer() {
+        exoPlayer?.let { player ->
+            addVideoViewModel.saveVideoPlayState(player.currentPosition, player.playWhenReady)
+            player.release()
+            exoPlayer = null
+        }
+    }
+
+    private fun createCancelDialog(): AlertDialog {
+        return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
+            .setTitle(R.string.upload_canceldialog_title)
+            .setMessage(R.string.upload_canceldialog_supporting_text)
+            .setPositiveButton(R.string.all_yes) { _, _ ->
+                findNavController().navigateUp()
+            }
+            .setNegativeButton(R.string.all_no) { _, _ ->
+                cancelDialog.dismiss()
+            }
+            .create()
     }
 }

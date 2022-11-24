@@ -74,6 +74,11 @@
         <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
     </style>
 
+    <style name="Theme.Puzzle.Dialog" parent="MaterialAlertDialog.Material3">
+        <item name="cornerSize">28dp</item>
+        <item name="colorSurface">?attr/colorSecondary</item>>
+        <item name="colorPrimary">?attr/colorOnSecondary</item>
+
     <style name="Theme.Puzzle.Button.Inplayvideo" parent="Widget.Material3.Button.IconButton">
         <item name="iconGravity">textStart</item>
         <item name="iconSize">40dp</item>
