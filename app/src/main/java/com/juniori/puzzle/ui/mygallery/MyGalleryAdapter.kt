@@ -9,14 +9,25 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
 
-class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : ListAdapter<VideoInfoEntity,MyGalleryAdapter.ViewHolder>(
+class MyGalleryAdapter(
+    val viewModel: MyGalleryViewModel,
+    private val onClick: (VideoInfoEntity) -> Unit
+) : ListAdapter<VideoInfoEntity, MyGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
     private var lastPaging = 0
-    class ViewHolder(val binding: ItemGalleryRecyclerBinding, val height: Int) :
+
+    class ViewHolder(
+        val binding: ItemGalleryRecyclerBinding,
+        val height: Int,
+        val onClick: (VideoInfoEntity) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
-            binding.root.layoutParams.height = height/ VISIBLE_ITEM_COUNT
+            binding.root.layoutParams.height = height / VISIBLE_ITEM_COUNT
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
             binding.data = item
         }
     }
@@ -25,19 +36,19 @@ class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : ListAdapter<VideoInf
         val binding =
             ItemGalleryRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding, parent.height)
+        return ViewHolder(binding, parent.height, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        if(itemCount!= lastPaging && position == itemCount - LOADING_FLAG_NUM){
+        if (itemCount != lastPaging && position == itemCount - LOADING_FLAG_NUM) {
             lastPaging = itemCount
             viewModel.getPaging(itemCount)
         }
     }
 
 
-    companion object{
+    companion object {
         const val VISIBLE_ITEM_COUNT = 3
         const val LOADING_FLAG_NUM = 3
     }
