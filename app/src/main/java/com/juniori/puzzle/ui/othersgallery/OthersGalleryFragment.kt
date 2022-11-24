@@ -1,9 +1,6 @@
 package com.juniori.puzzle.ui.othersgallery
 
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
-import android.graphics.PorterDuff
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
+import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +36,15 @@ class OthersGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = OtherGalleryAdapter(viewModel)
+        val recyclerAdapter = OtherGalleryAdapter(viewModel) {
+            startActivity(
+                Intent(
+                    requireContext(),
+                    PlayVideoActivity::class.java
+                ).apply {
+                    this.putExtra(VIDEO_EXTRA_NAME, it)
+                })
+        }
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
             val gridLayoutManager = GridLayoutManager(requireContext(), ITEM_ROW_COUNT)
@@ -62,7 +67,7 @@ class OthersGalleryFragment : Fragment() {
         }
 
         viewModel.list.value.also { list ->
-            if(list == null || list.isEmpty()){
+            if (list == null || list.isEmpty()) {
                 viewModel.getMyData()
             }
         }
@@ -70,7 +75,7 @@ class OthersGalleryFragment : Fragment() {
         setListener()
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.spinnerOtherGallery.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -81,20 +86,20 @@ class OthersGalleryFragment : Fragment() {
                 ) {
                     when (position) {
                         0 -> {
-                            if(viewModel.setOrderType(SortType.NEW)){
+                            if (viewModel.setOrderType(SortType.NEW)) {
                                 binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                             }
                         }
 
                         1 -> {
-                            if(viewModel.setOrderType(SortType.LIKE)){
+                            if (viewModel.setOrderType(SortType.LIKE)) {
                                 binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                             }
                         }
                     }
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) { }
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             }
 
@@ -118,8 +123,10 @@ class OthersGalleryFragment : Fragment() {
         _binding = null
     }
 
-    companion object{
+    companion object {
         const val ITEM_ROW_COUNT = 2
         const val RECYCLER_TOP = 0
+        const val VIDEO_EXTRA_NAME = "videoInfo"
+
     }
 }
