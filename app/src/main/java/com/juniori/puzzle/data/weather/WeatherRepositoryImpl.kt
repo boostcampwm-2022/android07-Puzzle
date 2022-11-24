@@ -11,9 +11,8 @@ class WeatherRepositoryImpl @Inject constructor(
     private val service: WeatherService
 ) : WeatherRepository {
     override suspend fun getWeather(lat: Double, lon: Double): Resource<List<WeatherItem>> {
-        val response = service.getWeather(lat, lon, SERVICE_KEY)
-
         return try {
+            val response = service.getWeather(lat, lon, SERVICE_KEY)
             Resource.Success(response.body()?.toItem() ?: emptyList())
         } catch (e: Exception) {
             Resource.Failure(Exception())

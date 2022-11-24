@@ -49,7 +49,6 @@ class HomeFragment : Fragment() {
     }
     private val locationListener = object : LocationListenerCompat {
         override fun onLocationChanged(loc: Location) {
-            println("onlocationchanged")
             getWeatherInfo(loc.latitude, loc.longitude)
         }
 

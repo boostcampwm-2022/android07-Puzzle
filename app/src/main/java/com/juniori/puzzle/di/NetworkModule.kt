@@ -90,5 +90,6 @@ object NetworkModule {
     @Provides
     fun provideStorageRepository(service: StorageService): StorageDataSource =
         StorageDataSource(service)
+
 }
 
