@@ -21,6 +21,8 @@ import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,6 +50,10 @@ class UploadStep2Fragment : Fragment() {
         _binding = FragmentUploadStep2Binding.inflate(inflater, container, false).apply {
             vm = viewModel
             lifecycleOwner = viewLifecycleOwner
+            dateFormatter =
+                SimpleDateFormat(getString(R.string.upload2_dates_format), Locale.getDefault())
+            timeFormatter =
+                SimpleDateFormat(getString(R.string.upload2_time_format), Locale.getDefault())
         }
         stateManager.createLoadingDialog(container)
         return binding.root
@@ -55,9 +61,9 @@ class UploadStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initOnClickListener()
+        setOnClickListener()
 
-        binding.containerRadiogroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+        binding.containerRadiogroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicUpload.not()) {
                 viewModel.isPublicUpload = true
                 publicModeDialog.show()
@@ -86,14 +92,6 @@ class UploadStep2Fragment : Fragment() {
                 }
             }
         }
-
-        binding.datespicker.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            binding.datesButton.text =
-                getString(R.string.upload2_dates, year, month + 1, dayOfMonth)
-        }
-
-        binding.timepicker.setOnTimeChangedListener { _, hourOfDay, minute ->
-        }
     }
 
     override fun onDestroyView() {
@@ -101,7 +99,7 @@ class UploadStep2Fragment : Fragment() {
         _binding = null
     }
 
-    private fun initOnClickListener() {
+    private fun setOnClickListener() {
         binding.buttonSave.setOnClickListener {
             uploadDialog.show()
         }

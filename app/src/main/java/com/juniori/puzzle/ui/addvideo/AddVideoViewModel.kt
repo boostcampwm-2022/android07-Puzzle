@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,6 +48,9 @@ class AddVideoViewModel @Inject constructor(
     var isPublicUpload = false
 
     private var isUploadingToServer = false
+
+    private val pickedCalendar = MutableLiveData(Calendar.getInstance())
+    val pickedDate: LiveData<Date> = pickedCalendar.map { calendar -> calendar.time }
 
     fun setVideoName(targetName: String) {
         videoName = targetName
@@ -134,6 +138,21 @@ class AddVideoViewModel @Inject constructor(
         comments = ""
         _uiState.value = AddVideoUiState.NONE
         videoFilePath.deleteIfFileUri()
+    }
+
+    fun changeDatesOfCalendar(year: Int, month: Int, dayOfMonth: Int) {
+        pickedCalendar.value?.let { calendar ->
+            calendar.set(year, month, dayOfMonth)
+            pickedCalendar.value = calendar
+        }
+    }
+
+    fun changeTimeOfCalendar(hourOfDay: Int, minute: Int) {
+        pickedCalendar.value?.let { calendar ->
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calendar.set(Calendar.MINUTE, minute)
+            pickedCalendar.value = calendar
+        }
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
