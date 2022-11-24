@@ -1,5 +1,6 @@
 package com.juniori.puzzle.data.auth
 
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -8,25 +9,25 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.repository.AuthRepository
 import com.juniori.puzzle.util.await
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
 
-    override fun updateNickname(newNickname: String): Resource<Unit> {
+    override suspend fun updateNickname(newNickname: String): Resource<Unit> {
         val newProfile = UserProfileChangeRequest.Builder()
             .setDisplayName(newNickname)
             .build()
 
-        val result = firebaseAuth.currentUser?.updateProfile(newProfile)
-        return result?.let { task ->
-            if (task.isSuccessful) {
-                Resource.Success(Unit)
-            }
-            else {
-                Resource.Failure(Exception())
-            }
+        val result = withContext(Dispatchers.IO) {
+            firebaseAuth.currentUser?.updateProfile(newProfile)
+        }
+
+        return result?.let {
+            Resource.Success(Unit)
         } ?: kotlin.run { Resource.Failure(Exception()) }
     }
 

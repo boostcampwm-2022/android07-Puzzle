@@ -3,8 +3,8 @@ package com.juniori.puzzle.ui.mypage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.juniori.puzzle.SingleLiveEvent
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.RequestLogoutUseCase
 import com.juniori.puzzle.domain.usecase.RequestWithdrawUseCase
@@ -23,17 +23,19 @@ class MyPageViewModel @Inject constructor(
     private val _finishApplicationEvent = MutableLiveData<Resource<Unit>>()
     val finishApplicationEvent: LiveData<Resource<Unit>> = _finishApplicationEvent
 
-    private val _userNickname = MutableLiveData<String>()
-    val userNickname: LiveData<String> = _userNickname
+    private val _navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
+    val navigateToUpdateNicknamePageEvent: SingleLiveEvent<Unit> = _navigateToUpdateNicknamePageEvent
+
+    val userNickname = MutableLiveData<String>()
 
     init {
         val data = getUserInfoUseCase()
 
         if (data is Resource.Success) {
-            _userNickname.value = data.result.nickname
+            userNickname.value = data.result.nickname
         }
         else {
-            _userNickname.value = "누구세요"
+            userNickname.value = "누구세요"
         }
     }
 
@@ -43,5 +45,13 @@ class MyPageViewModel @Inject constructor(
 
     fun requestWithdraw() {
         _finishApplicationEvent.value = requestWithdrawUseCase()
+    }
+
+    fun navigateToUpdateNicknamePage() {
+        _navigateToUpdateNicknamePageEvent.call()
+    }
+
+    fun updateUserNickname(newNickname: String?) {
+        userNickname.value = newNickname ?: "누구세요"
     }
 }

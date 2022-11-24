@@ -4,5 +4,5 @@ import com.juniori.puzzle.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class UpdateNicknameUseCase @Inject constructor(private val authRepository: AuthRepository){
-    operator fun invoke(newNickname: String) = authRepository.updateNickname(newNickname)
+    suspend operator fun invoke(newNickname: String) = authRepository.updateNickname(newNickname)
 }
