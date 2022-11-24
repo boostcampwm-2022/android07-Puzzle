@@ -3,7 +3,13 @@
     <string name="all_cancel">취소</string>
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
+    <string name="all_setting">설정</string>
     <string name="all_save">저장</string>
+
+    <!--date-->
+    <string name="full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
+    <string name="time_AM_date_format">오전 %d시</string>
+    <string name="time_PM_date_format">오후 %d시</string>
 
     <!--activity_main-->
     <string name="main_home">홈</string>
@@ -21,9 +27,11 @@
         <item>당신의 퍼팅영상을 공유해보세요!</item>
         <item>오늘은 신기록을 세울 수 있을 거예요!</item>
     </string-array>
-    <string name="weather_full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
+    <string name="display_name_format">%s님</string>
+    <string name="display_anonymous">익명</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
+    <string name="weather_slash_divider">/</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -40,6 +48,23 @@
     <string name="upload_set_public">공개</string>
     <string name="upload_set_private">비공개</string>
     <string name="uploadstep1_saying">문구</string>
+
+    <!--network-->
+    <string name="network_fail">네트워크 통신에 실패했습니다</string>
+
+    <!--permission-->
+    <string name="location_permission">위치 권한을 허용해주세요</string>
+    <string name="location_service_off">네트워크 및 위치 서비스를 연결해주세요</string>
+
+    <!--description-->
+    <string name="home_background_image_description">홈 배경이미지</string>
+    <string name="weather_icon_description">%d도 %s</string>
+    <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
+
+    <!--acitivty_camera-->
+    <string name="playvideo_to_private">나만 보기</string>
+    <string name="playvideo_to_public">공유하기</string>
+    <string name="playvideo_delete">삭제</string>
     <string name="weather_slash_divider">/</string>
 
     <!--mypage-->

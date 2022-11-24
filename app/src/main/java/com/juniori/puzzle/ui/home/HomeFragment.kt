@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
 
         override fun onProviderDisabled(provider: String) {
             super.onProviderDisabled(provider)
-            homeViewModel.setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
+            homeViewModel.setWeatherInfoText(getString(R.string.location_service_off))
         }
 
         override fun onProviderEnabled(provider: String) {
@@ -58,10 +58,10 @@ class HomeFragment : Fragment() {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 getWeatherByLocation()
             } else {
-                homeViewModel.setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
+                homeViewModel.setWeatherInfoText(getString(R.string.location_service_off))
             }
         } else {
-            homeViewModel.setWeatherInfoText("위치 권한을 허용해주세요")
+            homeViewModel.setWeatherInfoText(getString(R.string.location_permission))
         }
     }
 

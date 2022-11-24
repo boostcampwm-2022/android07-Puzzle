@@ -5,12 +5,10 @@ import com.juniori.puzzle.data.weather.WeatherResponse
 import java.util.*
 import kotlin.math.roundToInt
 
-
 fun WeatherResponse.toItem(): List<WeatherItem> {
     return list.map {
         WeatherItem(
-            fullDate = (it.dtTxt.toDate()?.toFullDate() ?: Date().toFullDate()),
-            time = it.dtTxt.toDate()?.toTime() ?: Date().toTime(),
+            date = it.dtTxt.toDate(),
             temp = it.main.temp.roundToInt(),
             feelsLike = it.main.feelsLike.roundToInt(),
             minTemp = it.main.tempMin.roundToInt(),

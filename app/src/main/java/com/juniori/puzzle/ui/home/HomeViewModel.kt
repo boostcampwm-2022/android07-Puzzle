@@ -13,6 +13,7 @@ import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.toAddressString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val _welcomeText = MutableLiveData("")
     val welcomeText: LiveData<String> = _welcomeText
 
-    private val _weatherInfoText = MutableLiveData("날씨 보기")
+    private val _weatherInfoText = MutableLiveData("")
     val weatherInfoText: LiveData<String> = _weatherInfoText
 
     private val _displayName = MutableLiveData("")
@@ -36,17 +37,16 @@ class HomeViewModel @Inject constructor(
     private val _weatherList = MutableLiveData<List<WeatherItem>>(emptyList())
     val weatherList: LiveData<List<WeatherItem>> = _weatherList
 
-    private val _weatherMainList = MutableLiveData<WeatherItem>().apply {
-        WeatherItem("", "", 0, 0, 0, 0, "", "")
-    }
+    private val _weatherMainList =
+        MutableLiveData(WeatherItem(Date(), 0, 0, 0, 0, "", ""))
     val weatherMainList: LiveData<WeatherItem> = _weatherMainList
 
     fun setDisplayName() {
         val userInfo = getUserInfoUseCase()
         if (userInfo is Resource.Success) {
-            _displayName.value = "${userInfo.result.nickname}님"
+            _displayName.value = userInfo.result.nickname
         } else {
-            _displayName.value = "누구세요?"
+            _displayName.value = ""
         }
     }
 

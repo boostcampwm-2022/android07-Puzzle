@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.addvideo.AddVideoBottomSheet">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_location"
+        style="@style/Theme.Puzzle.Button.Inplayvideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:icon="@drawable/all_location_icon"
+        tools:text="장소" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_date"
+        style="@style/Theme.Puzzle.Button.Inplayvideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:icon="@drawable/play_calendar_icon"
+        tools:text="날짜" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_owner"
+        style="@style/Theme.Puzzle.Button.Inplayvideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:icon="@drawable/add_photo_icon"
+        tools:text="사용자" />
+
+
+</LinearLayout>

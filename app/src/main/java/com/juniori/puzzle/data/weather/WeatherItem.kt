@@ -1,8 +1,9 @@
 package com.juniori.puzzle.data.weather
 
+import java.util.*
+
 data class WeatherItem(
-    val fullDate: String,
-    val time: String,
+    val date: Date,
     val temp: Int,
     val feelsLike: Int,
     val minTemp: Int,

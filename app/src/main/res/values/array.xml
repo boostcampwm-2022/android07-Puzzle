@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="other_order_type">
+        <!--todo string resource-->
+        <item>최신순</item>
+        <item>좋아요순</item>
+    </string-array>
+</resources>
