@@ -5,8 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.weather.WeatherItem
+import com.juniori.puzzle.util.toAddressString
+import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.toAddressString
