@@ -12,6 +12,7 @@ import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.toAddressString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -21,6 +22,9 @@ class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
+
+    private val _uiState = MutableLiveData<Resource<List<WeatherItem>>>(Resource.Loading)
+    val uiState = _uiState
 
     private val _welcomeText = MutableLiveData("")
     val welcomeText: LiveData<String> = _welcomeText
@@ -41,6 +45,10 @@ class HomeViewModel @Inject constructor(
         MutableLiveData(WeatherItem(Date(), 0, 0, 0, 0, "", ""))
     val weatherMainList: LiveData<WeatherItem> = _weatherMainList
 
+    fun setUiState(state: Resource<List<WeatherItem>>) {
+        _uiState.value = state
+    }
+
     fun setDisplayName() {
         val userInfo = getUserInfoUseCase()
         if (userInfo is Resource.Success) {
@@ -56,6 +64,7 @@ class HomeViewModel @Inject constructor(
 
     fun setWeatherInfoText(text: String) {
         _weatherInfoText.value = text
+        _uiState.value = Resource.Failure(Exception(text))
     }
 
     fun setCurrentAddress(address: List<Address>) {
@@ -64,14 +73,26 @@ class HomeViewModel @Inject constructor(
 
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            val result = repository.getWeather(latitude, longitude)
-            if (result.isSuccess) {
-                val list = result.getOrDefault(emptyList())
-                _weatherMainList.value = list[0]
-                _weatherList.value = list.subList(1, list.size)
-                _weatherInfoText.value = ""
-            } else {
-                _weatherInfoText.value = result.exceptionOrNull()?.message
+            delay(1000)
+            when(val result = repository.getWeather(latitude, longitude)){
+                is Resource.Success->{
+                    val list = result.result
+                    if(list.isNotEmpty()){
+                        _weatherMainList.value = list[0]
+                        _weatherList.value = list.subList(1, list.size)
+                        _weatherInfoText.value = ""
+                        uiState.value = Resource.Success(list)
+                    }
+                    else{
+                        _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
+                        uiState.value = Resource.Failure(Exception())
+                    }
+                }
+                is Resource.Failure -> {
+                    _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
+                    uiState.value = Resource.Failure(Exception())
+                }
+                is Resource.Loading -> TODO()
             }
         }
     }

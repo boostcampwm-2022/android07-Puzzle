@@ -5,6 +5,8 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +16,16 @@ import androidx.core.location.LocationListenerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
+import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentHomeBinding
+import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
 @AndroidEntryPoint
@@ -28,6 +36,10 @@ class HomeFragment : Fragment() {
 
     private val random = Random(System.currentTimeMillis())
     private val homeViewModel: HomeViewModel by viewModels()
+
+    @Inject
+    lateinit var stateManager: StateManager
+
     private val locationManager: LocationManager by lazy {
         requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
@@ -54,6 +66,7 @@ class HomeFragment : Fragment() {
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
+        homeViewModel.setUiState(Resource.Loading)
         if (isPermitted) {
             if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                 getWeatherByLocation()
@@ -74,23 +87,18 @@ class HomeFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
             vm = homeViewModel
         }
+        stateManager.createLoadingDialog(container)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
-        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-
+        checkPermission()
         adapter = WeatherRecyclerViewAdapter()
 
-        binding.weatherNotPermittedLayout.setOnClickListener {
-            locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
-
         binding.weatherRefreshBtn.setOnClickListener {
-            locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            checkPermission()
         }
 
         binding.weatherDetailRecyclerView.adapter = adapter
@@ -98,11 +106,46 @@ class HomeFragment : Fragment() {
         homeViewModel.run {
             setWelcomeText(welcomeTextArray.random(random))
             setDisplayName()
-            weatherInfoText.observe(viewLifecycleOwner) { text ->
-                binding.weatherLayout.isVisible = text.isEmpty()
-                binding.weatherNotPermittedLayout.isVisible = text.isNotEmpty()
+
+            uiState.observe(viewLifecycleOwner) { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        stateManager.dismissLoadingDialog()
+                        stateManager.removeNetworkDialog()
+                        binding.weatherLayout.isVisible = true
+                    }
+                    is Resource.Failure -> {
+                        stateManager.dismissLoadingDialog()
+                        stateManager.removeNetworkDialog()
+                        binding.weatherLayout.isVisible = false
+                        stateManager.showNetworkDialog(
+                            binding.homeBottomCardView,
+                            resource.exception.message ?: "네트워크 통신에 실패했습니다",
+                            checkPermission
+                        )
+                    }
+                    is Resource.Loading -> {
+                        stateManager.showLoadingDialog()
+                    }
+                }
             }
         }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stateManager.dismissLoadingDialog()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        locationManager.removeUpdates(locationListener)
+        _binding = null
+    }
+
+    val checkPermission = {
+        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     @SuppressLint("MissingPermission")
@@ -115,7 +158,10 @@ class HomeFragment : Fragment() {
                 locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
         }
         locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER, LOCATION_MIN_TIME_INTERVAL, LOCATION_MIN_DISTANCE_INTERVAL, locationListener
+            LocationManager.GPS_PROVIDER,
+            LOCATION_MIN_TIME_INTERVAL,
+            LOCATION_MIN_DISTANCE_INTERVAL,
+            locationListener
         )
         val latitude = location?.latitude ?: DEFAULT_LATITUDE
         val longitude = location?.longitude ?: DEFAULT_LONGITUDE
@@ -126,12 +172,6 @@ class HomeFragment : Fragment() {
         val address = geoCoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT)
         homeViewModel.setCurrentAddress(address)
         homeViewModel.getWeather(latitude, longitude)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        locationManager.removeUpdates(locationListener)
-        _binding = null
     }
 
     companion object {

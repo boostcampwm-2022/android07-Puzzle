@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/home_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.home.HomeFragment">
@@ -76,9 +77,11 @@
             app:layout_constraintBottom_toTopOf="@id/top_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/user_nickname_tv"
-            app:setText="@{vm.welcomeText}" />
+            setText="@{vm.welcomeText}"
+            tools:text="환영합니다!"/>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/home_bottom_cardView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:elevation="0dp"
@@ -176,7 +179,7 @@
                 style="@style/Theme.Puzzle.TextSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/text_horizontal_margin"
+                android:layout_marginEnd="4dp"
                 android:text="@{@string/weather_temp_format(vm.weatherMainList.maxTemp)}"
                 app:layout_constraintBottom_toBottomOf="@id/weather_main_slash_tv"
                 app:layout_constraintEnd_toStartOf="@id/weather_main_slash_tv"
@@ -189,7 +192,7 @@
                 style="@style/Theme.Puzzle.TextSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/text_horizontal_margin"
+                android:layout_marginEnd="4dp"
                 android:text="@string/weather_slash_divider"
                 app:layout_constraintBottom_toBottomOf="@id/weather_main_min_temp_tv"
                 app:layout_constraintEnd_toStartOf="@id/weather_main_min_temp_tv"
@@ -228,46 +231,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/weather_main_icon_iv" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/weather_not_permitted_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:elevation="2dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/end_guideline"
-            app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="@id/bottom_guideline"
-            app:layout_constraintVertical_bias="0.3">
-
-            <ImageView
-                android:id="@+id/weather_not_permitted_refresh_btn"
-                android:layout_width="40dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/text_vertical_margin"
-                android:contentDescription="@string/weather_refresh_btn_description"
-                android:src="@drawable/home_refresh_icon"
-                app:layout_constraintBottom_toTopOf="@id/weather_not_permitted_msg_tv"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="@id/weather_not_permitted_msg_tv"
-                app:layout_constraintStart_toStartOf="@id/weather_not_permitted_msg_tv"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed" />
-
-            <TextView
-                android:id="@+id/weather_not_permitted_msg_tv"
-                style="@style/Theme.Puzzle.TextMedium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{vm.weatherInfoText}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/weather_not_permitted_refresh_btn" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

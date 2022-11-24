@@ -24,11 +24,19 @@ suspend fun <T> Task<T>.await(): T {
 }
 
 fun Address.toAddressString(): String {
-    return if (locality == null) {
-        "$adminArea $thoroughfare"
-    } else {
-        "$adminArea $locality $thoroughfare"
+    val list= mutableListOf<String>()
+    if(adminArea !=null) list.add(adminArea)
+    if(locality != null){
+        list.add(locality)
     }
+    else{
+        list.add(subLocality)
+    }
+    if(thoroughfare!=null){
+        list.add(thoroughfare)
+    }
+
+    return list.joinToString(" ")
 }
 
 fun String.toDate(): Date = formatter.parse(this) ?: Date()
