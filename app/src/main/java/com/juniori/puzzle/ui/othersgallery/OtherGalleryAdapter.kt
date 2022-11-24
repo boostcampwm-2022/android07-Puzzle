@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.ui.mygallery.MyGalleryAdapter
-import com.juniori.puzzle.ui.mygallery.MyGalleryViewModel
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class OtherGalleryAdapter (val viewModel: OthersGalleryViewModel) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
+    private var lastPaging = 0
+
     class ViewHolder(val binding: ItemGalleryRecyclerBinding, val height: Int) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
@@ -30,9 +30,10 @@ class OtherGalleryAdapter (val viewModel: OthersGalleryViewModel) : ListAdapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        if (position == itemCount - LOADING_FLAG_NUM) {
+        if(itemCount!= lastPaging && position == itemCount - LOADING_FLAG_NUM){
+            lastPaging = itemCount
             viewModel.getPaging(itemCount)
-        }//todo flag
+        }
     }
 
     companion object{
