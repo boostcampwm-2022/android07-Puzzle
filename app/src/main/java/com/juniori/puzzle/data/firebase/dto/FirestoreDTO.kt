@@ -7,6 +7,6 @@ data class RunQueryRequestDTO(
 )
 
 data class RunQueryResponseDTO(
-    @SerializedName("document") val videoItem: VideoItem,
+    @SerializedName("document") val videoItem: VideoItem?,
     @SerializedName("readTime") val readTime: String
 )

@@ -98,7 +98,9 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoQuery(uid, offset, limit)
                     )
-                ).map { it.videoItem.getVideoInfoEntity() }
+                ).filter {
+                    it.videoItem != null
+                }.map { it.videoItem!!.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -119,7 +121,9 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getMyVideoWithKeywordQuery(uid, toSearch, keyword, offset, limit)
                     )
-                ).map { it.videoItem.getVideoInfoEntity() }
+                ).filter {
+                    it.videoItem != null
+                }.map { it.videoItem!!.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -138,7 +142,9 @@ class FirestoreDataSource @Inject constructor(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
                     )
-                ).map { it.videoItem.getVideoInfoEntity() }
+                ).filter {
+                    it.videoItem != null
+                }.map { it.videoItem!!.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -165,7 +171,9 @@ class FirestoreDataSource @Inject constructor(
                             limit
                         )
                     )
-                ).map { it.videoItem.getVideoInfoEntity() }
+                ).filter {
+                    it.videoItem != null
+                }.map { it.videoItem!!.getVideoInfoEntity() }
             )
         } catch (e: Exception) {
             e.printStackTrace()
