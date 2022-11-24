@@ -63,7 +63,7 @@ class HomeViewModel @Inject constructor(
 
     fun setWeatherInfoText(text: String) {
         _weatherInfoText.value = text
-        _uiState.value = Resource.Failure(Exception())
+        _uiState.value = Resource.Failure(Exception(text))
     }
 
     fun setCurrentAddress(address: List<Address>) {
