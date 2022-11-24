@@ -11,11 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_marginBottom="16dp"
+        android:id="@+id/progress_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/button_camera_capture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/button_camera_capture"
         android:layout_width="110dp"
-        android:layout_height="110dp"
-        android:layout_marginBottom="50dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="20dp"
         android:elevation="2dp"
         android:text="@string/camera_capture_start"
         app:layout_constraintBottom_toBottomOf="parent"

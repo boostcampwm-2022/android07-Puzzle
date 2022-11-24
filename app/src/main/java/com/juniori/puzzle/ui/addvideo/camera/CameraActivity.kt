@@ -15,9 +15,12 @@ import androidx.camera.video.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.ActivityCameraBinding
 import com.juniori.puzzle.ui.addvideo.AddVideoBottomSheet
+import kotlinx.coroutines.*
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +32,7 @@ class CameraActivity : AppCompatActivity() {
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
-
+    private var progressJob: Job? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -125,9 +128,24 @@ class CameraActivity : AppCompatActivity() {
 
         val curRecording = recording
         if (curRecording != null) {
+            progressJob?.cancel()
+            binding.progressCamera.setProgressCompat(0,false)
+            binding.progressCamera.isVisible = false
             curRecording.stop()
             recording = null
             return
+        }
+
+        binding.progressCamera.isVisible = true
+        progressJob = lifecycleScope.launch(Dispatchers.IO) {
+            for(i in 1..20){
+                delay(1000)
+                withContext(Dispatchers.Main){
+                    binding.progressCamera.setProgressCompat(i*100/20, true)
+                }
+            }
+            recording?.stop()
+            recording = null
         }
 
         val name = SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA) // todo 이름
