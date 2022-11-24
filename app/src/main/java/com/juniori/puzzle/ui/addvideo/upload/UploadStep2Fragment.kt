@@ -38,7 +38,6 @@ class UploadStep2Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val filePath = "${requireContext().cacheDir.path}/${viewModel.videoName.value}.mp4"
-
         binding.buttonSave.setOnClickListener {
             viewModel.uploadVideo(filePath)
         }
@@ -54,24 +53,22 @@ class UploadStep2Fragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uploadFlow.collectLatest { resource ->
-                    resource?.let {
-                        when (it) {
-                            is Resource.Success -> {
-                                File(filePath).delete()
-                                arguments?.let { bundle ->
-                                    findNavController().navigate(
-                                        bundle.getInt(
-                                            "previousFragment"
-                                        )
+                    when (resource) {
+                        is Resource.Success -> {
+                            File(filePath).delete()
+                            arguments?.let { bundle ->
+                                findNavController().navigate(
+                                    bundle.getInt(
+                                        "previousFragment"
                                     )
-                                }
+                                )
                             }
-                            is Resource.Failure -> {
-                                /** upload video가 실패했을때의 ui 처리 */
-                            }
-                            is Resource.Loading -> {
-                                /** video upload 중일때의 ui 처리 */
-                            }
+                        }
+                        is Resource.Failure -> {
+                            /** upload video가 실패했을때의 ui 처리 */
+                        }
+                        is Resource.Loading -> {
+                            /** video upload 중일때의 ui 처리 */
                         }
                     }
                 }

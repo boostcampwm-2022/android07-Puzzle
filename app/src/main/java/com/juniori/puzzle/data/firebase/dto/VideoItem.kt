@@ -10,7 +10,7 @@ data class VideoItem(
     @SerializedName("updateTime") val updateTime: String? = null
 ) {
     fun getVideoInfoEntity(): VideoInfoEntity {
-        return videoDetail.toVideoInfoEntity(videoName)
+        return videoDetail.toVideoInfoEntity(videoName.substringAfter("videoReal/"))
     }
 }
 

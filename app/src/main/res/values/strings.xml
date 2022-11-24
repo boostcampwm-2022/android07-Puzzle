@@ -3,6 +3,7 @@
     <string name="all_cancel">취소</string>
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
+    <string name="all_setting">설정</string>
     <string name="all_save">저장</string>
 
     <!--date-->
@@ -59,4 +60,8 @@
     <string name="weather_icon_description">%d도 %s</string>
     <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
 
+    <!--acitivty_camera-->
+    <string name="playvideo_to_private">나만 보기</string>
+    <string name="playvideo_to_public">공유하기</string>
+    <string name="playvideo_delete">삭제</string>
 </resources>

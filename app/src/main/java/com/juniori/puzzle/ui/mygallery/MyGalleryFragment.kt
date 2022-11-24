@@ -49,7 +49,11 @@ class MyGalleryFragment : Fragment() {
             binding.progressMyGallery.isVisible = isRefresh
         }
 
-        viewModel.getMyData()
+        viewModel.list.value.also { list ->
+            if(list == null || list.isEmpty()){
+                viewModel.getMyData()
+            }
+        }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
