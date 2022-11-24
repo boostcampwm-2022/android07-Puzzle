@@ -22,6 +22,7 @@ class StateManager constructor(
         val view = LayoutInflater.from(context).inflate(R.layout.loading_layout, parent, false)
         dialog = builder.setView(view).create().apply {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setCancelable(false)
         }
     }
 
