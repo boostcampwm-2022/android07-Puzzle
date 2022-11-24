@@ -46,6 +46,8 @@ class AddVideoViewModel @Inject constructor(
 
     var isPublicUpload = false
 
+    private var isUploadingToServer = false
+
     fun setVideoName(targetName: String) {
         videoName = targetName
     }
@@ -82,10 +84,16 @@ class AddVideoViewModel @Inject constructor(
     }
 
     fun uploadVideo() = viewModelScope.launch {
+        if (isUploadingToServer) {
+            return@launch
+        }
         val uid = getUid() ?: return@launch
         val videoName = videoName
         val thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
+
+        isUploadingToServer = true
         _uploadFlow.emit(Resource.Loading)
+
         storageDataSource.insertThumbnail(videoName, thumbnailBytes).onSuccess {
             storageDataSource.insertVideo(
                 videoName,
@@ -103,6 +111,7 @@ class AddVideoViewModel @Inject constructor(
                 _uploadFlow.emit(Resource.Failure(it as Exception))
             }
         }
+        isUploadingToServer = false
     }
 
     private fun getUid(): String? {

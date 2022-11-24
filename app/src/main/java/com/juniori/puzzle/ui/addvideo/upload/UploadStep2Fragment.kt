@@ -12,13 +12,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
 import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
+import com.juniori.puzzle.util.StateManager
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UploadStep2Fragment : Fragment() {
 
     private var _binding: FragmentUploadStep2Binding? = null
@@ -32,6 +37,9 @@ class UploadStep2Fragment : Fragment() {
         createPublicModeDialog()
     }
 
+    @Inject
+    lateinit var stateManager: StateManager
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,6 +49,7 @@ class UploadStep2Fragment : Fragment() {
             vm = viewModel
             lifecycleOwner = viewLifecycleOwner
         }
+        stateManager.createLoadingDialog(container)
         return binding.root
     }
 
@@ -62,13 +71,16 @@ class UploadStep2Fragment : Fragment() {
                 viewModel.uploadFlow.collectLatest { resource ->
                     when (resource) {
                         is Resource.Success -> {
+                            stateManager.dismissLoadingDialog()
+                            showUploadStateFeedback("영상이 업로드 됐어요!")
                             findNavController().popBackStack(R.id.fragment_upload_step1, true)
                         }
                         is Resource.Failure -> {
-                            /** upload video가 실패했을때의 ui 처리 */
+                            stateManager.dismissLoadingDialog()
+                            showUploadStateFeedback("영상 업로드에 실패했습니다, 다시 시도해주세요.")
                         }
                         is Resource.Loading -> {
-                            /** video upload 중일때의 ui 처리 */
+                            stateManager.showLoadingDialog()
                         }
                     }
                 }
@@ -76,7 +88,8 @@ class UploadStep2Fragment : Fragment() {
         }
 
         binding.datespicker.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            binding.datesButton.text = getString(R.string.upload2_dates, year, month + 1, dayOfMonth)
+            binding.datesButton.text =
+                getString(R.string.upload2_dates, year, month + 1, dayOfMonth)
         }
 
         binding.timepicker.setOnTimeChangedListener { _, hourOfDay, minute ->
@@ -138,5 +151,13 @@ class UploadStep2Fragment : Fragment() {
                 binding.radiobuttonSetPrivate.isChecked = true
             }
             .create()
+    }
+
+    private fun showUploadStateFeedback(feedbackText: String) {
+        Snackbar.make(
+            binding.root,
+            feedbackText,
+            Snackbar.LENGTH_SHORT
+        ).show()
     }
 }
