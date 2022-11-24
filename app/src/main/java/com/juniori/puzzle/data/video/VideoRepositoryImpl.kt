@@ -1,28 +1,49 @@
 package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
 import java.io.File
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(val videoRemoteDataSource: VideoRemoteDataSource):
+class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: FirestoreDataSource):
     VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return firestoreDataSource.getMyVideoItems(
+            uid = uid,
+            offset = index,
+            limit = 10
+        )
     }
 
     override suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return firestoreDataSource.getMyVideoItemsWithKeyword(
+            uid = uid,
+            toSearch = "location",
+            keyword =  keyword,
+            offset = index,
+            limit = 10
+        )
     }
 
     override suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return firestoreDataSource.getPublicVideoItemsOrderBy(
+            orderBy = sortType,
+            offset = index,
+            limit = 10
+        )
     }
 
     override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>> {
-        TODO("Not yet implemented")
+        return firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
+            orderBy = sortType,
+            toSearch = "location",
+            keyword = keyword,
+            offset = index,
+            limit = 10
+        )
     }
 
     override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {

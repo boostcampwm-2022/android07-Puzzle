@@ -1,5 +1,6 @@
 package com.juniori.puzzle.di
 
+import com.juniori.puzzle.data.video.VideoRepositoryImpl
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.data.video.VideoRepositoryMockImpl
 import com.juniori.puzzle.mock.getVideoListMockData
@@ -16,4 +17,7 @@ object VideoModule {
     @MockData
     @Provides
     fun provideMockRepository(): VideoRepository = VideoRepositoryMockImpl(mockVideoList)
+
+    @Provides
+    fun provideRepository(impl: VideoRepositoryImpl): VideoRepository = impl
 }

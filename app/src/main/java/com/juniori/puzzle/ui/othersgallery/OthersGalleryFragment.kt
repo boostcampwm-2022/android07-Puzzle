@@ -40,7 +40,6 @@ class OthersGalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerAdapter = OtherGalleryAdapter(viewModel)
-
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
             val gridLayoutManager = GridLayoutManager(requireContext(), ITEM_ROW_COUNT)
@@ -53,6 +52,25 @@ class OthersGalleryFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
         binding.spinnerOtherGallery.adapter = spinnerAdapter
 
+
+        viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            recyclerAdapter.submitList(dataList)
+        }
+
+        viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
+            binding.progressOtherGallery.isVisible = isRefresh
+        }
+
+        viewModel.list.value.also { list ->
+            if(list == null || list.isEmpty()){
+                viewModel.getMyData()
+            }
+        }
+
+        setListener()
+    }
+
+    private fun setListener(){
         binding.spinnerOtherGallery.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -76,20 +94,9 @@ class OthersGalleryFragment : Fragment() {
                     }
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
+                override fun onNothingSelected(parent: AdapterView<*>?) { }
 
             }
-        viewModel.list.observe(viewLifecycleOwner) { dataList ->
-            recyclerAdapter.submitList(dataList)
-        }
-
-        viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
-            binding.progressOtherGallery.isVisible = isRefresh
-        }
-
-        viewModel.getMyData()
 
         binding.searchOtherGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
