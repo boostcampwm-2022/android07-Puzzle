@@ -35,11 +35,14 @@ class StateManager constructor(
         dialog?.dismiss()
     }
 
-    fun showNetworkDialog(parent: ViewGroup, msg: String) {
+    fun showNetworkDialog(parent: ViewGroup, msg: String, callback: () -> Unit) {
         networkView =
             NetworkFailLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, true)
                 .apply {
                     infoText.text = msg
+                    refreshBtn.setOnClickListener {
+                        callback()
+                    }
                 }
         networkParent = parent
     }

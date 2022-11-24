@@ -120,7 +120,8 @@ class HomeFragment : Fragment() {
                         binding.weatherLayout.isVisible = false
                         stateManager.showNetworkDialog(
                             binding.homeBottomCardView,
-                            resource.exception.message ?: "네트워크 통신에 실패했습니다"
+                            resource.exception.message ?: "네트워크 통신에 실패했습니다",
+                            checkPermission
                         )
                     }
                     is Resource.Loading -> {
@@ -143,7 +144,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun checkPermission() {
+    val checkPermission = {
         locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
