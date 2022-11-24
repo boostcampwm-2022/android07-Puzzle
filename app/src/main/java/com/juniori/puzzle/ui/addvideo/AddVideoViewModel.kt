@@ -57,6 +57,9 @@ class AddVideoViewModel @Inject constructor(
 
     fun notifyAction(actionState: AddVideoActionState) {
         when (actionState) {
+            is AddVideoActionState.StartingToAdd -> {
+                _uiState.value = AddVideoUiState.NONE
+            }
             is AddVideoActionState.VideoPicked -> {
                 val durationInSeconds: Long =
                     videoMetaDataUtil.getVideoDurationInSeconds(actionState.uri) ?: return
