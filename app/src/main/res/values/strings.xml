@@ -57,7 +57,6 @@
     <string name="location_service_off">네트워크 및 위치 서비스를 연결해주세요</string>
 
     <!--description-->
-    <string name="home_background_image_description">홈 배경이미지</string>
     <string name="weather_icon_description">%d도 %s</string>
     <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
 
@@ -65,7 +64,6 @@
     <string name="playvideo_to_private">나만 보기</string>
     <string name="playvideo_to_public">공유하기</string>
     <string name="playvideo_delete">삭제</string>
-    <string name="weather_slash_divider">/</string>
 
     <!--mypage-->
     <string name="user_nickname">%s님</string>
