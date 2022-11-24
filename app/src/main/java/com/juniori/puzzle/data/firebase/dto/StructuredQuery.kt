@@ -20,10 +20,14 @@ data class CollectionSelector(
 
 sealed interface Filters
 
+data class Where(
+    val compositeFilter: CompositeFilter
+) : Filters
+
 data class CompositeFilter(
     val filters: List<Filter>,
     val op: String
-) : Filters
+)
 
 data class Filter(
     val fieldFilter: FieldFilter
