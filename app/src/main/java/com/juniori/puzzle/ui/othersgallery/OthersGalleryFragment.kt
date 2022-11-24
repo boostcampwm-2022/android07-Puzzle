@@ -42,7 +42,7 @@ class OthersGalleryFragment : Fragment() {
                     requireContext(),
                     PlayVideoActivity::class.java
                 ).apply {
-                    this.putExtra("videoInfo", it)
+                    this.putExtra(VIDEO_EXTRA_NAME, it)
                 })
         }
         binding.recycleOtherGallery.apply {
@@ -126,5 +126,7 @@ class OthersGalleryFragment : Fragment() {
     companion object {
         const val ITEM_ROW_COUNT = 2
         const val RECYCLER_TOP = 0
+        const val VIDEO_EXTRA_NAME = "videoInfo"
+
     }
 }

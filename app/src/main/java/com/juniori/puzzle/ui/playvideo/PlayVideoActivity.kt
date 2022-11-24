@@ -34,7 +34,7 @@ class PlayVideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        currentVideoItem = intent.extras?.get("videoInfo") as VideoInfoEntity
+        currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
         setItemOnClickListener()
         initCollector()
@@ -151,7 +151,7 @@ class PlayVideoActivity : AppCompatActivity() {
             buttonComment.setOnClickListener {
                 PlayVideoBottomSheet().apply {
                     arguments = Bundle().apply {
-                        putParcelable("videoInfo", currentVideoItem)
+                        putParcelable(VIDEO_EXTRA_NAME, currentVideoItem)
                         putString("nickName", currentUserInfo.nickname)
                     }
                 }.show(supportFragmentManager, null)
@@ -161,5 +161,6 @@ class PlayVideoActivity : AppCompatActivity() {
 
     companion object {
         lateinit var currentUserInfo: UserInfoEntity
+        const val VIDEO_EXTRA_NAME = "videoInfo"
     }
 }

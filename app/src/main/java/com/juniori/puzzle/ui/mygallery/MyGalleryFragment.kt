@@ -39,7 +39,7 @@ class MyGalleryFragment : Fragment() {
                     requireContext(),
                     PlayVideoActivity::class.java
                 ).apply {
-                    this.putExtra("videoInfo", it)
+                    this.putExtra(VIDEO_EXTRA_NAME, it)
                 })
         }
 
@@ -81,5 +81,9 @@ class MyGalleryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val VIDEO_EXTRA_NAME = "videoInfo"
     }
 }
