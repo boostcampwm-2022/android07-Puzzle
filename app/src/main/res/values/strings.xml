@@ -60,8 +60,6 @@
     <string name="weather_icon_description">%d도 %s</string>
     <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
 
-    <string name="weather_slash_divider">/</string>
-
     <!--acitivty_camera-->
     <string name="playvideo_to_private">나만 보기</string>
     <string name="playvideo_to_public">공유하기</string>
