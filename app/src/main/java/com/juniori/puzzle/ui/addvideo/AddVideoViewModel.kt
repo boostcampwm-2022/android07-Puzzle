@@ -38,14 +38,14 @@ class AddVideoViewModel @Inject constructor(
         private set
 
     var comments: String = ""
+    var golfCourse = ""
+    var isPublicUpload = false
 
     private val _uploadFlow = MutableSharedFlow<Resource<VideoInfoEntity>>(replay = 0)
     val uploadFlow: SharedFlow<Resource<VideoInfoEntity>> = _uploadFlow
 
     private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
     val uiState: LiveData<AddVideoUiState> get() = _uiState
-
-    var isPublicUpload = false
 
     private var isUploadingToServer = false
 
@@ -106,9 +106,9 @@ class AddVideoViewModel @Inject constructor(
                 val result = firestoreDataSource.postVideoItem(
                     uid = uid,
                     videoName = videoName,
-                    isPrivate = false,
-                    location = "test",
-                    memo = "test"
+                    isPrivate = isPublicUpload.not(),
+                    location = golfCourse,
+                    memo = comments
                 )
                 _uploadFlow.emit(result)
             }.onFailure {
@@ -153,6 +153,10 @@ class AddVideoViewModel @Inject constructor(
             calendar.set(Calendar.MINUTE, minute)
             pickedCalendar.value = calendar
         }
+    }
+
+    fun onGolfCourseTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
+        golfCourse = charSequence.toString()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
