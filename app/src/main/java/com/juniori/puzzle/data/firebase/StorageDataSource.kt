@@ -41,23 +41,31 @@ class StorageDataSource @Inject constructor(
         name: String,
         fileByteArray: ByteArray
     ): Result<Nothing> {
-        return service.insert(
-            "video/$name", body = RequestBody.create(
-                MediaType.parse("video/mp4"),
-                fileByteArray
+        return try {
+            service.insert(
+                "video/$name", body = RequestBody.create(
+                    MediaType.parse("video/mp4"),
+                    fileByteArray
+                )
             )
-        )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     suspend fun insertThumbnail(
         name: String,
         fileByteArray: ByteArray
     ): Result<Nothing> {
-        return service.insert(
-            "thumb/$name", body = RequestBody.create(
-                MediaType.parse("image/jpeg"),
-                fileByteArray
+        return try {
+            service.insert(
+                "thumb/$name", body = RequestBody.create(
+                    MediaType.parse("image/jpeg"),
+                    fileByteArray
+                )
             )
-        )
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
