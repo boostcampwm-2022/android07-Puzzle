@@ -63,6 +63,8 @@ class UploadStep2Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setOnClickListener()
 
+        binding.datespicker.maxDate = System.currentTimeMillis()
+
         binding.containerRadiogroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicUpload.not()) {
                 viewModel.isPublicUpload = true

@@ -181,6 +181,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:dateTextAppearance="@style/Theme.Puzzle.TextSmall"
                 android:onSelectedDayChange="@{(_, year, month, dayOfMonth) -> vm.changeDatesOfCalendar(year, month, dayOfMonth)}"
                 app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
                 app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
