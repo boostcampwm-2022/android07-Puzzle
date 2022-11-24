@@ -44,6 +44,8 @@ class AddVideoViewModel @Inject constructor(
     private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
     val uiState: LiveData<AddVideoUiState> get() = _uiState
 
+    var isPublicUpload = false
+
     fun setVideoName(targetName: String) {
         videoName = targetName
     }

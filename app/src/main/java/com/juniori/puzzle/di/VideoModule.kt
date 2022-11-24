@@ -2,8 +2,8 @@ package com.juniori.puzzle.di
 
 import android.content.Context
 import com.juniori.puzzle.data.video.VideoRepositoryImpl
-import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.data.video.VideoRepositoryMockImpl
+import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.mock.getVideoListMockData
 import com.juniori.puzzle.util.VideoMetaDataUtil
 import dagger.Module
