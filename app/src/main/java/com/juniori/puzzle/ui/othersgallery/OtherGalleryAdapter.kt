@@ -16,7 +16,7 @@ class OtherGalleryAdapter (val viewModel: OthersGalleryViewModel) : ListAdapter<
     class ViewHolder(val binding: ItemGalleryRecyclerBinding, val height: Int) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
-            binding.root.layoutParams.height = height / 3
+            binding.root.layoutParams.height = height / VISIBLE_ITEM_COUNT
             binding.data = item
         }
     }
@@ -30,8 +30,13 @@ class OtherGalleryAdapter (val viewModel: OthersGalleryViewModel) : ListAdapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        if (position == itemCount - 3) {
+        if (position == itemCount - LOADING_FLAG_NUM) {
             viewModel.getPaging(itemCount)
-        }
+        }//todo flag
+    }
+
+    companion object{
+        const val VISIBLE_ITEM_COUNT = 3
+        const val LOADING_FLAG_NUM = 3
     }
 }

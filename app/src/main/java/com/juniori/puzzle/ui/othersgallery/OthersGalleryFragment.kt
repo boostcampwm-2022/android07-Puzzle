@@ -43,7 +43,7 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+            val gridLayoutManager = GridLayoutManager(requireContext(), ITEM_ROW_COUNT)
             layoutManager = gridLayoutManager
         }
 
@@ -64,13 +64,13 @@ class OthersGalleryFragment : Fragment() {
                     when (position) {
                         0 -> {
                             if(viewModel.setOrderType(SortType.NEW)){
-                                binding.recycleOtherGallery.scrollToPosition(0)
+                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                             }
                         }
 
                         1 -> {
                             if(viewModel.setOrderType(SortType.LIKE)){
-                                binding.recycleOtherGallery.scrollToPosition(0)
+                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                             }
                         }
                     }
@@ -109,5 +109,10 @@ class OthersGalleryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        const val ITEM_ROW_COUNT = 2
+        const val RECYCLER_TOP = 0
     }
 }

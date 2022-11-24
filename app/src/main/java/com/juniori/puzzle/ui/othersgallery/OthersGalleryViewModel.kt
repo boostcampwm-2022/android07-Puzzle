@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.domain.usecase.*
+import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
+import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
+import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,7 +44,8 @@ class OthersGalleryViewModel @Inject constructor(
             //todo network err
         } else {
             viewModelScope.launch {
-                val data = getSearchedSocialVideoListUseCase(0, query, sortType)
+                val data =
+                    getSearchedSocialVideoListUseCase(index = 0, keyword = query, order = sortType)
                 if (data is Resource.Success) {
                     val result = data.result
                     _list.value = result//todo empty list
@@ -65,11 +67,14 @@ class OthersGalleryViewModel @Inject constructor(
         } else {
             viewModelScope.launch {
                 _refresh.value = true
-                delay(500)
                 val data = if (query.isBlank()) {
-                    getSocialVideoList(start, sortType)
+                    getSocialVideoList(index = start, order = sortType)
                 } else {
-                    getSearchedSocialVideoListUseCase(start, query, sortType)
+                    getSearchedSocialVideoListUseCase(
+                        index = start,
+                        keyword = query,
+                        order = sortType
+                    )
                 }
 
                 if (data is Resource.Success) {
@@ -91,7 +96,7 @@ class OthersGalleryViewModel @Inject constructor(
             //todo network err
         } else {
             viewModelScope.launch {
-                val data = getSocialVideoList(0, sortType)
+                val data = getSocialVideoList(index = 0, order =  sortType)
                 if (data is Resource.Success) {
                     val result = data.result
                     _list.postValue(result)//todo empty list
@@ -126,13 +131,13 @@ class OthersGalleryViewModel @Inject constructor(
         _list.value = newList
     }
 
-    fun setOrderType(type: SortType): Boolean{
-        if(sortType!=type){
+    fun setOrderType(type: SortType): Boolean {
+        if (sortType != type) {
             sortType = type
 
-            if(query.isBlank()){
+            if (query.isBlank()) {
                 getMyData()
-            }else{
+            } else {
                 setQueryText(query)
             }
 
