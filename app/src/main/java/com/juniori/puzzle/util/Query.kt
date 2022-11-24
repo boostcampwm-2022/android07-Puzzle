@@ -9,6 +9,7 @@ import com.juniori.puzzle.data.firebase.dto.Order
 import com.juniori.puzzle.data.firebase.dto.StringFieldFilter
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StructuredQuery
+import com.juniori.puzzle.data.firebase.dto.Where
 
 object QueryUtil {
     fun getMyVideoQuery(uid: String, offset: Int?, limit: Int?) = StructuredQuery(
@@ -36,28 +37,30 @@ object QueryUtil {
         offset: Int?,
         limit: Int?
     ) = StructuredQuery(
-        where = CompositeFilter(
-            op = "AND",
-            filters = listOf(
-                Filter(
-                    StringFieldFilter(
-                        field = FieldReference("owner_uid"),
-                        op = "EQUAL",
-                        value = StringValue(uid)
-                    )
-                ),
-                Filter(
-                    StringFieldFilter(
-                        field = FieldReference(toSearch),
-                        op = "GREATER_THAN_OR_EQUAL",
-                        value = StringValue(keyword)
-                    )
-                ),
-                Filter(
-                    StringFieldFilter(
-                        field = FieldReference(toSearch),
-                        op = "LESS_THAN_OR_EQUAL",
-                        value = StringValue("$keyword~")
+        where = Where(
+            CompositeFilter(
+                op = "AND",
+                filters = listOf(
+                    Filter(
+                        StringFieldFilter(
+                            field = FieldReference("owner_uid"),
+                            op = "EQUAL",
+                            value = StringValue(uid)
+                        )
+                    ),
+                    Filter(
+                        StringFieldFilter(
+                            field = FieldReference(toSearch),
+                            op = "GREATER_THAN_OR_EQUAL",
+                            value = StringValue(keyword)
+                        )
+                    ),
+                    Filter(
+                        StringFieldFilter(
+                            field = FieldReference(toSearch),
+                            op = "LESS_THAN_OR_EQUAL",
+                            value = StringValue("$keyword~")
+                        )
                     )
                 )
             )
@@ -101,28 +104,30 @@ object QueryUtil {
         offset: Int?,
         limit: Int?
     ) = StructuredQuery(
-        where = CompositeFilter(
-            op = "AND",
-            filters = listOf(
-                Filter(
-                    fieldFilter = BooleanFieldFilter(
-                        field = FieldReference("is_private"),
-                        op = "EQUAL",
-                        value = BooleanValue(false)
-                    )
-                ),
-                Filter(
-                    StringFieldFilter(
-                        field = FieldReference(toSearch),
-                        op = "GREATER_THAN_OR_EQUAL",
-                        value = StringValue(keyword)
-                    )
-                ),
-                Filter(
-                    StringFieldFilter(
-                        field = FieldReference(toSearch),
-                        op = "LESS_THAN_OR_EQUAL",
-                        value = StringValue("$keyword~")
+        where = Where(
+            CompositeFilter(
+                op = "AND",
+                filters = listOf(
+                    Filter(
+                        fieldFilter = BooleanFieldFilter(
+                            field = FieldReference("is_private"),
+                            op = "EQUAL",
+                            value = BooleanValue(false)
+                        )
+                    ),
+                    Filter(
+                        StringFieldFilter(
+                            field = FieldReference(toSearch),
+                            op = "GREATER_THAN_OR_EQUAL",
+                            value = StringValue(keyword)
+                        )
+                    ),
+                    Filter(
+                        StringFieldFilter(
+                            field = FieldReference(toSearch),
+                            op = "LESS_THAN_OR_EQUAL",
+                            value = StringValue("$keyword~")
+                        )
                     )
                 )
             )
