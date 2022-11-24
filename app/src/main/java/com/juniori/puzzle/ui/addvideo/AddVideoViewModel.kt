@@ -4,8 +4,8 @@ import androidx.lifecycle.*
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
-import com.juniori.puzzle.data.firebase.dto.VideoItem
 import com.juniori.puzzle.di.LocalCacheModule
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.VideoMetaDataUtil
 import com.juniori.puzzle.util.deleteIfFileUri
@@ -38,8 +38,8 @@ class AddVideoViewModel @Inject constructor(
 
     var comments: String = ""
 
-    private val _uploadFlow = MutableStateFlow<Resource<VideoItem>?>(null)
-    val uploadFlow: StateFlow<Resource<VideoItem>?> = _uploadFlow
+    private val _uploadFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
+    val uploadFlow: StateFlow<Resource<VideoInfoEntity>?> = _uploadFlow
 
     private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
     val uiState: LiveData<AddVideoUiState> get() = _uiState
