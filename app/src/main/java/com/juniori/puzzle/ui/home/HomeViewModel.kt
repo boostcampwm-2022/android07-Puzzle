@@ -8,13 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.util.toAddressString
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherRepository
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.toAddressString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,8 +45,7 @@ class HomeViewModel @Inject constructor(
         val userInfo = getUserInfoUseCase()
         if (userInfo is Resource.Success) {
             _displayName.value = userInfo.result.nickname
-        }
-        else {
+        } else {
             _displayName.value = ""
         }
     }

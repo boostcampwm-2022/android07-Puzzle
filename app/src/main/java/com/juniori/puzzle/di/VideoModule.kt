@@ -1,8 +1,9 @@
 package com.juniori.puzzle.di
 
 import android.content.Context
-import com.juniori.puzzle.data.video.VideoRepositoryMockImpl
+import com.juniori.puzzle.data.video.VideoRepositoryImpl
 import com.juniori.puzzle.domain.repository.VideoRepository
+import com.juniori.puzzle.data.video.VideoRepositoryMockImpl
 import com.juniori.puzzle.mock.getVideoListMockData
 import com.juniori.puzzle.util.VideoMetaDataUtil
 import dagger.Module
@@ -26,4 +27,7 @@ object VideoModule {
     fun provideVideoMetaDataUtil(@ApplicationContext context: Context): VideoMetaDataUtil {
         return VideoMetaDataUtil(context)
     }
+
+    @Provides
+    fun provideRepository(impl: VideoRepositoryImpl): VideoRepository = impl
 }

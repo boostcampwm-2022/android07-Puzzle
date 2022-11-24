@@ -12,8 +12,8 @@ import com.juniori.puzzle.util.deleteIfFileUri
 import com.juniori.puzzle.util.saveInFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -38,8 +38,8 @@ class AddVideoViewModel @Inject constructor(
 
     var comments: String = ""
 
-    private val _uploadFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
-    val uploadFlow: StateFlow<Resource<VideoInfoEntity>?> = _uploadFlow
+    private val _uploadFlow = MutableSharedFlow<Resource<VideoInfoEntity>>(replay = 0)
+    val uploadFlow: SharedFlow<Resource<VideoInfoEntity>> = _uploadFlow
 
     private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
     val uiState: LiveData<AddVideoUiState> get() = _uiState
@@ -94,6 +94,8 @@ class AddVideoViewModel @Inject constructor(
                     memo = "test"
                 )
                 _uploadFlow.emit(result)
+            }.onFailure {
+                _uploadFlow.emit(Resource.Failure(it as Exception))
             }
         }
     }
@@ -117,7 +119,6 @@ class AddVideoViewModel @Inject constructor(
         playWhenReady = true
         comments = ""
         _uiState.value = AddVideoUiState.NONE
-        _uploadFlow.value = null
         videoFilePath.deleteIfFileUri()
     }
 

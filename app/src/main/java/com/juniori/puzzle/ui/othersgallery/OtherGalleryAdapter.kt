@@ -1,4 +1,4 @@
-package com.juniori.puzzle.ui.mygallery
+package com.juniori.puzzle.ui.othersgallery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,15 +8,15 @@ import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
-
-class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : ListAdapter<VideoInfoEntity,MyGalleryAdapter.ViewHolder>(
+class OtherGalleryAdapter (val viewModel: OthersGalleryViewModel) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
     private var lastPaging = 0
+
     class ViewHolder(val binding: ItemGalleryRecyclerBinding, val height: Int) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
-            binding.root.layoutParams.height = height/ VISIBLE_ITEM_COUNT
+            binding.root.layoutParams.height = height / VISIBLE_ITEM_COUNT
             binding.data = item
         }
     }
@@ -35,7 +35,6 @@ class MyGalleryAdapter(val viewModel: MyGalleryViewModel) : ListAdapter<VideoInf
             viewModel.getPaging(itemCount)
         }
     }
-
 
     companion object{
         const val VISIBLE_ITEM_COUNT = 3

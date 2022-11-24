@@ -3,6 +3,7 @@
     <string name="all_cancel">취소</string>
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
+    <string name="all_setting">설정</string>
     <string name="all_save">저장</string>
     <string name="all_yes">네</string>
     <string name="all_no">아니요</string>
@@ -20,6 +21,7 @@
     <string name="main_mypage">마이 페이지</string>
 
     <!--fragment_home-->
+    <string name="home_background_image_description">홈 배경이미지</string>
     <string-array name="welcome_text">
         <item>오늘도 나이스샷^^</item>
         <item>즐거운 퍼팅되세요!</item>
@@ -62,8 +64,22 @@
     <string name="location_service_off">네트워크 및 위치 서비스를 연결해주세요</string>
 
     <!--description-->
-    <string name="home_background_image_description">홈 배경이미지</string>
     <string name="weather_icon_description">%d도 %s</string>
     <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
 
+    <!--acitivty_camera-->
+    <string name="playvideo_to_private">나만 보기</string>
+    <string name="playvideo_to_public">공유하기</string>
+    <string name="playvideo_delete">삭제</string>
+
+    <!--mypage-->
+    <string name="user_nickname">%s님</string>
+    <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
+    <string name="change_nickname">닉네임 변경</string>
+    <string name="logout">로그아웃</string>
+    <string name="withdraw">회원 탈퇴</string>
+    <string name="open_source_lib">오픈소스 라이브러리</string>
+    <string name="input_new_nickname">새로운 닉네임을 입력하세요.</string>
+    <string name="input_nickname_hint">닉네임을 입력하세요.</string>
+    <string name="complete">완료</string>
 </resources>
