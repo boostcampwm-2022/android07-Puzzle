@@ -141,7 +141,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:gravity="start|center_vertical"
                 android:paddingVertical="12dp"
-                tools:text="2022년 11월 24일"
+                android:text="2022년 11월 24일"
                 android:textAppearance="@style/Theme.Puzzle.TextSmall"
                 android:textColor="?android:attr/textColorPrimary"
                 app:icon="@drawable/play_calendar_icon"
