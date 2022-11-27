@@ -18,9 +18,11 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlayVideoActivity : AppCompatActivity() {
@@ -30,9 +32,13 @@ class PlayVideoActivity : AppCompatActivity() {
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var currentVideoItem: VideoInfoEntity
 
+    @Inject
+    lateinit var stateManager: StateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
+        stateManager.createLoadingDialog(binding.root)
         setContentView(binding.root)
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
@@ -59,12 +65,14 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
                                 finish()
                             }
                             is Resource.Loading -> {
-                                /** loading 화면 보여주기 */
+                                stateManager.showLoadingDialog()
                             }
                             is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
                                 resource.exception.printStackTrace()
                                 Snackbar.make(
                                     binding.root,
@@ -84,13 +92,15 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
                                 currentVideoItem = resource.result
                                 setMenuItems()
                             }
                             is Resource.Loading -> {
-                                /** loading 화면 보여주기 */
+                                stateManager.showLoadingDialog()
                             }
                             is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
                                 resource.exception.printStackTrace()
                                 Snackbar.make(
                                     binding.root,
