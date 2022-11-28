@@ -1,6 +1,5 @@
 package com.juniori.puzzle.ui.mypage
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.juniori.puzzle.SingleLiveEvent
@@ -17,15 +16,9 @@ class MyPageViewModel @Inject constructor(
     private val requestWithdrawUseCase: RequestWithdrawUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
-    private val _navigateToIntroPageEvent = MutableLiveData<Resource<Unit>>(Resource.Loading)
-    val navigateToIntroPageEvent: LiveData<Resource<Unit>> = _navigateToIntroPageEvent
-
-    private val _finishApplicationEvent = MutableLiveData<Resource<Unit>>()
-    val finishApplicationEvent: LiveData<Resource<Unit>> = _finishApplicationEvent
-
-    private val _navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
-    val navigateToUpdateNicknamePageEvent: SingleLiveEvent<Unit> = _navigateToUpdateNicknamePageEvent
-
+    val makeLogoutDialogEvent = SingleLiveEvent<Unit>()
+    val makeWithdrawDialogEvent = SingleLiveEvent<Unit>()
+    val navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
     val userNickname = MutableLiveData<String>()
 
     init {
@@ -39,19 +32,23 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun requestLogout() {
-        _navigateToIntroPageEvent.value = requestLogoutUseCase()
+    fun makeLogoutDialog() {
+        makeLogoutDialogEvent.call()
     }
 
-    fun requestWithdraw() {
-        _finishApplicationEvent.value = requestWithdrawUseCase()
+    fun makeWithdrawDialog() {
+        makeWithdrawDialogEvent.call()
+    }
+
+    fun requestLogout(): Resource<Unit> {
+        return requestLogoutUseCase()
+    }
+
+    fun requestWithdraw(): Resource<Unit> {
+        return requestWithdrawUseCase()
     }
 
     fun navigateToUpdateNicknamePage() {
-        _navigateToUpdateNicknamePageEvent.call()
-    }
-
-    fun updateUserNickname(newNickname: String?) {
-        userNickname.value = newNickname ?: "누구세요"
+        navigateToUpdateNicknamePageEvent.call()
     }
 }

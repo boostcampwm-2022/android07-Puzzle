@@ -1,6 +1,7 @@
 package com.juniori.puzzle.ui.mypage
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentMypageBinding
 import com.juniori.puzzle.ui.login.LoginActivity
@@ -42,12 +44,12 @@ class MyPageFragment : Fragment() {
             }
         }
 
-        viewModel.navigateToIntroPageEvent.observe(viewLifecycleOwner) { result ->
-            navigateToIntroPageEvent(result)
+        viewModel.makeLogoutDialogEvent.observe(viewLifecycleOwner) {
+            navigateToIntroPageEvent()
         }
 
-        viewModel.finishApplicationEvent.observe(viewLifecycleOwner) { result ->
-            finishApplication(result)
+        viewModel.makeWithdrawDialogEvent.observe(viewLifecycleOwner) {
+            finishApplication()
         }
 
         viewModel.navigateToUpdateNicknamePageEvent.observe(viewLifecycleOwner) {
@@ -56,18 +58,36 @@ class MyPageFragment : Fragment() {
         }
     }
 
-    private fun navigateToIntroPageEvent(result: Resource<Unit>) {
-        if (result is Resource.Success) {
-            val intent = Intent(context, LoginActivity::class.java)
-            activity?.finishAffinity()
-            startActivity(intent)
-        }
+    private fun navigateToIntroPageEvent() {
+        AlertDialog.Builder(context)
+            .setTitle(getString(R.string.logout))
+            .setMessage(getString(R.string.logout_remind))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val result = viewModel.requestLogout()
+                if (result is Resource.Success<Unit>) {
+                    val intent = Intent(context, LoginActivity::class.java)
+                    activity?.finishAffinity()
+                    startActivity(intent)
+                }
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            }
+            .show()
     }
 
-    private fun finishApplication(result: Resource<Unit>) {
-        if (result is Resource.Success) {
-            activity?.finishAffinity()
-        }
+    private fun finishApplication() {
+        AlertDialog.Builder(context)
+            .setTitle(getString(R.string.withdraw))
+            .setMessage(getString(R.string.withdraw_remind))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val result = viewModel.requestWithdraw()
+                if (result is Resource.Success<Unit>) {
+                    activity?.finishAffinity()
+                }
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            }
+            .show()
     }
 
     override fun onDestroyView() {

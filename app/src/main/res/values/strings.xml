@@ -83,7 +83,11 @@
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
     <string name="change_nickname">닉네임 변경</string>
     <string name="logout">로그아웃</string>
+    <string name="logout_remind">정말 로그아웃 하시겠습니까?</string>
     <string name="withdraw">회원 탈퇴</string>
+    <string name="withdraw_remind">회원탈퇴를 하시면 퍼팅 영상을 포함한 저장되어 있던 모든 정보가 삭제됩니다. \n정말 회원탈퇴 하시겠습니까?</string>
+    <string name="yes">예</string>
+    <string name="no">아니요</string>
     <string name="open_source_lib">오픈소스 라이브러리</string>
     <string name="input_new_nickname">새로운 닉네임을 입력하세요.</string>
     <string name="input_nickname_hint">닉네임을 입력하세요.</string>
