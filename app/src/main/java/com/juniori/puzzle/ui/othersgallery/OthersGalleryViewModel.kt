@@ -38,20 +38,23 @@ class OthersGalleryViewModel @Inject constructor(
         }
 
         query = nowQuery
-        val uid = getUid()
 
-        if (uid == null) {
-            //todo network err
-        } else {
-            viewModelScope.launch {
-                val data =
-                    getSearchedSocialVideoListUseCase(index = 0, keyword = query, order = sortType)
-                if (data is Resource.Success) {
-                    val result = data.result
-                    _list.value = result//todo empty list
+        viewModelScope.launch {
+            val data = getSearchedSocialVideoListUseCase(
+                index = 0,
+                keyword = query,
+                order = sortType
+            )
+
+            if (data is Resource.Success) {
+                val result = data.result
+                if (result == null || result.isEmpty()) {
+                    _list.postValue(emptyList())
                 } else {
-                    //todo network err
+                    _list.postValue(result)
                 }
+            } else {
+                //todo network err
             }
         }
     }
@@ -61,61 +64,49 @@ class OthersGalleryViewModel @Inject constructor(
             return
         }
 
-        val uid = getUid()
-        if (uid == null) {
-            //todo network err
-        } else {
-            viewModelScope.launch {
-                _refresh.value = true
-                val data = if (query.isBlank()) {
-                    getSocialVideoList(index = start, order = sortType)
-                } else {
-                    getSearchedSocialVideoListUseCase(
-                        index = start,
-                        keyword = query,
-                        order = sortType
-                    )
-                }
-
-                if (data is Resource.Success) {
-                    val result = data.result
-                    addItems(result)//todo empty list
-                } else {
-                    //todo network err
-                }
-
-                _refresh.value = false
+        viewModelScope.launch {
+            _refresh.value = true
+            val data = if (query.isBlank()) {
+                getSocialVideoList(
+                    index = start,
+                    order = sortType
+                )
+            } else {
+                getSearchedSocialVideoListUseCase(
+                    index = start,
+                    keyword = query,
+                    order = sortType
+                )
             }
+
+            if (data is Resource.Success) {
+                val result = data.result
+                addItems(result)//todo empty list(paging)
+            } else {
+                //todo network err
+            }
+
+            _refresh.value = false
         }
     }
 
     fun getMyData() {
-        val uid = getUid()
-
-        if (uid == null) {
-            //todo network err
-        } else {
-            viewModelScope.launch {
-                val data = getSocialVideoList(index = 0, order =  sortType)
-                if (data is Resource.Success) {
-                    val result = data.result
-                    _list.postValue(result)//todo empty list
+        viewModelScope.launch {
+            val data = getSocialVideoList(
+                index = 0,
+                order = sortType
+            )
+            if (data is Resource.Success) {
+                val result = data.result
+                if (result == null || result.isEmpty()) {
+                    _list.postValue(emptyList())
                 } else {
-                    //todo network err
+                    _list.postValue(result)
                 }
+            } else {
+                //todo network err
             }
         }
-    }
-
-    private fun getUid(): String? {
-        val userInfo = getUserInfoUseCase()
-        val uid: String? = if (userInfo is Resource.Success) {
-            userInfo.result.uid
-        } else {
-            null
-        }
-
-        return uid
     }
 
     private fun addItems(items: List<VideoInfoEntity>) {
@@ -145,6 +136,5 @@ class OthersGalleryViewModel @Inject constructor(
         }
 
         return false
-
     }
 }

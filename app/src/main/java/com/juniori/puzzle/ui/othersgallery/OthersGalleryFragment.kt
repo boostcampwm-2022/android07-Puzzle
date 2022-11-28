@@ -60,6 +60,8 @@ class OthersGalleryFragment : Fragment() {
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             recyclerAdapter.submitList(dataList)
+
+            binding.textOtherGalleryNotFound.isVisible = dataList.isEmpty()
         }
 
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->

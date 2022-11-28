@@ -15,11 +15,9 @@ class MyGalleryAdapter(
 ) : ListAdapter<VideoInfoEntity, MyGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
-    private var lastPaging = 0
 
     class ViewHolder(
-        val binding: ItemGalleryRecyclerBinding,
-        val height: Int,
+        val binding: ItemGalleryRecyclerBinding, val height: Int,
         val onClick: (VideoInfoEntity) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
@@ -41,15 +39,14 @@ class MyGalleryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        if (itemCount != lastPaging && position == itemCount - LOADING_FLAG_NUM) {
-            lastPaging = itemCount
+        if (position == itemCount - LOADING_FLAG_NUM) {
             viewModel.getPaging(itemCount)
         }
     }
-
 
     companion object {
         const val VISIBLE_ITEM_COUNT = 3
         const val LOADING_FLAG_NUM = 3
     }
+
 }
