@@ -39,6 +39,7 @@ class MyPageFragment : Fragment() {
         updateActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 viewModel.userNickname.value = result.data?.getStringExtra(NEW_NICKNAME) ?: ""
+                viewModel.updateUserInfo(result.data?.getStringExtra(NEW_NICKNAME) ?: "")
             }
         }
 
