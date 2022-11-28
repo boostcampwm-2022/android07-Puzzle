@@ -44,9 +44,9 @@ class OthersGalleryViewModel @Inject constructor(
                 getSearchedSocialVideoListUseCase(index = 0, keyword = query, order = sortType)
             if (data is Resource.Success) {
                 val result = data.result
-                if(result==null||result.isEmpty()){
+                if (result == null || result.isEmpty()) {
                     _list.postValue(emptyList())
-                }else {
+                } else {
                     _list.postValue(result)
                 }
             } else {
@@ -85,12 +85,12 @@ class OthersGalleryViewModel @Inject constructor(
 
     fun getMyData() {
         viewModelScope.launch {
-            val data = getSocialVideoList(index = 0, order =  sortType)
+            val data = getSocialVideoList(index = 0, order = sortType)
             if (data is Resource.Success) {
                 val result = data.result
-                if(result==null||result.isEmpty()){
+                if (result == null || result.isEmpty()) {
                     _list.postValue(emptyList())
-                }else {
+                } else {
                     _list.postValue(result)
                 }
             } else {

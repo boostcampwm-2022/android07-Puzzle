@@ -54,11 +54,11 @@ class MyGalleryFragment : Fragment() {
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             recyclerAdapter.submitList(dataList)
 
-            binding.mygalleryAddVideoBtn.isVisible =  dataList.isEmpty()
-            binding.mygalleryAddVideoText.isVisible =  dataList.isEmpty()
+            binding.mygalleryAddVideoBtn.isVisible = dataList.isEmpty()
+            binding.mygalleryAddVideoText.isVisible = dataList.isEmpty()
         }
 
-        binding.mygalleryAddVideoBtn.setOnClickListener{
+        binding.mygalleryAddVideoBtn.setOnClickListener {
             view.findNavController().navigate(R.id.bottomsheet_main_addvideo)
         }
 
