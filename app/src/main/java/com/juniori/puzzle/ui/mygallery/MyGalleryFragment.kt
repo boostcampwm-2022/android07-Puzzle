@@ -9,7 +9,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,16 +53,17 @@ class MyGalleryFragment : Fragment() {
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             recyclerAdapter.submitList(dataList)
+
+            binding.mygalleryAddVideoBtn.isVisible =  dataList.isEmpty()
+            binding.mygalleryAddVideoText.isVisible =  dataList.isEmpty()
+        }
+
+        binding.mygalleryAddVideoBtn.setOnClickListener{
+            view.findNavController().navigate(R.id.bottomsheet_main_addvideo)
         }
 
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
             binding.progressMyGallery.isVisible = isRefresh
-        }
-
-        viewModel.list.value.also { list ->
-            if (list == null || list.isEmpty()) {
-                viewModel.getMyData()
-            }
         }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -76,6 +79,12 @@ class MyGalleryFragment : Fragment() {
                 return false
             }
         })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMyData()
     }
 
     override fun onDestroyView() {
