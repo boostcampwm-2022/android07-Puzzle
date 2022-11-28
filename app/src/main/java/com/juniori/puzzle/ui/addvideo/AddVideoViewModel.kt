@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,6 +38,8 @@ class AddVideoViewModel @Inject constructor(
         private set
 
     var comments: String = ""
+    var golfCourse = ""
+    var isPublicUpload = false
 
     private val _uploadFlow = MutableSharedFlow<Resource<VideoInfoEntity>>(replay = 0)
     val uploadFlow: SharedFlow<Resource<VideoInfoEntity>> = _uploadFlow
@@ -44,7 +47,10 @@ class AddVideoViewModel @Inject constructor(
     private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
     val uiState: LiveData<AddVideoUiState> get() = _uiState
 
-    var isPublicUpload = false
+    private var isUploadingToServer = false
+
+    private val pickedCalendar = MutableLiveData(Calendar.getInstance())
+    val pickedDate: LiveData<Date> = pickedCalendar.map { calendar -> calendar.time }
 
     fun setVideoName(targetName: String) {
         videoName = targetName
@@ -57,6 +63,9 @@ class AddVideoViewModel @Inject constructor(
 
     fun notifyAction(actionState: AddVideoActionState) {
         when (actionState) {
+            is AddVideoActionState.StartingToAdd -> {
+                _uiState.value = AddVideoUiState.NONE
+            }
             is AddVideoActionState.VideoPicked -> {
                 val durationInSeconds: Long =
                     videoMetaDataUtil.getVideoDurationInSeconds(actionState.uri) ?: return
@@ -79,10 +88,16 @@ class AddVideoViewModel @Inject constructor(
     }
 
     fun uploadVideo() = viewModelScope.launch {
+        if (isUploadingToServer) {
+            return@launch
+        }
         val uid = getUid() ?: return@launch
         val videoName = videoName
         val thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
+
+        isUploadingToServer = true
         _uploadFlow.emit(Resource.Loading)
+
         storageDataSource.insertThumbnail(videoName, thumbnailBytes).onSuccess {
             storageDataSource.insertVideo(
                 videoName,
@@ -91,15 +106,16 @@ class AddVideoViewModel @Inject constructor(
                 val result = firestoreDataSource.postVideoItem(
                     uid = uid,
                     videoName = videoName,
-                    isPrivate = false,
-                    location = "test",
-                    memo = "test"
+                    isPrivate = isPublicUpload.not(),
+                    location = golfCourse,
+                    memo = comments
                 )
                 _uploadFlow.emit(result)
             }.onFailure {
                 _uploadFlow.emit(Resource.Failure(it as Exception))
             }
         }
+        isUploadingToServer = false
     }
 
     private fun getUid(): String? {
@@ -122,6 +138,25 @@ class AddVideoViewModel @Inject constructor(
         comments = ""
         _uiState.value = AddVideoUiState.NONE
         videoFilePath.deleteIfFileUri()
+    }
+
+    fun changeDatesOfCalendar(year: Int, month: Int, dayOfMonth: Int) {
+        pickedCalendar.value?.let { calendar ->
+            calendar.set(year, month, dayOfMonth)
+            pickedCalendar.value = calendar
+        }
+    }
+
+    fun changeTimeOfCalendar(hourOfDay: Int, minute: Int) {
+        pickedCalendar.value?.let { calendar ->
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
+            calendar.set(Calendar.MINUTE, minute)
+            pickedCalendar.value = calendar
+        }
+    }
+
+    fun onGolfCourseTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
+        golfCourse = charSequence.toString()
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
