@@ -2,6 +2,7 @@ package com.juniori.puzzle.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
@@ -21,6 +22,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentHomeBinding
+import com.juniori.puzzle.ui.sensor.SensorActivity
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -99,6 +101,11 @@ class HomeFragment : Fragment() {
 
         binding.weatherRefreshBtn.setOnClickListener {
             checkPermission()
+        }
+
+        binding.button.setOnClickListener {
+            val intent= Intent(requireActivity(),SensorActivity::class.java)
+            startActivity(intent)
         }
 
         binding.weatherDetailRecyclerView.adapter = adapter
