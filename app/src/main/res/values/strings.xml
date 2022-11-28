@@ -87,4 +87,7 @@
     <string name="input_new_nickname">새로운 닉네임을 입력하세요.</string>
     <string name="input_nickname_hint">닉네임을 입력하세요.</string>
     <string name="complete">완료</string>
+    <string name="green_lean_text">그린 기울기 구하기</string>
+    <string name="green_lean_image_description">그린 기울기 구하기 버튼</string>
+    <string name="logo_dsecription">퍼즐 로고</string>
 </resources>
