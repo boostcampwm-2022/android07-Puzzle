@@ -7,7 +7,7 @@
     <string name="all_save">저장</string>
     <string name="all_yes">네</string>
     <string name="all_no">아니요</string>
-    <string name="all_golf_course">골프장 및 홀번호</string>
+    <string name="all_golf_course">골프장</string>
 
     <!--date-->
     <string name="full_date_format">%d년 %02d월 %02d일 %02d시 %02d분</string>
@@ -58,9 +58,8 @@
     <string name="upload2_savedialog_supporting_text_public">영상은 공개로 저장됩니다.</string>
     <string name="upload2_publicuploaddialog_title">영상을 공개로 전환합니다</string>
     <string name="upload2_publicuploaddialog_supporting_text">• 다른 사용자의 피드에 영상이 표시됩니다.\n• 다른 사용자가 반응을 남길 수 있습니다.</string>
-    <string name="upload2_golf_hole_number">홀번호</string>
-    <string name="upload2_dates_format">yyyy년 MM월 dd일 (E)</string>
-    <string name="upload2_time_format">a hh:mm</string>
+    <string name="upload2_input_golf_course_hint">골프장 이름을 입력해주세요</string>
+    <string name="upload2_input_memo_hint">메모를 입력해보세요</string>
 
     <!--network-->
     <string name="network_fail">네트워크 통신에 실패했습니다</string>

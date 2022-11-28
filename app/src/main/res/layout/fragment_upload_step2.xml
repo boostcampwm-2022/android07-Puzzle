@@ -8,14 +8,6 @@
         <variable
             name="vm"
             type="com.juniori.puzzle.ui.addvideo.AddVideoViewModel" />
-
-        <variable
-            name="dateFormatter"
-            type="java.text.SimpleDateFormat" />
-
-        <variable
-            name="timeFormatter"
-            type="java.text.SimpleDateFormat" />
     </data>
 
     <ScrollView
@@ -73,16 +65,89 @@
                 app:layout_constraintEnd_toEndOf="@id/container_toolbar"
                 app:layout_constraintTop_toTopOf="@id/container_toolbar" />
 
+            <EditText
+                android:id="@+id/memo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@android:color/transparent"
+                android:gravity="start|top"
+                android:hint="@string/upload2_input_memo_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLength="140"
+                android:text="@{vm.memo}"
+                android:textAppearance="@style/Theme.Puzzle.TextSmall"
+                app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+                app:layout_constraintEnd_toStartOf="@id/thumbnail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/container_toolbar"
+                app:layout_constraintVertical_bias="0" />
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="100dp"
+                android:layout_height="112dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:adjustViewBounds="true"
+                app:imageBytes="@{vm.thumbnailBytes}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/memo"
+                app:layout_constraintTop_toBottomOf="@id/container_toolbar" />
+
+            <View
+                android:id="@+id/memo_divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/onDisabled_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/thumbnail" />
+
+            <TextView
+                android:id="@+id/golf_course_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/all_golf_course"
+                android:textAppearance="@style/Theme.Puzzle.TextSmall.Bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/memo_divider" />
+
+            <EditText
+                android:id="@+id/golf_course_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/upload2_input_golf_course_hint"
+                android:inputType="text"
+                android:importantForAutofill="no"
+                android:onTextChanged="@{vm.onGolfCourseTextChanged}"
+                android:paddingBottom="24dp"
+                android:text="@{vm.golfCourse}"
+                android:textAppearance="@style/Theme.Puzzle.TextSmall"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/golf_course_label" />
+
             <TextView
                 android:id="@+id/text_isprivate_status_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/upload_isprivate_status"
-                android:textAppearance="@style/Theme.Puzzle.TextMedium"
+                android:textAppearance="@style/Theme.Puzzle.TextSmall.Bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/container_toolbar" />
+                app:layout_constraintTop_toBottomOf="@id/golf_course_name" />
 
             <RadioGroup
                 android:id="@+id/container_radiogroup"
@@ -109,107 +174,6 @@
                     android:buttonTint="@color/primary_color"
                     android:text="@string/upload_set_private" />
             </RadioGroup>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/golf_course_name_inputlayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:expandedHintEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/container_radiogroup"
-                app:placeholderText="@string/all_golf_course"
-                app:startIconDrawable="@drawable/upload2_golfcourse_24dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/golf_course_name"
-                    android:text="@{vm.golfCourse}"
-                    android:onTextChanged="@{vm.onGolfCourseTextChanged}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:id="@+id/divider1"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginHorizontal="16dp"
-                android:background="@color/onSecondary_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/golf_course_name_inputlayout" />
-
-            <Button
-                android:id="@+id/dates_button"
-                style="@style/Theme.Puzzle.Button.Upload2.ShowPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="12dp"
-                android:text="@{dateFormatter.format(vm.pickedDate)}"
-                app:icon="@drawable/play_calendar_icon"
-                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-            <View
-                android:id="@+id/dates_time_divider"
-                android:layout_width="1dp"
-                android:layout_height="0dp"
-                android:background="@color/onSecondary_color"
-                app:layout_constraintBottom_toBottomOf="@id/dates_button"
-                app:layout_constraintStart_toEndOf="@id/dates_button"
-                app:layout_constraintTop_toTopOf="@id/dates_button" />
-
-            <Button
-                android:id="@+id/time_button"
-                style="@style/Theme.Puzzle.Button.Upload2.ShowPicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:paddingVertical="12dp"
-                android:text="@{timeFormatter.format(vm.pickedDate)}"
-                app:icon="@drawable/upload2_time_icon_24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/dates_time_divider"
-                app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-            <CalendarView
-                android:id="@+id/datespicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:dateTextAppearance="@style/Theme.Puzzle.TextSmall"
-                android:onSelectedDayChange="@{(_, year, month, dayOfMonth) -> vm.changeDatesOfCalendar(year, month, dayOfMonth)}"
-                app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintTop_toBottomOf="@id/dates_button" />
-
-            <TimePicker
-                android:id="@+id/timepicker"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:onTimeChanged="@{(_, hourOfDay, minute) -> vm.changeTimeOfCalendar(hourOfDay, minute)}"
-                android:timePickerMode="spinner"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintTop_toBottomOf="@id/datespicker" />
-
-            <View
-                android:id="@+id/button_picker_divider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/onSecondary_color"
-                android:layout_marginHorizontal="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dates_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

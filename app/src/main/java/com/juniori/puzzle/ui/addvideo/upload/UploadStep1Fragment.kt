@@ -50,7 +50,6 @@ class UploadStep1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonNext.setOnClickListener {
-            addVideoViewModel.saveComments(binding.comments.text.toString())
             findNavController().navigate(R.id.fragment_upload_step2)
         }
         binding.buttonCancel.setOnClickListener {
@@ -66,7 +65,6 @@ class UploadStep1Fragment : Fragment() {
     override fun onStop() {
         super.onStop()
         releaseVideoPlayer()
-        addVideoViewModel.saveComments(binding.comments.text.toString())
     }
 
     override fun onDestroyView() {
