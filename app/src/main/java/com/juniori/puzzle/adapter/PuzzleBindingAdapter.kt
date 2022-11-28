@@ -14,6 +14,9 @@ import java.util.*
 
 private val calendar = Calendar.getInstance()
 
+private const val DRAWABLE_WIDTH = 120
+private const val DRAWABLE_HEIGHT = 120
+
 @BindingAdapter("setImage")
 fun setImage(view: ImageView, url: String?) {
     if (url.isNullOrEmpty()) return
@@ -31,34 +34,34 @@ fun setDrawableLeft(view: TextView, url: String?) {
         val resourceId = url.toInt()
         Glide.with(view.context)
             .load(resourceId)
-            .into(object : CustomTarget<Drawable>(100, 100) {
+            .into(object : CustomTarget<Drawable>(DRAWABLE_WIDTH, DRAWABLE_HEIGHT) {
                 override fun onResourceReady(
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
-                    resource.setBounds(0, 0, 160, 160)
+                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
                     view.setCompoundDrawables(resource, null, null, null)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    placeholder?.setBounds(0, 0, 160, 160)
+                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
                     view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
                 }
             })
     } catch (e: Exception) {
         Glide.with(view.context)
             .load(url)
-            .into(object : CustomTarget<Drawable>(100, 100) {
+            .into(object : CustomTarget<Drawable>(DRAWABLE_WIDTH, DRAWABLE_HEIGHT) {
                 override fun onResourceReady(
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
-                    resource.setBounds(0, 0, 160, 160)
+                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
                     view.setCompoundDrawables(resource, null, null, null)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    placeholder?.setBounds(0, 0, 160, 160)
+                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
                     view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
                 }
             })

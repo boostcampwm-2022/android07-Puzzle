@@ -49,6 +49,8 @@ class PlayVideoBottomSheet : BottomSheetDialogFragment() {
         binding.itemDate.content =
             SimpleDateFormat("yyyy-MM-dd HH:mm").format(videoInfo.updateTime)
         binding.itemPublisher.content = publisherInfo.nickname
+
+        binding.memo = videoInfo.memo
     }
 
     override fun onDestroyView() {
