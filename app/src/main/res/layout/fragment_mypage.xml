@@ -54,7 +54,7 @@
             android:layout_marginBottom="@dimen/text_vertical_margin"
             tools:text="000님"
             android:textColor="@color/onPrimary_color"
-            android:text="@{@string/user_nickname(viewModel.userNickname)}"
+            setNickname="@{viewModel.userNickname}"
             app:layout_constraintBottom_toTopOf="@id/welcome_text"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="@id/top_bar"

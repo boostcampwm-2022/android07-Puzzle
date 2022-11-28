@@ -55,4 +55,13 @@ fun setTime(view: TextView, date: Date) {
     }
 }
 
+@BindingAdapter("setNickname")
+fun setNickname(view: TextView, nickname: String?) {
+    val displayName = nickname?.let {
+        "${it}님"
+    } ?: run { "${view.context.getString(R.string.display_anonymous)}님" }
+
+    view.text = displayName
+}
+
 

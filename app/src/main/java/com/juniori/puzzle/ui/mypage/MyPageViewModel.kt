@@ -19,7 +19,7 @@ class MyPageViewModel @Inject constructor(
     val makeLogoutDialogEvent = SingleLiveEvent<Unit>()
     val makeWithdrawDialogEvent = SingleLiveEvent<Unit>()
     val navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
-    val userNickname = MutableLiveData<String>()
+    val userNickname = MutableLiveData<String?>()
 
     init {
         val data = getUserInfoUseCase()
@@ -28,7 +28,7 @@ class MyPageViewModel @Inject constructor(
             userNickname.value = data.result.nickname
         }
         else {
-            userNickname.value = "누구세요"
+            userNickname.value = null
         }
     }
 
