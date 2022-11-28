@@ -126,7 +126,7 @@ object QueryUtil {
                         StringFieldFilter(
                             field = FieldReference(toSearch),
                             op = "LESS_THAN_OR_EQUAL",
-                            value = StringValue("$${keyword}힣")
+                            value = StringValue("${keyword}힣")
                         )
                     )
                 )
