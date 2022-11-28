@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.juniori.puzzle.databinding.BottomsheetPlayvideoBinding
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -17,8 +17,6 @@ class PlayVideoBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetPlayvideoBinding? = null
     private val binding get() = _binding!!
-
-    private val viewModel: PlayVideoViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,8 +31,8 @@ class PlayVideoBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentVideoItem = arguments?.get("videoInfo") as VideoInfoEntity
-        val nickname = arguments?.get("nickName") as String
-        binding.buttonOwner.text = nickname
+        val currentUserItem = arguments?.get("publisherInfo") as UserInfoEntity
+        binding.buttonOwner.text = currentUserItem.nickname
         binding.buttonDate.text =
             SimpleDateFormat("yyyy-MM-dd HH:mm").format(currentVideoItem.updateTime)
         binding.buttonLocation.text = currentVideoItem.location

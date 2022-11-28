@@ -23,6 +23,9 @@ class PlayVideoViewModel @Inject constructor(
     private val _getLoginInfoFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
     val getLoginInfoFlow: StateFlow<Resource<UserInfoEntity>?> = _getLoginInfoFlow
 
+    private val _getPublisherInfoFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
+    val getPublisherInfoFlow: StateFlow<Resource<UserInfoEntity>?> = _getPublisherInfoFlow
+
     private val _deleteFlow = MutableStateFlow<Resource<Unit>?>(null)
     val deleteFlow: StateFlow<Resource<Unit>?> = _deleteFlow
 
@@ -31,6 +34,12 @@ class PlayVideoViewModel @Inject constructor(
 
     init {
         _getLoginInfoFlow.value = getUserInfoUseCase()
+    }
+
+    fun getPublisherInfo(uid: String) {
+        viewModelScope.launch {
+            _getPublisherInfoFlow.value = firestoreDataSource.getUserItem(uid)
+        }
     }
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {

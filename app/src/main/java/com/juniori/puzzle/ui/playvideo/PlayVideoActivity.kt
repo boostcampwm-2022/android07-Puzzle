@@ -41,6 +41,7 @@ class PlayVideoActivity : AppCompatActivity() {
         stateManager.createLoadingDialog(binding.root)
         setContentView(binding.root)
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
+        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         initVideoPlayer(currentVideoItem.videoUrl)
         setItemOnClickListener()
         initCollector()
@@ -52,8 +53,18 @@ class PlayVideoActivity : AppCompatActivity() {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
                     if (resource is Resource.Success) {
                         currentUserInfo = resource.result
-                        binding.materialToolbar.title = currentUserInfo.nickname
                         setMenuItems()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getPublisherInfoFlow.collectLatest { resource ->
+                    if (resource is Resource.Success) {
+                        publisherUserInfo = resource.result
+                        binding.materialToolbar.title = publisherUserInfo.nickname
                     }
                 }
             }
@@ -162,7 +173,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 PlayVideoBottomSheet().apply {
                     arguments = Bundle().apply {
                         putParcelable(VIDEO_EXTRA_NAME, currentVideoItem)
-                        putString("nickName", currentUserInfo.nickname)
+                        putParcelable(PUBLISHER_EXTRA_NAME, publisherUserInfo)
                     }
                 }.show(supportFragmentManager, null)
             }
@@ -170,7 +181,9 @@ class PlayVideoActivity : AppCompatActivity() {
     }
 
     companion object {
+        lateinit var publisherUserInfo: UserInfoEntity
         lateinit var currentUserInfo: UserInfoEntity
         const val VIDEO_EXTRA_NAME = "videoInfo"
+        const val PUBLISHER_EXTRA_NAME = "publisherInfo"
     }
 }
