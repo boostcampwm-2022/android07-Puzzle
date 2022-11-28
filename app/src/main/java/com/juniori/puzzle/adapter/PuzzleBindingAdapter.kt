@@ -1,11 +1,14 @@
 package com.juniori.puzzle.adapter
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.juniori.puzzle.R
 import java.util.*
 
@@ -18,6 +21,49 @@ fun setImage(view: ImageView, url: String?) {
     Glide.with(view.context)
         .load(url)
         .into(view)
+}
+
+@BindingAdapter("setDrawableLeft")
+fun setDrawableLeft(view: TextView, url: String?) {
+    if (url.isNullOrEmpty()) return
+
+    try {
+        val resourceId = url.toInt()
+        Glide.with(view.context)
+            .load(resourceId)
+            .into(object : CustomTarget<Drawable>(100, 100) {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    resource.setBounds(0, 0, 160, 160)
+                    view.setCompoundDrawables(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    placeholder?.setBounds(0, 0, 160, 160)
+                    view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
+                }
+            })
+    } catch (e: Exception) {
+        Glide.with(view.context)
+            .load(url)
+            .into(object : CustomTarget<Drawable>(100, 100) {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    resource.setBounds(0, 0, 160, 160)
+                    view.setCompoundDrawables(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    placeholder?.setBounds(0, 0, 160, 160)
+                    view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
+                }
+            })
+    }
+
 }
 
 @BindingAdapter("setAdapter")
