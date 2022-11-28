@@ -88,4 +88,10 @@
     <string name="input_new_nickname">새로운 닉네임을 입력하세요.</string>
     <string name="input_nickname_hint">닉네임을 입력하세요.</string>
     <string name="complete">완료</string>
+
+    <!--my gallery-->
+    <string name="mygallery_add_video_text">멋진 퍼팅 영상을 촬영해 보세요!</string>
+    
+    <!--other gallery-->
+    <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
 </resources>
