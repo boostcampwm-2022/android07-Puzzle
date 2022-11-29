@@ -15,6 +15,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.juniori.puzzle.R
 import java.util.Calendar
+import java.util.Date
 
 private val calendar = Calendar.getInstance()
 
@@ -70,7 +71,6 @@ fun setDrawableLeft(view: TextView, url: String?) {
                 }
             })
     }
-
 }
 
 @BindingAdapter("setAdapter")
