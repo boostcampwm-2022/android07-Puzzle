@@ -10,6 +10,7 @@ import com.juniori.puzzle.data.firebase.dto.StringValues
 import com.juniori.puzzle.data.firebase.dto.UserDetail
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.getVideoInfoEntity
+import com.juniori.puzzle.data.firebase.dto.toStringValues
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.QueryUtil
@@ -42,7 +43,7 @@ class FirestoreDataSource @Inject constructor(
                             thumbUrl = StringValue(thumbnailUrl),
                             isPrivate = BooleanValue(isPrivate.not()),
                             likeCount = IntegerValue(likedCount.toLong()),
-                            likedUserList = ArrayValue(StringValues(likedUserUidList)),
+                            likedUserList = ArrayValue(likedUserUidList.toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
                             memo = StringValue(memo)
