@@ -31,14 +31,18 @@ class OthersGalleryViewModel @Inject constructor(
     var query = ""
     var sortType = SortType.NEW
     fun setQueryText(nowQuery: String?) {
-        if (nowQuery.isNullOrBlank()) {
-            query = ""
-            getMainData()
-            return
+        query = if (nowQuery != null && nowQuery.isNotBlank()) {
+            nowQuery
+        }else{
+            ""
         }
 
-        query = nowQuery
+        getMainData()
+    }
 
+
+
+    fun getQueryData(){
         viewModelScope.launch {
             val data = getSearchedSocialVideoListUseCase(
                 index = 0,
@@ -58,7 +62,24 @@ class OthersGalleryViewModel @Inject constructor(
             }
         }
     }
-
+    fun getBaseData(){
+        viewModelScope.launch {
+            val data = getSocialVideoList(
+                index = 0,
+                order = sortType
+            )
+            if (data is Resource.Success) {
+                val result = data.result
+                if (result == null || result.isEmpty()) {
+                    _list.postValue(emptyList())
+                } else {
+                    _list.postValue(result)
+                }
+            } else {
+                //todo network err
+            }
+        }
+    }
     fun getPaging(start: Int) {
         if (refresh.value == true) {
             return
@@ -91,21 +112,10 @@ class OthersGalleryViewModel @Inject constructor(
     }
 
     fun getMainData() {
-        viewModelScope.launch {
-            val data = getSocialVideoList(
-                index = 0,
-                order = sortType
-            )
-            if (data is Resource.Success) {
-                val result = data.result
-                if (result == null || result.isEmpty()) {
-                    _list.postValue(emptyList())
-                } else {
-                    _list.postValue(result)
-                }
-            } else {
-                //todo network err
-            }
+        if(query.isEmpty()){
+            getBaseData()
+        }else{
+            getQueryData()
         }
     }
 

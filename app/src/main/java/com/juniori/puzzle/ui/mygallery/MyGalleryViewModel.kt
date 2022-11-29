@@ -31,13 +31,16 @@ class MyGalleryViewModel @Inject constructor(
     private var query = ""
 
     fun setQueryText(nowQuery: String?) {
-        if (nowQuery.isNullOrBlank()) {
-            query = ""
-            getMyData()
-            return
+        query = if (nowQuery != null && nowQuery.isNotBlank()) {
+            nowQuery
+        }else{
+            ""
         }
 
-        query = nowQuery
+        getMyData()
+    }
+
+    private fun getQueryData(){
         val uid = getUid()
 
         if (uid == null) {
@@ -45,6 +48,28 @@ class MyGalleryViewModel @Inject constructor(
         } else {
             viewModelScope.launch {
                 val data = getSearchedMyVideoUseCase(uid, 0, query)
+                if (data is Resource.Success) {
+                    val result = data.result
+                    if(result==null||result.isEmpty()){
+                        _list.postValue(emptyList())
+                    }else {
+                        _list.postValue(result)
+                    }
+                } else {
+                    //todo network err
+                }
+            }
+        }
+    }
+
+    private fun getBaseData(){
+        val uid = getUid()
+
+        if (uid == null) {
+            //todo network err
+        } else {
+            viewModelScope.launch {
+                val data = getMyVideoListUseCase(uid, 0)
                 if (data is Resource.Success) {
                     val result = data.result
                     if(result==null||result.isEmpty()){
@@ -89,24 +114,10 @@ class MyGalleryViewModel @Inject constructor(
     }
 
     fun getMyData() {
-        val uid = getUid()
-
-        if (uid == null) {
-            //todo network err
-        } else {
-            viewModelScope.launch {
-                val data = getMyVideoListUseCase(uid, 0)
-                if (data is Resource.Success) {
-                    val result = data.result
-                    if(result==null||result.isEmpty()){
-                        _list.postValue(emptyList())
-                    }else {
-                        _list.postValue(result)
-                    }
-                } else {
-                    //todo network err
-                }
-            }
+        if(query.isEmpty()){
+            getBaseData()
+        }else{
+            getQueryData()
         }
     }
 

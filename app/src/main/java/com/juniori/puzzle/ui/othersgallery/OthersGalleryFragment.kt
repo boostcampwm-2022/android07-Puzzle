@@ -69,6 +69,9 @@ class OthersGalleryFragment : Fragment() {
             })
         }
 
+        binding.otherGallerySwipeRefresh.setOnRefreshListener {
+            viewModel.getMainData()
+        }
         val items = resources.getStringArray(R.array.other_order_type)
         val spinnerAdapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
@@ -76,6 +79,8 @@ class OthersGalleryFragment : Fragment() {
 
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            binding.otherGallerySwipeRefresh.isRefreshing = false
+
             recyclerAdapter.submitList(dataList)
 
             binding.textOtherGalleryNotFound.isVisible = dataList.isEmpty()

@@ -68,6 +68,8 @@ class MyGalleryFragment : Fragment() {
         }
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            binding.mygallerySwipeRefresh.isRefreshing = false
+
             recyclerAdapter.submitList(dataList)
 
             binding.mygalleryAddVideoBtn.isVisible = dataList.isEmpty()
@@ -78,11 +80,19 @@ class MyGalleryFragment : Fragment() {
             view.findNavController().navigate(R.id.bottomsheet_main_addvideo)
         }
 
+        binding.mygallerySwipeRefresh.setOnRefreshListener {
+            viewModel.getMyData()
+        }
+
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
             binding.progressMyGallery.isVisible = isRefresh
         }
 
-        viewModel.getMyData()
+        viewModel.list.value.also {
+            if(it == null || it.isEmpty()){
+                viewModel.getMyData()
+            }
+        }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
