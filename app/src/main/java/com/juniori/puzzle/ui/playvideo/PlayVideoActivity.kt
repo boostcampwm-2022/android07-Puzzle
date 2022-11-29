@@ -38,7 +38,7 @@ class PlayVideoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
-        stateManager.createLoadingDialog(binding.root)
+        stateManager.createLoadingDialog(binding.activityPlayVideo)
         setContentView(binding.root)
 
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
@@ -122,6 +122,7 @@ class PlayVideoActivity : AppCompatActivity() {
                             is Resource.Success -> {
                                 stateManager.dismissLoadingDialog()
                                 currentVideoItem = resource.result
+                                binding.videoInfo = currentVideoItem
                                 setMenuItems()
                             }
                             is Resource.Loading -> {
@@ -195,7 +196,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 }.show(supportFragmentManager, null)
             }
             buttonLike.setOnClickListener {
-                viewModel.changeBookmarkStatus(currentVideoItem, currentUserInfo.uid)
+                viewModel.changeLikeStatus(currentVideoItem, currentUserInfo.uid)
             }
         }
     }

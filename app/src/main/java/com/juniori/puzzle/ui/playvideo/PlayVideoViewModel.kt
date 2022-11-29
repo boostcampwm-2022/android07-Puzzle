@@ -52,7 +52,7 @@ class PlayVideoViewModel @Inject constructor(
         }
     }
 
-    fun changeBookmarkStatus(currentVideo: VideoInfoEntity, currentUid: String) {
+    fun changeLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
         if (likeState.value) {
             cancelLike(currentVideo, currentUid)
         } else {
