@@ -5,14 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.util.toAddressString
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.weather.WeatherRepository
+import com.juniori.puzzle.domain.entity.WeatherEntity
+import com.juniori.puzzle.domain.usecase.GetLocationUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
-import com.juniori.puzzle.util.toAddressString
+import com.juniori.puzzle.domain.usecase.GetWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -20,10 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: WeatherRepository,
+    private val getLocationUseCase: GetLocationUseCase,
+    private val getWeatherUseCase: GetWeatherUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<Resource<List<WeatherItem>>>(Resource.Loading)
+    private val _uiState = MutableLiveData<Resource<List<WeatherEntity>>>(Resource.Loading)
     val uiState = _uiState
 
     private val _welcomeText = MutableLiveData("")
@@ -38,14 +39,14 @@ class HomeViewModel @Inject constructor(
     private val _currentAddress = MutableLiveData("")
     val currentAddress: LiveData<String> = _currentAddress
 
-    private val _weatherList = MutableLiveData<List<WeatherItem>>(emptyList())
-    val weatherList: LiveData<List<WeatherItem>> = _weatherList
+    private val _weatherList = MutableLiveData<List<WeatherEntity>>(emptyList())
+    val weatherList: LiveData<List<WeatherEntity>> = _weatherList
 
     private val _weatherMainList =
-        MutableLiveData(WeatherItem(Date(), 0, 0, 0, 0, "", ""))
-    val weatherMainList: LiveData<WeatherItem> = _weatherMainList
+        MutableLiveData(WeatherEntity(Date(), 0, 0, 0, 0, "", ""))
+    val weatherMainList: LiveData<WeatherEntity> = _weatherMainList
 
-    fun setUiState(state: Resource<List<WeatherItem>>) {
+    fun setUiState(state: Resource<List<WeatherEntity>>) {
         _uiState.value = state
     }
 
@@ -63,7 +64,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setWeatherInfoText(text: String) {
-        _weatherInfoText.value = text
         _uiState.value = Resource.Failure(Exception(text))
     }
 
@@ -73,26 +73,22 @@ class HomeViewModel @Inject constructor(
 
     fun getWeather(latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            delay(1000)
             when(val result = repository.getWeather(latitude, longitude)){
-                is Resource.Success->{
+                is Resource.Success<*> ->{
                     val list = result.result
                     if(list.isNotEmpty()){
                         _weatherMainList.value = list[0]
                         _weatherList.value = list.subList(1, list.size)
-                        _weatherInfoText.value = ""
                         uiState.value = Resource.Success(list)
                     }
                     else{
-                        _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
-                        uiState.value = Resource.Failure(Exception())
+                        uiState.value = Resource.Failure(Exception("네트워크 통신에 실패하였습니다"))
                     }
                 }
                 is Resource.Failure -> {
-                    _weatherInfoText.value = "네트워크 통신에 실패하였습니다"
-                    uiState.value = Resource.Failure(Exception())
+                    uiState.value = Resource.Failure(Exception("네트워크 통신에 실패하였습니다"))
                 }
-                is Resource.Loading -> TODO()
+                is Resource.Loading ->  uiState.value = Resource.Loading
             }
         }
     }

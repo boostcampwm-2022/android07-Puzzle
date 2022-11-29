@@ -1,8 +1,8 @@
-package com.juniori.puzzle.data.weather
+package com.juniori.puzzle.domain.entity
 
 import java.util.*
 
-data class WeatherItem(
+data class WeatherEntity(
     val date: Date,
     val temp: Int,
     val feelsLike: Int,

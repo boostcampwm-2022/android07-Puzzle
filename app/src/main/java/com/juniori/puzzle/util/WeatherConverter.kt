@@ -1,6 +1,5 @@
 package com.juniori.puzzle.util
 
-import com.juniori.puzzle.data.weather.WeatherItem
 import com.juniori.puzzle.data.weather.WeatherResponse
 import java.util.*
 import kotlin.math.roundToInt
