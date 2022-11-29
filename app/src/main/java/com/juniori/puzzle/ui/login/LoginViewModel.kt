@@ -7,7 +7,6 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.RequestLoginUseCase
-import com.juniori.puzzle.domain.usecase.RequestLogoutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +17,6 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val requestLoginUseCase: RequestLoginUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val requestLogoutUseCase: RequestLogoutUseCase
 ) : ViewModel() {
     private val _loginFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
     val loginFlow: StateFlow<Resource<UserInfoEntity>?> = _loginFlow
@@ -33,16 +31,5 @@ class LoginViewModel @Inject constructor(
         _loginFlow.value = Resource.Loading
         val result = requestLoginUseCase(account)
         _loginFlow.value = result
-    }
-
-    private fun logout() {
-        val logoutResult = requestLogoutUseCase()
-
-        if (logoutResult is Resource.Success) {
-            _loginFlow.value = null
-        }
-        else {
-            throw Exception()
-        }
     }
 }

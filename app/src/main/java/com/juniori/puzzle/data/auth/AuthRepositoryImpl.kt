@@ -1,6 +1,5 @@
 package com.juniori.puzzle.data.auth
 
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -9,8 +8,6 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.repository.AuthRepository
 import com.juniori.puzzle.util.await
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -22,9 +19,7 @@ class AuthRepositoryImpl @Inject constructor(
             .setDisplayName(newNickname)
             .build()
 
-        val result = withContext(Dispatchers.IO) {
-            firebaseAuth.currentUser?.updateProfile(newProfile)
-        }
+        val result = firebaseAuth.currentUser?.updateProfile(newProfile)
 
         return result?.let {
             Resource.Success(Unit)
@@ -64,7 +59,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun requestLogout(): Resource<Unit> {
+    override suspend fun requestLogout(): Resource<Unit> {
         return try {
             firebaseAuth.signOut()
             Resource.Success(Unit)
@@ -73,7 +68,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun requestWithdraw(): Resource<Unit> {
+    override suspend fun requestWithdraw(): Resource<Unit> {
         return try {
             firebaseAuth.currentUser?.delete() ?: throw java.lang.Exception()
             Resource.Success(Unit)

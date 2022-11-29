@@ -11,11 +11,14 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentMypageBinding
 import com.juniori.puzzle.ui.login.LoginActivity
+import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MyPageFragment : Fragment() {
@@ -23,6 +26,7 @@ class MyPageFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MyPageViewModel by viewModels()
     private lateinit var updateActivityLauncher: ActivityResultLauncher<Intent>
+    @Inject lateinit var stateManager: StateManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +36,7 @@ class MyPageFragment : Fragment() {
         _binding = FragmentMypageBinding.inflate(inflater, container, false)
         _binding!!.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        stateManager.createLoadingDialog(container)
 
         return binding.root
     }
@@ -40,16 +45,52 @@ class MyPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.userNickname.value = result.data?.getStringExtra(NEW_NICKNAME) ?: ""
+                viewModel.updateUserNickname(result.data?.getStringExtra(NEW_NICKNAME))
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.requestLogoutFlow.collect { result ->
+                when(result) {
+                    is Resource.Success<Unit> -> {
+                        stateManager.dismissLoadingDialog()
+                        val intent = Intent(context, LoginActivity::class.java)
+                        activity?.finishAffinity()
+                        startActivity(intent)
+                    }
+                    is Resource.Loading -> {
+                        stateManager.showLoadingDialog()
+                    }
+                    is Resource.Failure -> {
+                        stateManager.dismissLoadingDialog()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.requestWithdrawFlow.collect { result ->
+                when(result) {
+                    is Resource.Success<Unit> -> {
+                        stateManager.dismissLoadingDialog()
+                        activity?.finishAffinity()
+                    }
+                    is Resource.Loading -> {
+                        stateManager.showLoadingDialog()
+                    }
+                    is Resource.Failure -> {
+                        stateManager.dismissLoadingDialog()
+                    }
+                }
             }
         }
 
         viewModel.makeLogoutDialogEvent.observe(viewLifecycleOwner) {
-            navigateToIntroPageEvent()
+            makeLogoutDialog()
         }
 
         viewModel.makeWithdrawDialogEvent.observe(viewLifecycleOwner) {
-            finishApplication()
+            makeWithdrawDialog()
         }
 
         viewModel.navigateToUpdateNicknamePageEvent.observe(viewLifecycleOwner) {
@@ -58,32 +99,24 @@ class MyPageFragment : Fragment() {
         }
     }
 
-    private fun navigateToIntroPageEvent() {
+    private fun makeLogoutDialog() {
         AlertDialog.Builder(context)
             .setTitle(getString(R.string.logout))
             .setMessage(getString(R.string.logout_remind))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                val result = viewModel.requestLogout()
-                if (result is Resource.Success<Unit>) {
-                    val intent = Intent(context, LoginActivity::class.java)
-                    activity?.finishAffinity()
-                    startActivity(intent)
-                }
+                viewModel.requestLogout()
             }
             .setNegativeButton(getString(R.string.no)) { _, _ ->
             }
             .show()
     }
 
-    private fun finishApplication() {
+    private fun makeWithdrawDialog() {
         AlertDialog.Builder(context)
             .setTitle(getString(R.string.withdraw))
             .setMessage(getString(R.string.withdraw_remind))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                val result = viewModel.requestWithdraw()
-                if (result is Resource.Success<Unit>) {
-                    activity?.finishAffinity()
-                }
+                viewModel.requestWithdraw()
             }
             .setNegativeButton(getString(R.string.no)) { _, _ ->
             }
@@ -96,6 +129,6 @@ class MyPageFragment : Fragment() {
     }
 
     companion object {
-        const val NEW_NICKNAME = "new_nickname"
+        const val NEW_NICKNAME = "NEW_NICKNAME"
     }
 }

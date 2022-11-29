@@ -20,7 +20,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class UpdateNicknameActivity : AppCompatActivity() {
     private val binding: ActivityUpdateNicknameBinding by lazy { ActivityUpdateNicknameBinding.inflate(layoutInflater) }
-    private val stateManager = StateManager(this)
+    @Inject lateinit var stateManager: StateManager
     @Inject lateinit var updateNicknameUseCase: UpdateNicknameUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,10 @@ class UpdateNicknameActivity : AppCompatActivity() {
                 stateManager.dismissLoadingDialog()
 
                 if (result is Resource.Success) {
-                    val intent = Intent(this@UpdateNicknameActivity, MainActivity::class.java)
+                    val intent = Intent(this@UpdateNicknameActivity, MainActivity::class.java).apply {
+                        putExtra(MyPageFragment.NEW_NICKNAME, newNickname)
+                    }
+
                     setResult(RESULT_OK, intent)
                     finish()
                 }
