@@ -1,11 +1,7 @@
 package com.juniori.puzzle.ui.home
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
-import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -37,16 +33,11 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var stateManager: StateManager
 
-    private val locationManager: LocationManager by lazy {
-        requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    }
     private lateinit var adapter: WeatherRecyclerViewAdapter
-    private val geoCoder: Geocoder by lazy {
-        Geocoder(requireContext())
-    }
+
     private val locationListener = object : LocationListenerCompat {
         override fun onLocationChanged(loc: Location) {
-            getWeatherInfo(loc.latitude, loc.longitude)
+            homeViewModel.getWeather()
         }
 
         override fun onProviderDisabled(provider: String) {
@@ -56,8 +47,12 @@ class HomeFragment : Fragment() {
 
         override fun onProviderEnabled(provider: String) {
             super.onProviderEnabled(provider)
-            getWeatherByLocation()
+            homeViewModel.getWeather()
         }
+    }
+
+    val checkPermission = {
+        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     private val locationPermissionRequest = registerForActivityResult(
@@ -65,11 +60,7 @@ class HomeFragment : Fragment() {
     ) { isPermitted ->
         homeViewModel.setUiState(Resource.Loading)
         if (isPermitted) {
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                getWeatherByLocation()
-            } else {
-                homeViewModel.setWeatherInfoText(getString(R.string.location_service_off))
-            }
+            homeViewModel.getWeather()
         } else {
             homeViewModel.setWeatherInfoText(getString(R.string.location_permission))
         }
@@ -94,16 +85,18 @@ class HomeFragment : Fragment() {
         checkPermission()
         adapter = WeatherRecyclerViewAdapter()
 
-        binding.weatherRefreshBtn.setOnClickListener {
-            checkPermission()
-        }
+        binding.run {
+            weatherRefreshBtn.setOnClickListener {
+                checkPermission()
+            }
 
-        binding.golfBtnBackground.setOnClickListener {
-            val intent= Intent(requireActivity(),SensorActivity::class.java)
-            startActivity(intent)
-        }
+            golfBtnBackground.setOnClickListener {
+                val intent = Intent(requireActivity(), SensorActivity::class.java)
+                startActivity(intent)
+            }
 
-        binding.weatherDetailRecyclerView.adapter = adapter
+            weatherDetailRecyclerView.adapter = adapter
+        }
 
         homeViewModel.run {
             setWelcomeText(welcomeTextArray.random(random))
@@ -134,6 +127,11 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        homeViewModel.registerListener(locationListener)
+    }
+
     override fun onPause() {
         super.onPause()
         stateManager.dismissLoadingDialog()
@@ -141,41 +139,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        locationManager.removeUpdates(locationListener)
+        homeViewModel.unregisterListener()
         _binding = null
     }
 
-    val checkPermission = {
-        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun getWeatherByLocation() {
-        val location = locationManager.getLastKnownLocation(
-            LocationManager.NETWORK_PROVIDER
-        )
-        locationManager.requestLocationUpdates(
-            LocationManager.NETWORK_PROVIDER,
-            LOCATION_MIN_TIME_INTERVAL,
-            LOCATION_MIN_DISTANCE_INTERVAL,
-            locationListener
-        )
-        val latitude = location?.latitude ?: DEFAULT_LATITUDE
-        val longitude = location?.longitude ?: DEFAULT_LONGITUDE
-        getWeatherInfo(latitude, longitude)
-    }
-
-    private fun getWeatherInfo(latitude: Double, longitude: Double) {
-        val address = geoCoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT)
-        homeViewModel.setCurrentAddress(address)
-        homeViewModel.getWeather(latitude, longitude)
-    }
-
-    companion object {
-        private const val DEFAULT_LATITUDE = 37.0
-        private const val DEFAULT_LONGITUDE = 127.0
-        private const val LOCATION_MIN_TIME_INTERVAL = 3000L
-        private const val LOCATION_MIN_DISTANCE_INTERVAL = 30f
-        private const val ADDRESS_MAX_RESULT = 1
-    }
 }

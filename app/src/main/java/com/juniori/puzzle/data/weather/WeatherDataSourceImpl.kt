@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class WeatherDataSourceImpl @Inject constructor(
     private val service: WeatherService
-):WeatherDataSource {
+) : WeatherDataSource {
 
     override suspend fun getWeather(lat: Double, lon: Double): Resource<List<WeatherEntity>> {
         return try {

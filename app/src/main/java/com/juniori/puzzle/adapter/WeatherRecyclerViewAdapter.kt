@@ -6,13 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.databinding.ItemWeatherDetailBinding
+import com.juniori.puzzle.domain.entity.WeatherEntity
 
 class WeatherRecyclerViewAdapter :
-    ListAdapter<WeatherItem, WeatherRecyclerViewAdapter.WeatherViewHolder>(diffUtil) {
+    ListAdapter<WeatherEntity, WeatherRecyclerViewAdapter.WeatherViewHolder>(diffUtil) {
     inner class WeatherViewHolder(val binding: ItemWeatherDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(weatherItem: WeatherItem) {
+        fun bind(weatherItem: WeatherEntity) {
             binding.item = weatherItem
         }
     }
@@ -32,15 +33,17 @@ class WeatherRecyclerViewAdapter :
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<WeatherItem>() {
-            override fun areItemsTheSame(oldItem: WeatherItem, newItem: WeatherItem): Boolean {
+        private val diffUtil = object : DiffUtil.ItemCallback<WeatherEntity>() {
+            override fun areItemsTheSame(oldItem: WeatherEntity, newItem: WeatherEntity): Boolean {
                 return oldItem.date == newItem.date
             }
 
-            override fun areContentsTheSame(oldItem: WeatherItem, newItem: WeatherItem): Boolean {
+            override fun areContentsTheSame(
+                oldItem: WeatherEntity,
+                newItem: WeatherEntity
+            ): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 

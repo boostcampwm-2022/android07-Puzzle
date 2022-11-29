@@ -1,12 +1,13 @@
 package com.juniori.puzzle.util
 
 import com.juniori.puzzle.data.weather.WeatherResponse
+import com.juniori.puzzle.domain.entity.WeatherEntity
 import java.util.*
 import kotlin.math.roundToInt
 
-fun WeatherResponse.toItem(): List<WeatherItem> {
+fun WeatherResponse.toItem(): List<WeatherEntity> {
     return list.map {
-        WeatherItem(
+        WeatherEntity(
             date = it.dtTxt.toDate(),
             temp = it.main.temp.roundToInt(),
             feelsLike = it.main.feelsLike.roundToInt(),
