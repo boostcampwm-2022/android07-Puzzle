@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.addvideo.AddVideoBottomSheet">
+<layout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_location"
-        style="@style/Theme.Puzzle.Button.Inplayvideo"
+    <data>
+
+        <variable
+            name="memo"
+            type="String" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        app:icon="@drawable/all_location_icon"
-        tools:text="장소" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.addvideo.AddVideoBottomSheet">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_date"
-        style="@style/Theme.Puzzle.Button.Inplayvideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        app:icon="@drawable/play_calendar_icon"
-        tools:text="날짜" />
+        <include
+            android:id="@+id/item_location"
+            layout="@layout/item_information" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_owner"
-        style="@style/Theme.Puzzle.Button.Inplayvideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        app:icon="@drawable/add_photo_icon"
-        tools:text="사용자" />
+        <include
+            android:id="@+id/item_date"
+            layout="@layout/item_information" />
 
+        <include
+            android:id="@+id/item_publisher"
+            layout="@layout/item_information" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/all_outlined_box"
+            android:padding="8dp"
+            android:text="@{memo}"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            tools:text="메모가 들어갈\n자리입니다\n1\n2\n3\n4" />
+
+    </LinearLayout>
+</layout>

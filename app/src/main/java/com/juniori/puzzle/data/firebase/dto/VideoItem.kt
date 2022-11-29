@@ -33,7 +33,7 @@ data class VideoDetail(
             thumbUrl.stringValue,
             isPrivate.booleanValue,
             likeCount.integerValue.toInt(),
-            likedUserList.arrayValue.values ?: listOf(),
+            likedUserList.arrayValue.values?.map { it.stringValue } ?: listOf(),
             updateTime.integerValue,
             location.stringValue,
             memo.stringValue
