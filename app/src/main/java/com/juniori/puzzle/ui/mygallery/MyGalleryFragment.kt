@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -22,6 +24,10 @@ class MyGalleryFragment : Fragment() {
     private var _binding: FragmentMygalleryBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val viewModel: MyGalleryViewModel by viewModels()
+    private val activityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.getMyData()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +42,7 @@ class MyGalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerAdapter = MyGalleryAdapter(viewModel) {
-            startActivity(
+            activityResult.launch(
                 Intent(
                     requireContext(),
                     PlayVideoActivity::class.java
