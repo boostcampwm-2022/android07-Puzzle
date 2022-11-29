@@ -40,14 +40,20 @@
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_other_gallery"
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/other_gallery_swipe_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_other_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/text_other_gallery_not_found"
@@ -56,9 +62,9 @@
         android:layout_height="wrap_content"
         android:text="@string/othergallery_not_found_text"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/recycle_other_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/other_gallery_swipe_refresh"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/recycle_other_gallery"
+        app:layout_constraintStart_toStartOf="@+id/other_gallery_swipe_refresh"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_other_gallery"
