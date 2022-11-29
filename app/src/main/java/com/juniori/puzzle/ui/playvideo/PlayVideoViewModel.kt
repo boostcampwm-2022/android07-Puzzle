@@ -32,6 +32,10 @@ class PlayVideoViewModel @Inject constructor(
     private val _updateFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
     val updateFlow: StateFlow<Resource<VideoInfoEntity>?> = _updateFlow
 
+    private val _likeState = MutableStateFlow(false)
+    val likeState: StateFlow<Boolean>
+        get() = _likeState
+
     init {
         _getLoginInfoFlow.value = getUserInfoUseCase()
     }
@@ -39,6 +43,44 @@ class PlayVideoViewModel @Inject constructor(
     fun getPublisherInfo(uid: String) {
         viewModelScope.launch {
             _getPublisherInfoFlow.value = firestoreDataSource.getUserItem(uid)
+        }
+    }
+
+    fun setCurrentLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            _likeState.emit(currentVideo.likedUserUidList.contains(currentUid))
+        }
+    }
+
+    fun changeBookmarkStatus(currentVideo: VideoInfoEntity, currentUid: String) {
+        if (likeState.value) {
+            cancelLike(currentVideo, currentUid)
+        } else {
+            like(currentVideo, currentUid)
+        }
+    }
+
+    private fun like(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            val result = firestoreDataSource.addVideoItemLike(
+                currentVideo, currentUid
+            )
+            if (result is Resource.Success) {
+                _updateFlow.emit(result)
+                _likeState.emit(true)
+            }
+        }
+    }
+
+    private fun cancelLike(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            val result = firestoreDataSource.removeVideoItemLike(
+                currentVideo, currentUid
+            )
+            if (result is Resource.Success) {
+                _updateFlow.emit(result)
+                _likeState.emit(false)
+            }
         }
     }
 

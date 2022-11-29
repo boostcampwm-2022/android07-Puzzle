@@ -40,9 +40,11 @@ class PlayVideoActivity : AppCompatActivity() {
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
         stateManager.createLoadingDialog(binding.root)
         setContentView(binding.root)
+
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
-        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         initVideoPlayer(currentVideoItem.videoUrl)
+
+        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         setItemOnClickListener()
         initCollector()
     }
@@ -53,8 +55,23 @@ class PlayVideoActivity : AppCompatActivity() {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
                     if (resource is Resource.Success) {
                         currentUserInfo = resource.result
+                        viewModel.setCurrentLikeStatus(currentVideoItem, currentUserInfo.uid)
                         setMenuItems()
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likeState.collectLatest { isLikedVideo ->
+                    binding.buttonLike.setIconResource(
+                        if (isLikedVideo) {
+                            R.drawable.play_like_selected
+                        } else {
+                            R.drawable.play_like_not_selected
+                        }
+                    )
                 }
             }
         }
@@ -176,6 +193,9 @@ class PlayVideoActivity : AppCompatActivity() {
                         putParcelable(PUBLISHER_EXTRA_NAME, publisherUserInfo)
                     }
                 }.show(supportFragmentManager, null)
+            }
+            buttonLike.setOnClickListener {
+                viewModel.changeBookmarkStatus(currentVideoItem, currentUserInfo.uid)
             }
         }
     }
