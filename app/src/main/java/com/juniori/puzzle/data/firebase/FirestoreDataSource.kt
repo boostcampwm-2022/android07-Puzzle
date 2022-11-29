@@ -59,6 +59,68 @@ class FirestoreDataSource @Inject constructor(
         }
     }
 
+    suspend fun addVideoItemLike(
+        documentInfo: VideoInfoEntity,
+        uid: String
+    ): Resource<VideoInfoEntity> {
+        return try {
+            service.patchVideoItemDocument(
+                documentInfo.documentId,
+                mapOf(
+                    with(documentInfo) {
+                        "fields" to VideoDetail(
+                            ownerUid = StringValue(ownerUid),
+                            videoUrl = StringValue(videoUrl),
+                            thumbUrl = StringValue(thumbnailUrl),
+                            isPrivate = BooleanValue(isPrivate.not()),
+                            likeCount = IntegerValue(likedCount.toLong() + 1),
+                            likedUserList = ArrayValue(StringValues(likedUserUidList + uid)),
+                            updateTime = IntegerValue(updateTime),
+                            location = StringValue(location),
+                            memo = StringValue(memo)
+                        )
+                    }
+                )
+            ).let {
+                Resource.Success(it.getVideoInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun removeVideoItemLike(
+        documentInfo: VideoInfoEntity,
+        uid: String
+    ): Resource<VideoInfoEntity> {
+        return try {
+            service.patchVideoItemDocument(
+                documentInfo.documentId,
+                mapOf(
+                    with(documentInfo) {
+                        "fields" to VideoDetail(
+                            ownerUid = StringValue(ownerUid),
+                            videoUrl = StringValue(videoUrl),
+                            thumbUrl = StringValue(thumbnailUrl),
+                            isPrivate = BooleanValue(isPrivate.not()),
+                            likeCount = IntegerValue(likedCount.toLong() - 1),
+                            likedUserList = ArrayValue(StringValues(likedUserUidList - uid)),
+                            updateTime = IntegerValue(updateTime),
+                            location = StringValue(location),
+                            memo = StringValue(memo)
+                        )
+                    }
+                )
+            ).let {
+                Resource.Success(it.getVideoInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
     suspend fun postVideoItem(
         uid: String,
         videoName: String,
