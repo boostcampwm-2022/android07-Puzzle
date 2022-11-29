@@ -67,36 +67,11 @@
             android:layout_height="0dp"
             app:auto_show="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_percent="0.55"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/container_toolbar"
-            app:resize_mode="fit"
+            app:resize_mode="zoom"
             app:surface_type="surface_view"
             app:use_controller="true" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="16dp"
-            android:gravity="start"
-            app:placeholderText="@string/uploadstep1_saying"
-            app:expandedHintEnabled="false"
-            android:textAlignment="gravity"
-            app:counterEnabled="true"
-            app:counterMaxLength="140"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/videoplayer">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/comments"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@{vm.comments}"
-                android:backgroundTint="@android:color/transparent"
-                android:gravity="start|top" />
-        </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
