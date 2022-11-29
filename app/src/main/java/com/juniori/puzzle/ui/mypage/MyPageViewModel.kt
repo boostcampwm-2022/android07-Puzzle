@@ -29,8 +29,8 @@ class MyPageViewModel @Inject constructor(
     private val _requestWithdrawFlow = MutableSharedFlow<Resource<Unit>>()
     val requestWithdrawFlow: SharedFlow<Resource<Unit>> = _requestWithdrawFlow
 
-    private val _userNickname = MutableStateFlow<String?>(null)
-    val userNickname: StateFlow<String?> = _userNickname
+    private val _userNickname = MutableStateFlow("")
+    val userNickname: StateFlow<String> = _userNickname
 
     val makeLogoutDialogEvent = SingleLiveEvent<Unit>()
     val makeWithdrawDialogEvent = SingleLiveEvent<Unit>()
@@ -78,12 +78,12 @@ class MyPageViewModel @Inject constructor(
                 _userNickname.value = data.result.nickname
             }
             else {
-                _userNickname.value = null
+                _userNickname.value = ""
             }
         }
     }
 
-    fun updateUserNickname(newNickname: String?) {
+    fun updateUserNickname(newNickname: String) {
         _userNickname.value = newNickname
     }
 }

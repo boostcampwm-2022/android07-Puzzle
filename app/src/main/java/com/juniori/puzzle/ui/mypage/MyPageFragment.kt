@@ -27,6 +27,7 @@ class MyPageFragment : Fragment() {
     private val viewModel: MyPageViewModel by viewModels()
     private lateinit var updateActivityLauncher: ActivityResultLauncher<Intent>
     @Inject lateinit var stateManager: StateManager
+    private val warningDialog: AlertDialog.Builder by lazy { AlertDialog.Builder(context) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,7 +46,7 @@ class MyPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         updateActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.updateUserNickname(result.data?.getStringExtra(NEW_NICKNAME))
+                viewModel.updateUserNickname(result.data?.getStringExtra(NEW_NICKNAME) ?: "")
             }
         }
 
@@ -100,25 +101,25 @@ class MyPageFragment : Fragment() {
     }
 
     private fun makeLogoutDialog() {
-        AlertDialog.Builder(context)
+        warningDialog
             .setTitle(getString(R.string.logout))
             .setMessage(getString(R.string.logout_remind))
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+            .setPositiveButton(getString(R.string.all_yes)) { _, _ ->
                 viewModel.requestLogout()
             }
-            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            .setNegativeButton(getString(R.string.all_no)) { _, _ ->
             }
             .show()
     }
 
     private fun makeWithdrawDialog() {
-        AlertDialog.Builder(context)
+        warningDialog
             .setTitle(getString(R.string.withdraw))
             .setMessage(getString(R.string.withdraw_remind))
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+            .setPositiveButton(getString(R.string.all_yes)) { _, _ ->
                 viewModel.requestWithdraw()
             }
-            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            .setNegativeButton(getString(R.string.all_no)) { _, _ ->
             }
             .show()
     }
