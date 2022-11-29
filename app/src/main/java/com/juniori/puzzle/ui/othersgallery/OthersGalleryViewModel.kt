@@ -9,6 +9,7 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,12 +29,16 @@ class OthersGalleryViewModel @Inject constructor(
     val refresh: LiveData<Boolean>
         get() = _refresh
 
+    private val _state = MutableLiveData(GalleryState.NONE)
+    val state: LiveData<GalleryState>
+        get() = _state
+
     var query = ""
     var sortType = SortType.NEW
     fun setQueryText(nowQuery: String?) {
         query = if (nowQuery != null && nowQuery.isNotBlank()) {
             nowQuery
-        }else{
+        } else {
             ""
         }
 
@@ -41,8 +46,7 @@ class OthersGalleryViewModel @Inject constructor(
     }
 
 
-
-    fun getQueryData(){
+    private fun getQueryData() {
         viewModelScope.launch {
             val data = getSearchedSocialVideoListUseCase(
                 index = 0,
@@ -58,11 +62,12 @@ class OthersGalleryViewModel @Inject constructor(
                     _list.postValue(result)
                 }
             } else {
-                //todo network err
+                _state.value = GalleryState.NETWORK_ERROR_BASE
             }
         }
     }
-    fun getBaseData(){
+
+    private fun getBaseData() {
         viewModelScope.launch {
             val data = getSocialVideoList(
                 index = 0,
@@ -76,10 +81,11 @@ class OthersGalleryViewModel @Inject constructor(
                     _list.postValue(result)
                 }
             } else {
-                //todo network err
+                _state.value = GalleryState.NETWORK_ERROR_BASE
             }
         }
     }
+
     fun getPaging(start: Int) {
         if (refresh.value == true) {
             return
@@ -102,9 +108,14 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                addItems(result)//todo empty list(paging)
+                if (result == null || result.isEmpty()) {
+                    _state.value = GalleryState.END_PAGING
+                } else {
+                    _state.value = GalleryState.NONE
+                    addItems(result)
+                }
             } else {
-                //todo network err
+                _state.value = GalleryState.NETWORK_ERROR_PAGING
             }
 
             _refresh.value = false
@@ -112,9 +123,9 @@ class OthersGalleryViewModel @Inject constructor(
     }
 
     fun getMainData() {
-        if(query.isEmpty()){
+        if (query.isEmpty()) {
             getBaseData()
-        }else{
+        } else {
             getQueryData()
         }
     }

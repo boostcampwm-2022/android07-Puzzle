@@ -15,9 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +33,8 @@ class OthersGalleryFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             viewModel.getMainData()
         }
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,6 +92,56 @@ class OthersGalleryFragment : Fragment() {
 
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
             binding.progressOtherGallery.isVisible = isRefresh
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                GalleryState.NONE -> {
+                    snackBar?.dismiss()
+                }
+
+                GalleryState.END_PAGING -> {
+                    snackBar = Snackbar.make(
+                        view,
+                        R.string.gallery_end_paging,
+                        Snackbar.LENGTH_SHORT
+                    ).apply {
+                        setAction(R.string.gallery_check) {
+                            dismiss()
+                        }
+                    }
+
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_PAGING -> {
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_paging_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getPaging(recyclerAdapter.itemCount)
+                            }
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_BASE -> {
+                    binding.otherGallerySwipeRefresh.isRefreshing = false
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_init_load_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getMainData()
+                            }
+                    snackBar?.show()
+                }
+            }
+
         }
 
         viewModel.list.value.also { list ->

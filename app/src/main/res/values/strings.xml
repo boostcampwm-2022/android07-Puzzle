@@ -98,4 +98,11 @@
     <!--other gallery-->
     <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
 
+    <!--other gallery-->
+    <string name="gallery_paging_error">다음 데이터를 불러오는데 실패했습니다.</string>
+    <string name="gallery_init_load_error">데이터를 불러오는데 실패했습니다.</string>
+    <string name="gallery_end_paging">더이상 표시할 데이터가 없습니다.</string>
+    <string name="gallery_retry">재시도</string>
+    <string name="gallery_check">확인</string>
+
 </resources>
