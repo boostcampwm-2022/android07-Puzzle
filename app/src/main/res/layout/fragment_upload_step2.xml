@@ -8,6 +8,14 @@
         <variable
             name="vm"
             type="com.juniori.puzzle.ui.addvideo.AddVideoViewModel" />
+
+        <variable
+            name="dateFormatter"
+            type="java.text.SimpleDateFormat" />
+
+        <variable
+            name="timeFormatter"
+            type="java.text.SimpleDateFormat" />
     </data>
 
     <ScrollView
@@ -107,7 +115,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
@@ -120,6 +129,8 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/golf_course_name"
+                    android:text="@{vm.golfCourse}"
+                    android:onTextChanged="@{vm.onGolfCourseTextChanged}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -128,27 +139,21 @@
                 android:id="@+id/divider1"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
+                android:layout_marginHorizontal="16dp"
                 android:background="@color/onSecondary_color"
-                app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/golf_course_name_inputlayout" />
 
             <Button
                 android:id="@+id/dates_button"
-                style="@style/Widget.Material3.Button.TextButton.Icon"
+                style="@style/Theme.Puzzle.Button.Upload2.ShowPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:gravity="start|center_vertical"
                 android:paddingVertical="12dp"
-                tools:text="2022년 11월 24일"
-                android:textAppearance="@style/Theme.Puzzle.TextSmall"
-                android:textColor="?android:attr/textColorPrimary"
+                android:text="@{dateFormatter.format(vm.pickedDate)}"
                 app:icon="@drawable/play_calendar_icon"
-                app:iconPadding="12dp"
-                app:iconSize="24dp"
-                app:iconTint="?attr/colorControlNormal"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
             <View
@@ -162,19 +167,13 @@
 
             <Button
                 android:id="@+id/time_button"
-                style="@style/Widget.Material3.Button.TextButton.Icon"
+                style="@style/Theme.Puzzle.Button.Upload2.ShowPicker"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:gravity="start|center_vertical"
                 android:paddingVertical="12dp"
-                android:text="오전 10:45"
-                android:textAppearance="@style/Theme.Puzzle.TextSmall"
-                android:textColor="?android:attr/textColorPrimary"
+                android:text="@{timeFormatter.format(vm.pickedDate)}"
                 app:icon="@drawable/upload2_time_icon_24dp"
-                app:iconPadding="12dp"
-                app:iconSize="24dp"
-                app:iconTint="?attr/colorControlNormal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/dates_time_divider"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
@@ -184,6 +183,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:dateTextAppearance="@style/Theme.Puzzle.TextSmall"
+                android:onSelectedDayChange="@{(_, year, month, dayOfMonth) -> vm.changeDatesOfCalendar(year, month, dayOfMonth)}"
                 app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
                 app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
                 app:layout_constraintTop_toBottomOf="@id/dates_button" />
@@ -193,6 +194,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:onTimeChanged="@{(_, hourOfDay, minute) -> vm.changeTimeOfCalendar(hourOfDay, minute)}"
                 android:timePickerMode="spinner"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
@@ -204,8 +206,9 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="@color/onSecondary_color"
-                app:layout_constraintEnd_toEndOf="@id/golf_course_name_inputlayout"
-                app:layout_constraintStart_toStartOf="@id/golf_course_name_inputlayout"
+                android:layout_marginHorizontal="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dates_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

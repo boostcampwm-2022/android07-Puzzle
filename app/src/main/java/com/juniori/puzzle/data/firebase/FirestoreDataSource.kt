@@ -7,8 +7,10 @@ import com.juniori.puzzle.data.firebase.dto.IntegerValue
 import com.juniori.puzzle.data.firebase.dto.RunQueryRequestDTO
 import com.juniori.puzzle.data.firebase.dto.StringValue
 import com.juniori.puzzle.data.firebase.dto.StringValues
+import com.juniori.puzzle.data.firebase.dto.UserDetail
 import com.juniori.puzzle.data.firebase.dto.VideoDetail
 import com.juniori.puzzle.data.firebase.dto.getVideoInfoEntity
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.STORAGE_BASE_URL
@@ -168,6 +170,65 @@ class FirestoreDataSource @Inject constructor(
                     )
                 ).getVideoInfoEntity()
             )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun getUserItem(
+        uid: String
+    ): Resource<UserInfoEntity> {
+        return try {
+            service.getUserItemDocument(uid).let {
+                Resource.Success(it.getUserInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun postUserItem(
+        uid: String,
+        nickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity> {
+        return try {
+            service.createUserItemDocument(
+                uid,
+                mapOf(
+                    "fields" to UserDetail(
+                        nickname = StringValue(nickname),
+                        profileImage = StringValue(profileImage)
+                    )
+                )
+            ).let {
+                Resource.Success(it.getUserInfoEntity())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Resource.Failure(e)
+        }
+    }
+
+    suspend fun changeUserNickname(
+        uid: String,
+        newNickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity> {
+        return try {
+            service.patchUserItemDocument(
+                uid,
+                mapOf(
+                    "fields" to UserDetail(
+                        nickname = StringValue(newNickname),
+                        profileImage = StringValue(profileImage)
+                    )
+                )
+            ).let {
+                Resource.Success(it.getUserInfoEntity())
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             Resource.Failure(e)

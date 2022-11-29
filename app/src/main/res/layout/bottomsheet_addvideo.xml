@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.addvideo.AddVideoBottomSheet">
+    android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/button_search_gallery"
-        style="@style/Theme.Puzzle.Button.Inaddvideo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/addvideo_search_gallery"
-        app:icon="@drawable/add_gallery_icon" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.addvideo.AddVideoBottomSheet">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/onDisabled_color" />
+        <Button
+            android:id="@+id/button_search_gallery"
+            style="@style/Theme.Puzzle.Button.Inaddvideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addvideo_search_gallery"
+            app:icon="@drawable/add_gallery_icon" />
 
-    <Button
-        android:id="@+id/button_take_video"
-        style="@style/Theme.Puzzle.Button.Inaddvideo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/addvideo_take_video"
-        app:icon="@drawable/add_photo_icon" />
-</LinearLayout>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/onDisabled_color" />
+
+        <Button
+            android:id="@+id/button_take_video"
+            style="@style/Theme.Puzzle.Button.Inaddvideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/addvideo_take_video"
+            app:icon="@drawable/add_photo_icon" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -18,9 +18,11 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlayVideoActivity : AppCompatActivity() {
@@ -30,11 +32,16 @@ class PlayVideoActivity : AppCompatActivity() {
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var currentVideoItem: VideoInfoEntity
 
+    @Inject
+    lateinit var stateManager: StateManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
+        stateManager.createLoadingDialog(binding.root)
         setContentView(binding.root)
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
+        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         initVideoPlayer(currentVideoItem.videoUrl)
         setItemOnClickListener()
         initCollector()
@@ -46,8 +53,18 @@ class PlayVideoActivity : AppCompatActivity() {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
                     if (resource is Resource.Success) {
                         currentUserInfo = resource.result
-                        binding.materialToolbar.title = currentUserInfo.nickname
                         setMenuItems()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getPublisherInfoFlow.collectLatest { resource ->
+                    if (resource is Resource.Success) {
+                        publisherUserInfo = resource.result
+                        binding.materialToolbar.title = publisherUserInfo.nickname
                     }
                 }
             }
@@ -59,12 +76,14 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
                                 finish()
                             }
                             is Resource.Loading -> {
-                                /** loading 화면 보여주기 */
+                                stateManager.showLoadingDialog()
                             }
                             is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
                                 resource.exception.printStackTrace()
                                 Snackbar.make(
                                     binding.root,
@@ -84,13 +103,15 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
                                 currentVideoItem = resource.result
                                 setMenuItems()
                             }
                             is Resource.Loading -> {
-                                /** loading 화면 보여주기 */
+                                stateManager.showLoadingDialog()
                             }
                             is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
                                 resource.exception.printStackTrace()
                                 Snackbar.make(
                                     binding.root,
@@ -152,7 +173,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 PlayVideoBottomSheet().apply {
                     arguments = Bundle().apply {
                         putParcelable(VIDEO_EXTRA_NAME, currentVideoItem)
-                        putString("nickName", currentUserInfo.nickname)
+                        putParcelable(PUBLISHER_EXTRA_NAME, publisherUserInfo)
                     }
                 }.show(supportFragmentManager, null)
             }
@@ -160,7 +181,9 @@ class PlayVideoActivity : AppCompatActivity() {
     }
 
     companion object {
+        lateinit var publisherUserInfo: UserInfoEntity
         lateinit var currentUserInfo: UserInfoEntity
         const val VIDEO_EXTRA_NAME = "videoInfo"
+        const val PUBLISHER_EXTRA_NAME = "publisherInfo"
     }
 }

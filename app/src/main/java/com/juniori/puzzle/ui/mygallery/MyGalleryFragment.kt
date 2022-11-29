@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +24,10 @@ class MyGalleryFragment : Fragment() {
     private var _binding: FragmentMygalleryBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val viewModel: MyGalleryViewModel by viewModels()
+    private val activityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.getMyData()
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +42,7 @@ class MyGalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerAdapter = MyGalleryAdapter(viewModel) {
-            startActivity(
+            activityResult.launch(
                 Intent(
                     requireContext(),
                     PlayVideoActivity::class.java
@@ -51,16 +59,17 @@ class MyGalleryFragment : Fragment() {
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             recyclerAdapter.submitList(dataList)
+
+            binding.mygalleryAddVideoBtn.isVisible = dataList.isEmpty()
+            binding.mygalleryAddVideoText.isVisible = dataList.isEmpty()
+        }
+
+        binding.mygalleryAddVideoBtn.setOnClickListener {
+            view.findNavController().navigate(R.id.bottomsheet_main_addvideo)
         }
 
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
             binding.progressMyGallery.isVisible = isRefresh
-        }
-
-        viewModel.list.value.also { list ->
-            if (list == null || list.isEmpty()) {
-                viewModel.getMyData()
-            }
         }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -76,6 +85,12 @@ class MyGalleryFragment : Fragment() {
                 return false
             }
         })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMyData()
     }
 
     override fun onDestroyView() {
