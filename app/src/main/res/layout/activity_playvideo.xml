@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="videoInfo"
-            type="com.juniori.puzzle.domain.entity.VideoInfoEntity" />
+            name="vm"
+            type="com.juniori.puzzle.ui.playvideo.PlayVideoViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,9 +53,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_like"
             style="@style/Theme.Puzzle.Button.Inplayvideo"
+            setLikeCount="@{vm.updateFlow}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(videoInfo.likedUserUidList.size())}"
             app:icon="@drawable/play_like_not_selected"
             app:iconGravity="textTop"
             app:layout_constraintEnd_toEndOf="parent"

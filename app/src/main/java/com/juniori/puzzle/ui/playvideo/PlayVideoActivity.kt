@@ -38,11 +38,15 @@ class PlayVideoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
+
         stateManager.createLoadingDialog(binding.activityPlayVideo)
         setContentView(binding.root)
 
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
+        binding.buttonLike.text = currentVideoItem.likedCount.toString()
 
         viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         setItemOnClickListener()
@@ -122,7 +126,6 @@ class PlayVideoActivity : AppCompatActivity() {
                             is Resource.Success -> {
                                 stateManager.dismissLoadingDialog()
                                 currentVideoItem = resource.result
-                                binding.videoInfo = currentVideoItem
                                 setMenuItems()
                             }
                             is Resource.Loading -> {
