@@ -19,5 +19,7 @@ data class ArrayValue(
 )
 
 data class StringValues(
-    @SerializedName("values") val values: List<String>?
+    @SerializedName("values") val values: List<StringValue>?
 )
+
+fun List<String>.toStringValues() = StringValues(this.map { StringValue(it) })
