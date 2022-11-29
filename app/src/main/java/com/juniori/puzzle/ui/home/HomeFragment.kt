@@ -98,7 +98,7 @@ class HomeFragment : Fragment() {
             checkPermission()
         }
 
-        binding.button.setOnClickListener {
+        binding.golfBtnBackground.setOnClickListener {
             val intent= Intent(requireActivity(),SensorActivity::class.java)
             startActivity(intent)
         }
@@ -151,15 +151,11 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("MissingPermission")
     private fun getWeatherByLocation() {
-        var location = locationManager.getLastKnownLocation(
-            LocationManager.GPS_PROVIDER
+        val location = locationManager.getLastKnownLocation(
+            LocationManager.NETWORK_PROVIDER
         )
-        if (location == null) {
-            location =
-                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        }
         locationManager.requestLocationUpdates(
-            LocationManager.GPS_PROVIDER,
+            LocationManager.NETWORK_PROVIDER,
             LOCATION_MIN_TIME_INTERVAL,
             LOCATION_MIN_DISTANCE_INTERVAL,
             locationListener
