@@ -33,7 +33,7 @@ class OthersGalleryViewModel @Inject constructor(
     fun setQueryText(nowQuery: String?) {
         if (nowQuery.isNullOrBlank()) {
             query = ""
-            getMyData()
+            getMainData()
             return
         }
 
@@ -90,7 +90,7 @@ class OthersGalleryViewModel @Inject constructor(
         }
     }
 
-    fun getMyData() {
+    fun getMainData() {
         viewModelScope.launch {
             val data = getSocialVideoList(
                 index = 0,
@@ -127,7 +127,7 @@ class OthersGalleryViewModel @Inject constructor(
             sortType = type
 
             if (query.isBlank()) {
-                getMyData()
+                getMainData()
             } else {
                 setQueryText(query)
             }
