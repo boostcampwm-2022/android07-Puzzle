@@ -1,5 +1,6 @@
 package com.juniori.puzzle.adapter
 
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -10,10 +11,15 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.juniori.puzzle.R
-import java.util.*
+import java.util.Calendar
 
 private val calendar = Calendar.getInstance()
+
+private const val DRAWABLE_WIDTH = 120
+private const val DRAWABLE_HEIGHT = 120
 
 @BindingAdapter("setImage")
 fun setImage(view: ImageView, url: String?) {
@@ -22,6 +28,49 @@ fun setImage(view: ImageView, url: String?) {
     Glide.with(view.context)
         .load(url)
         .into(view)
+}
+
+@BindingAdapter("setDrawableLeft")
+fun setDrawableLeft(view: TextView, url: String?) {
+    if (url.isNullOrEmpty()) return
+
+    try {
+        val resourceId = url.toInt()
+        Glide.with(view.context)
+            .load(resourceId)
+            .into(object : CustomTarget<Drawable>(DRAWABLE_WIDTH, DRAWABLE_HEIGHT) {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    view.setCompoundDrawables(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
+                }
+            })
+    } catch (e: Exception) {
+        Glide.with(view.context)
+            .load(url)
+            .into(object : CustomTarget<Drawable>(DRAWABLE_WIDTH, DRAWABLE_HEIGHT) {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
+                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    view.setCompoundDrawables(resource, null, null, null)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
+                }
+            })
+    }
+
 }
 
 @BindingAdapter("setAdapter")

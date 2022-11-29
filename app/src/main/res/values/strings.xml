@@ -35,6 +35,9 @@
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">체감온도 %dº</string>
     <string name="weather_slash_divider">/</string>
+    <string name="green_lean_text">그린 기울기 구하기</string>
+    <string name="green_lean_image_description">그린 기울기 구하기 버튼</string>
+    <string name="logo_dsecription">퍼즐 로고</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -93,4 +96,5 @@
     
     <!--other gallery-->
     <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
+
 </resources>

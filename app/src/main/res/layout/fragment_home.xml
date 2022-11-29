@@ -35,7 +35,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/activity_horizontal_margin" />
+            app:layout_constraintGuide_end="391dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/home_icon_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/activity_vertical_margin"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/end_guideline"
@@ -53,9 +62,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="2:1"
+            android:src="@drawable/home_icon"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/home_icon_guideline"
+            android:contentDescription="@string/logo_dsecription" />
+
         <TextView
             android:id="@+id/user_nickname_tv"
             style="@style/Theme.Puzzle.TextLarge.Bold"
+            setDisplayName="@{vm.displayName}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_margin"
@@ -65,20 +85,19 @@
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            setDisplayName="@{vm.displayName}"
             tools:text="000님" />
 
         <TextView
             android:id="@+id/welcome_text_tv"
             style="@style/Theme.Puzzle.TextMedium"
+            android:text="@{vm.welcomeText}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/onPrimary_color"
             app:layout_constraintBottom_toTopOf="@id/top_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/user_nickname_tv"
-            setText="@{vm.welcomeText}"
-            tools:text="환영합니다!"/>
+            tools:text="환영합니다!" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/home_bottom_cardView"
@@ -92,15 +111,67 @@
             app:shapeAppearance="@style/ShapeAppearance.Puzzle.LargeComponent.Top" />
 
         <ImageView
+            android:id="@+id/home_ground_iv"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:contentDescription="@string/home_background_image_description"
             android:elevation="1dp"
-            android:src="@drawable/home_background_image"
+            android:src="@drawable/grass_rectangle"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="5:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="-20dp"
+            android:contentDescription="@string/home_background_image_description"
+            android:elevation="1dp"
+            android:src="@drawable/flag"
+            app:layout_constraintBottom_toTopOf="@id/home_ground_iv"
+            app:layout_constraintDimensionRatio="1:1.5"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/golf_btn_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:paddingVertical="@dimen/text_vertical_margin"
+            android:paddingHorizontal="@dimen/text_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/all_search_view_background"
+            android:backgroundTint="@color/primary_color"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/golf_iv"
+                android:layout_width="30dp"
+                android:layout_height="0dp"
+                android:elevation="10dp"
+                android:src="@drawable/golf_ball"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="@id/golf_btn_background"
+                android:contentDescription="@string/green_lean_image_description" />
+
+            <TextView
+                android:id="@+id/golf_btn_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:layout_marginStart="@dimen/text_vertical_margin"
+                style="@style/Theme.Puzzle.TextSmall.Bold"
+                android:textColor="@color/white"
+                android:text="@string/green_lean_text"
+                app:layout_constraintStart_toEndOf="@id/golf_iv"
+                app:layout_constraintTop_toTopOf="@id/golf_iv"
+                app:layout_constraintBottom_toBottomOf="@id/golf_iv"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weather_layout"
