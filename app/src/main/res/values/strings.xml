@@ -90,6 +90,8 @@
     <string name="open_source_lib">오픈소스 라이브러리</string>
     <string name="input_new_nickname">새로운 닉네임을 입력하세요.</string>
     <string name="input_nickname_hint">닉네임을 입력하세요.</string>
+    <string name="input_nickname_again">닉네임을 다시 입력하세요.</string>
+    <string name="nickname_change_impossible">닉네임을 변경할 수 없습니다!</string>
     <string name="complete">완료</string>
 
     <!--my gallery-->
