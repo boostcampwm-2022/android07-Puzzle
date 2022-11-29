@@ -72,9 +72,9 @@ class FirestoreDataSource @Inject constructor(
                             ownerUid = StringValue(ownerUid),
                             videoUrl = StringValue(videoUrl),
                             thumbUrl = StringValue(thumbnailUrl),
-                            isPrivate = BooleanValue(isPrivate.not()),
+                            isPrivate = BooleanValue(isPrivate),
                             likeCount = IntegerValue(likedCount.toLong() + 1),
-                            likedUserList = ArrayValue(StringValues(likedUserUidList + uid)),
+                            likedUserList = ArrayValue((likedUserUidList + uid).toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
                             memo = StringValue(memo)
@@ -103,9 +103,9 @@ class FirestoreDataSource @Inject constructor(
                             ownerUid = StringValue(ownerUid),
                             videoUrl = StringValue(videoUrl),
                             thumbUrl = StringValue(thumbnailUrl),
-                            isPrivate = BooleanValue(isPrivate.not()),
+                            isPrivate = BooleanValue(isPrivate),
                             likeCount = IntegerValue(likedCount.toLong() - 1),
-                            likedUserList = ArrayValue(StringValues(likedUserUidList - uid)),
+                            likedUserList = ArrayValue((likedUserUidList - uid).toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
                             memo = StringValue(memo)
