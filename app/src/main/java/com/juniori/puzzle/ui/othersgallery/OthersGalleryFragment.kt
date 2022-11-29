@@ -14,6 +14,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
@@ -28,7 +29,7 @@ class OthersGalleryFragment : Fragment() {
     private val viewModel: OthersGalleryViewModel by viewModels()
     private val activityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.getMyData()
+            viewModel.getMainData()
         }
 
     override fun onCreateView(
@@ -43,7 +44,7 @@ class OthersGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = OtherGalleryAdapter(viewModel) {
+        val recyclerAdapter = OtherGalleryAdapter {
             activityResult.launch(
                 Intent(
                     requireContext(),
@@ -52,12 +53,21 @@ class OthersGalleryFragment : Fragment() {
                     this.putExtra(VIDEO_EXTRA_NAME, it)
                 })
         }
+
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), ITEM_ROW_COUNT)
+            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
-        }
 
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        viewModel.getPaging(recyclerAdapter.itemCount)
+                    }
+                }
+            })
+        }
 
         val items = resources.getStringArray(R.array.other_order_type)
         val spinnerAdapter =
@@ -77,7 +87,7 @@ class OthersGalleryFragment : Fragment() {
 
         viewModel.list.value.also { list ->
             if (list == null || list.isEmpty()) {
-                viewModel.getMyData()
+                viewModel.getMainData()
             }
         }
 

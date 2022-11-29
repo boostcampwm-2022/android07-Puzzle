@@ -9,7 +9,6 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class OtherGalleryAdapter(
-    val viewModel: OthersGalleryViewModel,
     private val onClick: (VideoInfoEntity) -> Unit
 ) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
@@ -39,13 +38,9 @@ class OtherGalleryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
-        if (position == itemCount - LOADING_FLAG_NUM) {
-            viewModel.getPaging(itemCount)
-        }
     }
 
     companion object {
         const val VISIBLE_ITEM_COUNT = 3
-        const val LOADING_FLAG_NUM = 3
     }
 }

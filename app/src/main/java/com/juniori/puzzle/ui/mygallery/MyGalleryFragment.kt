@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
@@ -41,7 +42,7 @@ class MyGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = MyGalleryAdapter(viewModel) {
+        val recyclerAdapter = MyGalleryAdapter {
             activityResult.launch(
                 Intent(
                     requireContext(),
@@ -55,6 +56,15 @@ class MyGalleryFragment : Fragment() {
             adapter = recyclerAdapter
             val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        viewModel.getPaging(recyclerAdapter.itemCount)
+                    }
+                }
+            })
         }
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
@@ -72,6 +82,8 @@ class MyGalleryFragment : Fragment() {
             binding.progressMyGallery.isVisible = isRefresh
         }
 
+        viewModel.getMyData()
+
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.setQueryText(query)
@@ -85,12 +97,6 @@ class MyGalleryFragment : Fragment() {
                 return false
             }
         })
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getMyData()
     }
 
     override fun onDestroyView() {
