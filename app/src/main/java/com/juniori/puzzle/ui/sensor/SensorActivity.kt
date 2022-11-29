@@ -24,7 +24,6 @@ class SensorActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.sensorBall.setMaxSize(window.decorView.measuredWidth,window.decorView.measuredHeight)
         sensorManager.registerListener(binding.sensorBall, sensor, SensorManager.SENSOR_DELAY_UI)
     }
 

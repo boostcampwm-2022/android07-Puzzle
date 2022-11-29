@@ -5,10 +5,11 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.util.AttributeSet
+import android.view.Surface
 import android.view.WindowManager
 import androidx.appcompat.widget.AppCompatImageView
-import kotlin.math.max
 
 class GolfBallView(context: Context, attrs: AttributeSet) : AppCompatImageView(context, attrs),
     SensorEventListener {
@@ -16,34 +17,75 @@ class GolfBallView(context: Context, attrs: AttributeSet) : AppCompatImageView(c
     private val sensorManager: SensorManager by lazy {
         context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
-    private val windowManager: WindowManager by lazy{
+    private val windowManager: WindowManager by lazy {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
-    private var maxSize: Pair<Float, Float> = Pair(x + width, y + height)
-
-    fun setMaxSize(width: Int, height: Int) {
-        println("width height $width $height")
-        maxSize = Pair(width.toFloat(), height.toFloat())
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    private val maxSize: Pair<Int, Int> by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Pair(
+                windowManager.maximumWindowMetrics.bounds.width(),
+                windowManager.maximumWindowMetrics.bounds.height()
+            )
+        } else {
+            Pair(windowManager.defaultDisplay.width, windowManager.defaultDisplay.height)
+        }
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor == sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)) {
             println("event ${event?.values?.joinToString(", ")}}")
             event?.let {
-                val eX = it.values[0]
-                val eY = it.values[1]
-                val eZ = it.values[2]
+                var sensorX=x
+                var sensorY=y
+                var sensorZ=z
+                when (windowManager.defaultDisplay.rotation) {
+                    Surface.ROTATION_0 -> {
+                        sensorX = event.values[0]
+                        sensorY = event.values[1]
+                        sensorZ=event.values[2]
+                    }
+                    Surface.ROTATION_90 -> {
+                        sensorX = -event.values[1]
+                        sensorY = event.values[0]
+                        sensorZ=event.values[2]
+                    }
+                    Surface.ROTATION_180 -> {
+                        sensorX = -event.values[0]
+                        sensorY = -event.values[1]
+                        sensorZ=event.values[2]
+                    }
+                    Surface.ROTATION_270 -> {
+                        sensorX = event.values[1]
+                        sensorY = -event.values[0]
+                        sensorZ=event.values[2]
+                    }
+                }
 
-                println("x y $x $y $maxSize")
-                if (x <= 0 || y <= 0 || x + width >= maxSize.first || y + height >= maxSize.second) return@let
+                println("x y $sensorX $sensorY $sensorZ")
+                x -= sensorX
+                y += sensorY
 
-                x += eX
-                y += eY
-                requestLayout()
+                var isDrawXNeeded=true
+                var isDrawYNeeded=true
+                if (x < 0) {
+                    x = 0f
+                } else if (x + width > maxSize.first) {
+                    x = (maxSize.first - width).toFloat()
+                }
+                else{
+                    isDrawXNeeded=false
+                }
+
+                if (y < 0) {
+                    y = 0f
+                } else if (y + height > maxSize.second) {
+                    y = (maxSize.second - height).toFloat()
+                }
+                else{
+                    isDrawYNeeded=false
+                }
+
+                if(isDrawXNeeded || isDrawYNeeded) requestLayout()
             }
         }
     }
