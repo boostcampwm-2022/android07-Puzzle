@@ -29,10 +29,33 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar"
-        tools:listitem="@layout/item_gallery_recycler" />
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
+
+    <TextView
+        android:id="@+id/mygallery_add_video_text"
+        style="@style/Theme.Puzzle.TextMedium.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mygallery_add_video_text"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/mygallery_add_video_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycle_my_gallery" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/mygallery_add_video_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:borderWidth="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/recycle_my_gallery"
+        app:layout_constraintEnd_toEndOf="@+id/mygallery_add_video_text"
+        app:layout_constraintStart_toStartOf="@+id/mygallery_add_video_text"
+        app:layout_constraintTop_toBottomOf="@+id/mygallery_add_video_text"
+        app:srcCompat="@drawable/add_photo_icon" />
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:visibility="gone"
         android:id="@+id/progress_my_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

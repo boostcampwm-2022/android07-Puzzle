@@ -6,8 +6,6 @@ import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
-import android.net.ConnectivityManager
-import android.net.Network
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +15,6 @@ import androidx.core.location.LocationListenerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
@@ -25,8 +22,6 @@ import com.juniori.puzzle.databinding.FragmentHomeBinding
 import com.juniori.puzzle.ui.sensor.SensorActivity
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -137,7 +132,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onPause() {

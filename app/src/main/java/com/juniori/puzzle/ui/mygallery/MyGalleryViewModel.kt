@@ -28,7 +28,7 @@ class MyGalleryViewModel @Inject constructor(
     val refresh: LiveData<Boolean>
         get() = _refresh
 
-    var query = ""
+    private var query = ""
 
     fun setQueryText(nowQuery: String?) {
         if (nowQuery.isNullOrBlank()) {
@@ -47,7 +47,11 @@ class MyGalleryViewModel @Inject constructor(
                 val data = getSearchedMyVideoUseCase(uid, 0, query)
                 if (data is Resource.Success) {
                     val result = data.result
-                    _list.value = result
+                    if(result==null||result.isEmpty()){
+                        _list.postValue(emptyList())
+                    }else {
+                        _list.postValue(result)
+                    }
                 } else {
                     //todo network err
                 }
@@ -66,7 +70,6 @@ class MyGalleryViewModel @Inject constructor(
         } else {
             viewModelScope.launch {
                 _refresh.value = true
-                delay(500)
                 val data = if (query.isBlank()) {
                     getMyVideoListUseCase(uid, start)
                 } else {
@@ -75,7 +78,7 @@ class MyGalleryViewModel @Inject constructor(
 
                 if (data is Resource.Success) {
                     val result = data.result
-                    addItems(result)
+                    addItems(result)//empty list paging
                 } else {
                     //todo network err
                 }
@@ -95,7 +98,11 @@ class MyGalleryViewModel @Inject constructor(
                 val data = getMyVideoListUseCase(uid, 0)
                 if (data is Resource.Success) {
                     val result = data.result
-                    _list.postValue(result)
+                    if(result==null||result.isEmpty()){
+                        _list.postValue(emptyList())
+                    }else {
+                        _list.postValue(result)
+                    }
                 } else {
                     //todo network err
                 }

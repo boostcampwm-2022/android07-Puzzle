@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="image"
+            type="String" />
+
+        <variable
+            name="content"
+            type="String" />
+    </data>
+
+
+    <TextView
+        setDrawableLeft="@{image}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:text="@{content}"
+        android:textSize="16sp"
+        tools:drawableStart="@drawable/all_location_icon"
+        tools:text="내용" />
+
+</layout>
