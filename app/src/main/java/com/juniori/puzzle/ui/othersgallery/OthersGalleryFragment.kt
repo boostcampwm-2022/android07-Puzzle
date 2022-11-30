@@ -48,7 +48,7 @@ class OthersGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = OtherGalleryAdapter {
+        val recyclerAdapter = OtherGalleryAdapter(viewModel) {
             activityResult.launch(
                 Intent(
                     requireContext(),
@@ -62,15 +62,6 @@ class OthersGalleryFragment : Fragment() {
             adapter = recyclerAdapter
             val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
-
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        viewModel.getPaging(recyclerAdapter.itemCount)
-                    }
-                }
-            })
         }
 
         binding.otherGallerySwipeRefresh.setOnRefreshListener {

@@ -46,7 +46,7 @@ class MyGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = MyGalleryAdapter {
+        val recyclerAdapter = MyGalleryAdapter(viewModel) {
             activityResult.launch(
                 Intent(
                     requireContext(),
@@ -60,15 +60,6 @@ class MyGalleryFragment : Fragment() {
             adapter = recyclerAdapter
             val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
-
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        viewModel.getPaging(recyclerAdapter.itemCount)
-                    }
-                }
-            })
         }
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
