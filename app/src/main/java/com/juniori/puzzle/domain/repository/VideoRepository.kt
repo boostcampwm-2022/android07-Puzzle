@@ -13,8 +13,9 @@ interface VideoRepository {
     suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>>
     suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File>
     suspend fun updateLikeStatus(uid: String, videoName: String): Resource<Unit>
-    suspend fun deleteVideo(uid: String, videoName: String): Resource<Unit>
-    suspend fun setVideoScope(uid: String, isPrivate: Boolean, videoName: String): Resource<Unit>
+    suspend fun deleteVideo(documentId: String): Resource<Unit>
+    suspend fun changeVideoScope(documentInfo: VideoInfoEntity): Resource<VideoInfoEntity>
     suspend fun postVideoUseCase(videoFile: File, videoInfoEntity: VideoInfoEntity): Resource<Unit>
+    suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity>
     suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity>
 }
