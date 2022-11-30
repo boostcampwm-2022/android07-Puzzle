@@ -9,6 +9,7 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,17 +29,24 @@ class OthersGalleryViewModel @Inject constructor(
     val refresh: LiveData<Boolean>
         get() = _refresh
 
+    private val _state = MutableLiveData(GalleryState.NONE)
+    val state: LiveData<GalleryState>
+        get() = _state
+
     var query = ""
     var sortType = SortType.NEW
     fun setQueryText(nowQuery: String?) {
-        if (nowQuery.isNullOrBlank()) {
-            query = ""
-            getMyData()
-            return
+        query = if (nowQuery != null && nowQuery.isNotBlank()) {
+            nowQuery
+        } else {
+            ""
         }
 
-        query = nowQuery
+        getMainData()
+    }
 
+
+    private fun getQueryData() {
         viewModelScope.launch {
             val data = getSearchedSocialVideoListUseCase(
                 index = 0,
@@ -54,7 +62,26 @@ class OthersGalleryViewModel @Inject constructor(
                     _list.postValue(result)
                 }
             } else {
-                //todo network err
+                _state.value = GalleryState.NETWORK_ERROR_BASE
+            }
+        }
+    }
+
+    private fun getBaseData() {
+        viewModelScope.launch {
+            val data = getSocialVideoList(
+                index = 0,
+                order = sortType
+            )
+            if (data is Resource.Success) {
+                val result = data.result
+                if (result == null || result.isEmpty()) {
+                    _list.postValue(emptyList())
+                } else {
+                    _list.postValue(result)
+                }
+            } else {
+                _state.value = GalleryState.NETWORK_ERROR_BASE
             }
         }
     }
@@ -81,31 +108,25 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                addItems(result)//todo empty list(paging)
+                if (result == null || result.isEmpty()) {
+                    _state.value = GalleryState.END_PAGING
+                } else {
+                    _state.value = GalleryState.NONE
+                    addItems(result)
+                }
             } else {
-                //todo network err
+                _state.value = GalleryState.NETWORK_ERROR_PAGING
             }
 
             _refresh.value = false
         }
     }
 
-    fun getMyData() {
-        viewModelScope.launch {
-            val data = getSocialVideoList(
-                index = 0,
-                order = sortType
-            )
-            if (data is Resource.Success) {
-                val result = data.result
-                if (result == null || result.isEmpty()) {
-                    _list.postValue(emptyList())
-                } else {
-                    _list.postValue(result)
-                }
-            } else {
-                //todo network err
-            }
+    fun getMainData() {
+        if (query.isEmpty()) {
+            getBaseData()
+        } else {
+            getQueryData()
         }
     }
 
@@ -127,7 +148,7 @@ class OthersGalleryViewModel @Inject constructor(
             sortType = type
 
             if (query.isBlank()) {
-                getMyData()
+                getMainData()
             } else {
                 setQueryText(query)
             }

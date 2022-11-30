@@ -22,14 +22,20 @@
             android:layout_height="wrap_content" />
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_my_gallery"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/mygallery_swipe_refresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_my_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/mygallery_add_video_text"
@@ -41,14 +47,14 @@
         app:layout_constraintBottom_toTopOf="@+id/mygallery_add_video_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycle_my_gallery" />
+        app:layout_constraintTop_toBottomOf="@+id/mygallery_swipe_refresh" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/mygallery_add_video_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:borderWidth="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/recycle_my_gallery"
+        app:layout_constraintBottom_toTopOf="@+id/mygallery_swipe_refresh"
         app:layout_constraintEnd_toEndOf="@+id/mygallery_add_video_text"
         app:layout_constraintStart_toStartOf="@+id/mygallery_add_video_text"
         app:layout_constraintTop_toBottomOf="@+id/mygallery_add_video_text"

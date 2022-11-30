@@ -13,9 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.util.GalleryState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +31,8 @@ class MyGalleryFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             viewModel.getMyData()
         }
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +63,8 @@ class MyGalleryFragment : Fragment() {
         }
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            binding.mygallerySwipeRefresh.isRefreshing = false
+
             recyclerAdapter.submitList(dataList)
 
             binding.mygalleryAddVideoBtn.isVisible = dataList.isEmpty()
@@ -68,8 +75,68 @@ class MyGalleryFragment : Fragment() {
             view.findNavController().navigate(R.id.bottomsheet_main_addvideo)
         }
 
+        binding.mygallerySwipeRefresh.setOnRefreshListener {
+            viewModel.getMyData()
+        }
+
         viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
             binding.progressMyGallery.isVisible = isRefresh
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                GalleryState.NONE -> {
+                    snackBar?.dismiss()
+                }
+
+                GalleryState.END_PAGING -> {
+                    snackBar = Snackbar.make(
+                        view,
+                        R.string.gallery_end_paging,
+                        Snackbar.LENGTH_SHORT
+                    ).apply {
+                        setAction(R.string.gallery_check) {
+                            dismiss()
+                        }
+                    }
+
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_PAGING -> {
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_paging_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getPaging(recyclerAdapter.itemCount)
+                            }
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_BASE -> {
+                    binding.mygallerySwipeRefresh.isRefreshing = false
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_init_load_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getMyData()
+                            }
+                    snackBar?.show()
+                }
+            }
+
+        }
+
+        viewModel.list.value.also {
+            if (it == null || it.isEmpty()) {
+                viewModel.getMyData()
+            }
         }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -85,12 +152,6 @@ class MyGalleryFragment : Fragment() {
                 return false
             }
         })
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getMyData()
     }
 
     override fun onDestroyView() {
