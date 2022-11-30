@@ -11,8 +11,8 @@ import java.io.File
 import javax.inject.Inject
 
 class VideoRepositoryImpl @Inject constructor(
-    val firestoreDataSource: FirestoreDataSource,
-    val storageDataSource: StorageDataSource
+    private val firestoreDataSource: FirestoreDataSource,
+    private val storageDataSource: StorageDataSource
 ) : VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItems(
