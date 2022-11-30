@@ -1,7 +1,6 @@
 package com.juniori.puzzle.domain.usecase
 
 import com.juniori.puzzle.domain.repository.VideoRepository
-import com.juniori.puzzle.di.MockData
 import javax.inject.Inject
 
 class GetSearchedMyVideoUseCase @Inject constructor(private val videoRepository: VideoRepository) {
