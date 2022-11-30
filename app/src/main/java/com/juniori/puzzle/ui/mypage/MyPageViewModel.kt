@@ -2,17 +2,13 @@ package com.juniori.puzzle.ui.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.SingleLiveEvent
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.RequestLogoutUseCase
 import com.juniori.puzzle.domain.usecase.RequestWithdrawUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,24 +28,35 @@ class MyPageViewModel @Inject constructor(
     private val _userNickname = MutableStateFlow("")
     val userNickname: StateFlow<String> = _userNickname
 
-    val makeLogoutDialogEvent = SingleLiveEvent<Unit>()
-    val makeWithdrawDialogEvent = SingleLiveEvent<Unit>()
-    val navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
+    private val _makeLogoutDialogFlow = MutableSharedFlow<Unit>()
+    val makeLogoutDialogFlow: SharedFlow<Unit> = _makeLogoutDialogFlow
+
+    private val _makeWithdrawDialogFlow = MutableSharedFlow<Unit>()
+    val makeWithdrawDialogFlow: SharedFlow<Unit> = _makeWithdrawDialogFlow
+
+    private val _navigateToUpdateNicknamePageFlow = MutableSharedFlow<Unit>()
+    val navigateToUpdateNicknameFlow: SharedFlow<Unit> = _navigateToUpdateNicknamePageFlow
 
     init {
         updateUserInfo()
     }
 
     fun makeLogoutDialog() {
-        makeLogoutDialogEvent.call()
+        viewModelScope.launch {
+            _makeLogoutDialogFlow.emit(Unit)
+        }
     }
 
     fun makeWithdrawDialog() {
-        makeWithdrawDialogEvent.call()
+        viewModelScope.launch {
+            _makeWithdrawDialogFlow.emit(Unit)
+        }
     }
 
     fun navigateToUpdateNicknamePage() {
-        navigateToUpdateNicknamePageEvent.call()
+        viewModelScope.launch {
+            _navigateToUpdateNicknamePageFlow.emit(Unit)
+        }
     }
 
     fun requestLogout() {

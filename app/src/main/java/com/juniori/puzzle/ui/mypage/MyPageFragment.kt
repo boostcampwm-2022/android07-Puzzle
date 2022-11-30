@@ -86,17 +86,23 @@ class MyPageFragment : Fragment() {
             }
         }
 
-        viewModel.makeLogoutDialogEvent.observe(viewLifecycleOwner) {
-            makeLogoutDialog()
+        lifecycleScope.launchWhenStarted {
+            viewModel.makeLogoutDialogFlow.collect {
+                makeLogoutDialog()
+            }
         }
 
-        viewModel.makeWithdrawDialogEvent.observe(viewLifecycleOwner) {
-            makeWithdrawDialog()
+        lifecycleScope.launchWhenStarted {
+            viewModel.makeWithdrawDialogFlow.collect {
+                makeWithdrawDialog()
+            }
         }
 
-        viewModel.navigateToUpdateNicknamePageEvent.observe(viewLifecycleOwner) {
-            val intent = Intent(context, UpdateNicknameActivity::class.java)
-            updateActivityLauncher.launch(intent)
+        lifecycleScope.launchWhenStarted {
+            viewModel.navigateToUpdateNicknameFlow.collect {
+                val intent = Intent(context, UpdateNicknameActivity::class.java)
+                updateActivityLauncher.launch(intent)
+            }
         }
     }
 
