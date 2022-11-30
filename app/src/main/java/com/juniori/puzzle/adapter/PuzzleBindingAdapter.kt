@@ -71,6 +71,7 @@ fun setDrawableLeft(view: TextView, url: String?) {
                 }
             })
     }
+
 }
 
 @BindingAdapter("setAdapter")
@@ -119,3 +120,4 @@ fun setImageBytes(view: ImageView, imageBytes: ByteArray) {
         )
         .into(view)
 }
+

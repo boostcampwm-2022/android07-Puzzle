@@ -45,13 +45,4 @@ class LoginViewModel @Inject constructor(
         _loginFlow.value = result
     }
 
-    private fun logout() {
-        val logoutResult = requestLogoutUseCase()
-
-        if (logoutResult is Resource.Success) {
-            _loginFlow.value = null
-        } else {
-            throw Exception()
-        }
-    }
 }

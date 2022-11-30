@@ -1,74 +1,96 @@
 package com.juniori.puzzle.ui.mypage
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.juniori.puzzle.SingleLiveEvent
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.RequestLogoutUseCase
 import com.juniori.puzzle.domain.usecase.RequestWithdrawUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val requestLogoutUseCase: RequestLogoutUseCase,
     private val requestWithdrawUseCase: RequestWithdrawUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val firestoreDataSource: FirestoreDataSource
+    val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
-    private val _navigateToIntroPageEvent = MutableLiveData<Resource<Unit>>(Resource.Loading)
-    val navigateToIntroPageEvent: LiveData<Resource<Unit>> = _navigateToIntroPageEvent
+    private val _requestLogoutFlow = MutableSharedFlow<Resource<Unit>>()
+    val requestLogoutFlow: SharedFlow<Resource<Unit>> = _requestLogoutFlow
 
-    private val _finishApplicationEvent = MutableLiveData<Resource<Unit>>()
-    val finishApplicationEvent: LiveData<Resource<Unit>> = _finishApplicationEvent
+    private val _requestWithdrawFlow = MutableSharedFlow<Resource<Unit>>()
+    val requestWithdrawFlow: SharedFlow<Resource<Unit>> = _requestWithdrawFlow
 
-    private val _navigateToUpdateNicknamePageEvent = SingleLiveEvent<Unit>()
-    val navigateToUpdateNicknamePageEvent: SingleLiveEvent<Unit> = _navigateToUpdateNicknamePageEvent
+    private val _userNickname = MutableStateFlow("")
+    val userNickname: StateFlow<String> = _userNickname
 
-    val userNickname = MutableLiveData<String>()
+    private val _makeLogoutDialogFlow = MutableSharedFlow<Unit>()
+    val makeLogoutDialogFlow: SharedFlow<Unit> = _makeLogoutDialogFlow
+
+    private val _makeWithdrawDialogFlow = MutableSharedFlow<Unit>()
+    val makeWithdrawDialogFlow: SharedFlow<Unit> = _makeWithdrawDialogFlow
+
+    private val _navigateToUpdateNicknamePageFlow = MutableSharedFlow<Unit>()
+    val navigateToUpdateNicknameFlow: SharedFlow<Unit> = _navigateToUpdateNicknamePageFlow
 
     init {
-        val data = getUserInfoUseCase()
+        updateUserInfo()
+    }
 
-        if (data is Resource.Success) {
-            userNickname.value = data.result.nickname
-        } else {
-            userNickname.value = "누구세요"
+    fun makeLogoutDialog() {
+        viewModelScope.launch {
+            _makeLogoutDialogFlow.emit(Unit)
         }
     }
 
-    fun updateUserInfo(newNickname: String) {
+    fun makeWithdrawDialog() {
         viewModelScope.launch {
-            with(getUserInfoUseCase()) {
-                if (this is Resource.Success) {
-                    firestoreDataSource.changeUserNickname(
-                        this.result.uid,
-                        newNickname,
-                        this.result.profileImage
-                    )
-                }
-            }
+            _makeWithdrawDialogFlow.emit(Unit)
+        }
+    }
+
+    fun navigateToUpdateNicknamePage() {
+        viewModelScope.launch {
+            _navigateToUpdateNicknamePageFlow.emit(Unit)
         }
     }
 
     fun requestLogout() {
-        _navigateToIntroPageEvent.value = requestLogoutUseCase()
+        viewModelScope.launch {
+            _requestLogoutFlow.emit(Resource.Loading)
+            withContext(Dispatchers.IO) {
+                _requestLogoutFlow.emit(requestLogoutUseCase())
+            }
+        }
     }
 
     fun requestWithdraw() {
-        _finishApplicationEvent.value = requestWithdrawUseCase()
+        viewModelScope.launch {
+            _requestWithdrawFlow.emit(Resource.Loading)
+            withContext(Dispatchers.IO) {
+                _requestWithdrawFlow.emit(requestWithdrawUseCase())
+            }
+        }
     }
 
-    fun navigateToUpdateNicknamePage() {
-        _navigateToUpdateNicknamePageEvent.call()
+    fun updateUserInfo() {
+        viewModelScope.launch {
+            val data = getUserInfoUseCase()
+
+            if (data is Resource.Success) {
+                _userNickname.value = data.result.nickname
+            }
+            else {
+                _userNickname.value = ""
+            }
+        }
     }
 
-    fun updateUserNickname(newNickname: String?) {
-        userNickname.value = newNickname ?: "누구세요"
+    fun updateUserNickname(newNickname: String) {
+        _userNickname.value = newNickname
     }
 }
