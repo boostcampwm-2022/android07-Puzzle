@@ -75,7 +75,9 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun startCameraActivity() {
-        cameraActivityLauncher?.launch(Intent(requireContext(), CameraActivity::class.java))
+        cameraActivityLauncher?.launch(Intent(requireContext(), CameraActivity::class.java).apply {
+            putExtra("uid", addVideoViewModel.getUid())
+        })
     }
 
     private fun initActivityLauncher() {
@@ -96,7 +98,11 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                 if (result.resultCode == RESULT_OK) {
                     val videoNameInCacheDir = result.data?.getStringExtra(VIDEO_NAME_KEY)
                         ?: return@registerForActivityResult
-                    addVideoViewModel.setVideoName(videoNameInCacheDir)
+                    addVideoViewModel.notifyAction(
+                        AddVideoActionState.TakingVideoCompleted(
+                            videoNameInCacheDir
+                        )
+                    )
                     findNavController().navigate(R.id.fragment_upload_step1, arguments)
                 }
             }
