@@ -130,6 +130,7 @@ class AddVideoViewModel @Inject constructor(
         playPosition = 0
         playWhenReady = true
         memo = ""
+        _uiState.value = null
         videoFilePath.deleteIfFileUri()
     }
 

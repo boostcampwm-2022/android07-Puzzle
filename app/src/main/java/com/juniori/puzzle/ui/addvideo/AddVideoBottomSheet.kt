@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +21,7 @@ import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
 import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
 import com.juniori.puzzle.util.readBytes
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
@@ -53,15 +56,17 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
             startCameraActivity()
         }
 
-        lifecycleScope.launchWhenStarted {
-            addVideoViewModel.uiState.collectLatest { uiState ->
-                if (uiState == null) return@collectLatest
-                when (uiState) {
-                    AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK -> {
-                        showDurationLimitFeedback()
-                    }
-                    AddVideoUiState.GO_TO_UPLOAD -> {
-                        findNavController().navigate(R.id.fragment_upload_step1)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                addVideoViewModel.uiState.collectLatest { uiState ->
+                    if (uiState == null) return@collectLatest
+                    when (uiState) {
+                        AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK -> {
+                            showDurationLimitFeedback()
+                        }
+                        AddVideoUiState.GO_TO_UPLOAD -> {
+                            findNavController().navigate(R.id.fragment_upload_step1)
+                        }
                     }
                 }
             }
