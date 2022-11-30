@@ -65,8 +65,16 @@ class VideoRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateLikeStatus(uid: String, videoName: String): Resource<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun updateLikeStatus(
+        documentInfo: VideoInfoEntity,
+        uid: String,
+        isLiked: Boolean
+    ): Resource<VideoInfoEntity> {
+        return if (isLiked) {
+            firestoreDataSource.removeVideoItemLike(documentInfo, uid)
+        } else {
+            firestoreDataSource.addVideoItemLike(documentInfo, uid)
+        }
     }
 
     override suspend fun deleteVideo(documentId: String): Resource<Unit> {
