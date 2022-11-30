@@ -73,18 +73,18 @@ class AddVideoViewModel @Inject constructor(
                     return
                 }
 
+                videoFilePath = "$cacheDirPath/${System.currentTimeMillis()}.mp4"
                 viewModelScope.launch(Dispatchers.IO) {
                     actionState.videoBytes.saveInFile(videoFilePath)
-                    _uiState.value = AddVideoUiState.GO_TO_UPLOAD
                     thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
                 }
             }
             is AddVideoActionState.TakingVideoCompleted -> {
                 videoFilePath = "$cacheDirPath/${actionState.videoName}.mp4"
                 thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return
-                _uiState.value = AddVideoUiState.GO_TO_UPLOAD
             }
         }
+        _uiState.value = AddVideoUiState.GO_TO_UPLOAD
     }
 
     fun uploadVideo() = viewModelScope.launch {
