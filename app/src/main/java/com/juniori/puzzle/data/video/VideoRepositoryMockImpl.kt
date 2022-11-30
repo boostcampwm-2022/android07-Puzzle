@@ -63,7 +63,11 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateLikeStatus(uid: String, videoName: String): Resource<Unit> {
+    override suspend fun updateLikeStatus(
+        documentInfo: VideoInfoEntity,
+        uid: String,
+        isLiked: Boolean
+    ): Resource<VideoInfoEntity> {
         TODO("Not yet implemented")
     }
 
