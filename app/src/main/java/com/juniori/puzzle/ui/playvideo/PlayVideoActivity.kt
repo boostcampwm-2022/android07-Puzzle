@@ -46,9 +46,9 @@ class PlayVideoActivity : AppCompatActivity() {
 
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
         initVideoPlayer(currentVideoItem.videoUrl)
-        binding.buttonLike.text = currentVideoItem.likedCount.toString()
 
         viewModel.getPublisherInfo(currentVideoItem.ownerUid)
+        viewModel.initVideoFlow(currentVideoItem)
         setItemOnClickListener()
         initCollector()
     }
@@ -120,7 +120,7 @@ class PlayVideoActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.updateFlow.collectLatest { resource ->
+                viewModel.videoFlow.collectLatest { resource ->
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {

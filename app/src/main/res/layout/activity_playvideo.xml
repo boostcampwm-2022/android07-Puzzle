@@ -53,7 +53,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_like"
             style="@style/Theme.Puzzle.Button.Inplayvideo"
-            setLikeCount="@{vm.updateFlow}"
+            setLikeCount="@{vm.videoFlow}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/play_like_not_selected"
