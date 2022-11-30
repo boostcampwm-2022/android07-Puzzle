@@ -1,6 +1,11 @@
 package com.juniori.puzzle.ui.addvideo
 
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
@@ -16,7 +21,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,12 +36,15 @@ class AddVideoViewModel @Inject constructor(
 
     private var videoName: String = ""
     val videoFilePath get() = "$cacheDirPath/$videoName.mp4"
+    var thumbnailBytes = ByteArray(0)
+        private set
+
     var playPosition: Long = 0
         private set
     var playWhenReady = true
         private set
 
-    var comments: String = ""
+    var memo = ""
     var golfCourse = ""
     var isPublicUpload = false
 
@@ -48,9 +55,6 @@ class AddVideoViewModel @Inject constructor(
     val uiState: LiveData<AddVideoUiState> get() = _uiState
 
     private var isUploadingToServer = false
-
-    private val pickedCalendar = MutableLiveData(Calendar.getInstance())
-    val pickedDate: LiveData<Date> = pickedCalendar.map { calendar -> calendar.time }
 
     fun setVideoName(targetName: String) {
         videoName = targetName
@@ -79,10 +83,12 @@ class AddVideoViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     actionState.videoBytes.saveInFile(videoFilePath)
                     _uiState.postValue(AddVideoUiState.GO_TO_UPLOAD)
+                    thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
                 }
             }
             is AddVideoActionState.TakingVideoCompleted -> {
                 videoName = actionState.videoName
+                thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return
             }
         }
     }
@@ -92,8 +98,6 @@ class AddVideoViewModel @Inject constructor(
             return@launch
         }
         val uid = getUid() ?: return@launch
-        val videoName = videoName
-        val thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
 
         isUploadingToServer = true
         _uploadFlow.emit(Resource.Loading)
@@ -108,7 +112,7 @@ class AddVideoViewModel @Inject constructor(
                     videoName = videoName,
                     isPrivate = isPublicUpload.not(),
                     location = golfCourse,
-                    memo = comments
+                    memo = memo
                 )
                 _uploadFlow.emit(result)
             }.onFailure {
@@ -127,32 +131,17 @@ class AddVideoViewModel @Inject constructor(
         }
     }
 
-    fun saveComments(comments: String) {
-        this.comments = comments
+    fun saveMemo(comments: String) {
+        this.memo = comments
     }
 
     private fun initializeUploading() {
         videoName = ""
         playPosition = 0
         playWhenReady = true
-        comments = ""
+        memo = ""
         _uiState.value = AddVideoUiState.NONE
         videoFilePath.deleteIfFileUri()
-    }
-
-    fun changeDatesOfCalendar(year: Int, month: Int, dayOfMonth: Int) {
-        pickedCalendar.value?.let { calendar ->
-            calendar.set(year, month, dayOfMonth)
-            pickedCalendar.value = calendar
-        }
-    }
-
-    fun changeTimeOfCalendar(hourOfDay: Int, minute: Int) {
-        pickedCalendar.value?.let { calendar ->
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-            calendar.set(Calendar.MINUTE, minute)
-            pickedCalendar.value = calendar
-        }
     }
 
     fun onGolfCourseTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {

@@ -20,8 +20,4 @@
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
-
-    <style name="ShapeAppearance.Puzzle.Rectangle" parent="">
-        <item name="cornerFamily">cut</item>
-    </style>
 </resources>

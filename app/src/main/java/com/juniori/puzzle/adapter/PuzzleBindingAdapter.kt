@@ -7,6 +7,10 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.FitCenter
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.button.MaterialButton
@@ -70,7 +74,6 @@ fun setDrawableLeft(view: TextView, url: String?) {
                 }
             })
     }
-
 }
 
 @BindingAdapter("setLikeCount")
@@ -115,4 +118,14 @@ fun setTime(view: TextView, date: Date) {
     }
 }
 
-
+@BindingAdapter("imageBytes")
+fun setImageBytes(view: ImageView, imageBytes: ByteArray) {
+    Glide.with(view.context)
+        .load(imageBytes)
+        .apply(
+            RequestOptions.bitmapTransform(
+                MultiTransformation(RoundedCorners(20), FitCenter())
+            )
+        )
+        .into(view)
+}
