@@ -13,7 +13,8 @@ import com.google.android.material.button.MaterialButton
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 private val calendar = Calendar.getInstance()
 
