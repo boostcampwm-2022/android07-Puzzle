@@ -99,5 +99,6 @@
     
     <!--other gallery-->
     <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
+    <string name="gallery_item_icon_description">동영상 위치 정보 아이콘</string>
 
 </resources>
