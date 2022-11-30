@@ -13,7 +13,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.google.android.material.button.MaterialButton
 import com.juniori.puzzle.R
+import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import java.util.Calendar
 import java.util.Date
 
@@ -72,6 +75,13 @@ fun setDrawableLeft(view: TextView, url: String?) {
             })
     }
 
+}
+
+@BindingAdapter("setLikeCount")
+fun setLikeCount(view: MaterialButton, updateFlow: Resource<VideoInfoEntity>?) {
+    if (updateFlow is Resource.Success) {
+        view.text = updateFlow.result.likedCount.toString()
+    }
 }
 
 @BindingAdapter("setAdapter")

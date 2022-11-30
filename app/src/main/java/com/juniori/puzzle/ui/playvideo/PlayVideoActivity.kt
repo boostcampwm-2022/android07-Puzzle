@@ -38,11 +38,17 @@ class PlayVideoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayvideoBinding.inflate(layoutInflater)
-        stateManager.createLoadingDialog(binding.root)
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
+
+        stateManager.createLoadingDialog(binding.activityPlayVideo)
         setContentView(binding.root)
+
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
-        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         initVideoPlayer(currentVideoItem.videoUrl)
+
+        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
+        viewModel.initVideoFlow(currentVideoItem)
         setItemOnClickListener()
         initCollector()
     }
@@ -53,8 +59,23 @@ class PlayVideoActivity : AppCompatActivity() {
                 viewModel.getLoginInfoFlow.collectLatest { resource ->
                     if (resource is Resource.Success) {
                         currentUserInfo = resource.result
+                        viewModel.setCurrentLikeStatus(currentVideoItem, currentUserInfo.uid)
                         setMenuItems()
                     }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likeState.collectLatest { isLikedVideo ->
+                    binding.buttonLike.setIconResource(
+                        if (isLikedVideo) {
+                            R.drawable.play_like_selected
+                        } else {
+                            R.drawable.play_like_not_selected
+                        }
+                    )
                 }
             }
         }
@@ -99,7 +120,7 @@ class PlayVideoActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.updateFlow.collectLatest { resource ->
+                viewModel.videoFlow.collectLatest { resource ->
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
@@ -176,6 +197,9 @@ class PlayVideoActivity : AppCompatActivity() {
                         putParcelable(PUBLISHER_EXTRA_NAME, publisherUserInfo)
                     }
                 }.show(supportFragmentManager, null)
+            }
+            buttonLike.setOnClickListener {
+                viewModel.changeLikeStatus(currentVideoItem, currentUserInfo.uid)
             }
         }
     }
