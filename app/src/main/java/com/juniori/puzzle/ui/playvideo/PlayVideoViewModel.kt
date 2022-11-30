@@ -7,6 +7,9 @@ import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.usecase.ChangeVideoScopeUseCase
+import com.juniori.puzzle.domain.usecase.DeleteVideoUseCase
+import com.juniori.puzzle.domain.usecase.GetUserInfoByUidUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +21,10 @@ import javax.inject.Inject
 class PlayVideoViewModel @Inject constructor(
     getUserInfoUseCase: GetUserInfoUseCase,
     private val firestoreDataSource: FirestoreDataSource,
-    private val storageDataSource: StorageDataSource
+    private val storageDataSource: StorageDataSource,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
+    private val changeVideoScopeUseCase: ChangeVideoScopeUseCase,
+    private val getUserInfoByUidUseCase: GetUserInfoByUidUseCase
 ) : ViewModel() {
     private val _getLoginInfoFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
     val getLoginInfoFlow: StateFlow<Resource<UserInfoEntity>?> = _getLoginInfoFlow
@@ -48,7 +54,7 @@ class PlayVideoViewModel @Inject constructor(
 
     fun getPublisherInfo(uid: String) {
         viewModelScope.launch {
-            _getPublisherInfoFlow.value = firestoreDataSource.getUserItem(uid)
+            _getPublisherInfoFlow.value = getUserInfoByUidUseCase(uid)
         }
     }
 
@@ -92,15 +98,11 @@ class PlayVideoViewModel @Inject constructor(
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        storageDataSource.deleteVideo(documentId).onSuccess {
-            _deleteFlow.emit(firestoreDataSource.deleteVideoItem(documentId))
-        }.onFailure {
-            _deleteFlow.emit(Resource.Failure(it as Exception))
-        }
+        _deleteFlow.emit(deleteVideoUseCase(documentId))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _videoFlow.emit(Resource.Loading)
-        _videoFlow.emit(firestoreDataSource.changeVideoItemPrivacy(documentInfo))
+        _videoFlow.emit(changeVideoScopeUseCase(documentInfo))
     }
 }
