@@ -88,11 +88,6 @@ class UploadStep2Fragment : Fragment() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.saveMemo(binding.memo.text.toString())
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

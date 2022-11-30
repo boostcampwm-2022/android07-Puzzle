@@ -2,8 +2,6 @@ package com.juniori.puzzle.ui.addvideo
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
@@ -18,7 +16,9 @@ import com.juniori.puzzle.util.saveInFile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -34,8 +34,8 @@ class AddVideoViewModel @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource
 ) : ViewModel(), DefaultLifecycleObserver {
 
-    private var videoName: String = ""
-    val videoFilePath get() = "$cacheDirPath/$videoName.mp4"
+    var videoFilePath = ""
+        private set
     var thumbnailBytes = ByteArray(0)
         private set
 
@@ -45,20 +45,18 @@ class AddVideoViewModel @Inject constructor(
         private set
 
     var memo = ""
+        private set
     var golfCourse = ""
+        private set
     var isPublicUpload = false
 
     private val _uploadFlow = MutableSharedFlow<Resource<VideoInfoEntity>>(replay = 0)
     val uploadFlow: SharedFlow<Resource<VideoInfoEntity>> = _uploadFlow
 
-    private val _uiState = MutableLiveData<AddVideoUiState>(AddVideoUiState.NONE)
-    val uiState: LiveData<AddVideoUiState> get() = _uiState
+    private val _uiState = MutableStateFlow<AddVideoUiState?>(null)
+    val uiState: StateFlow<AddVideoUiState?> get() = _uiState
 
     private var isUploadingToServer = false
-
-    fun setVideoName(targetName: String) {
-        videoName = targetName
-    }
 
     fun saveVideoPlayState(playBackPosition: Long, wasBeingPlayed: Boolean) {
         playPosition = playBackPosition
@@ -67,9 +65,6 @@ class AddVideoViewModel @Inject constructor(
 
     fun notifyAction(actionState: AddVideoActionState) {
         when (actionState) {
-            is AddVideoActionState.StartingToAdd -> {
-                _uiState.value = AddVideoUiState.NONE
-            }
             is AddVideoActionState.VideoPicked -> {
                 val durationInSeconds: Long =
                     videoMetaDataUtil.getVideoDurationInSeconds(actionState.uri) ?: return
@@ -78,17 +73,16 @@ class AddVideoViewModel @Inject constructor(
                     return
                 }
 
-                val uid = getUid() ?: return
-                videoName = "${uid}_${System.currentTimeMillis()}"
                 viewModelScope.launch(Dispatchers.IO) {
                     actionState.videoBytes.saveInFile(videoFilePath)
-                    _uiState.postValue(AddVideoUiState.GO_TO_UPLOAD)
+                    _uiState.value = AddVideoUiState.GO_TO_UPLOAD
                     thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
                 }
             }
             is AddVideoActionState.TakingVideoCompleted -> {
-                videoName = actionState.videoName
+                videoFilePath = "$cacheDirPath/${actionState.videoName}.mp4"
                 thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return
+                _uiState.value = AddVideoUiState.GO_TO_UPLOAD
             }
         }
     }
@@ -98,6 +92,7 @@ class AddVideoViewModel @Inject constructor(
             return@launch
         }
         val uid = getUid() ?: return@launch
+        val videoName = "${uid}_${System.currentTimeMillis()}"
 
         isUploadingToServer = true
         _uploadFlow.emit(Resource.Loading)
@@ -131,20 +126,18 @@ class AddVideoViewModel @Inject constructor(
         }
     }
 
-    fun saveMemo(comments: String) {
-        this.memo = comments
-    }
-
     private fun initializeUploading() {
-        videoName = ""
         playPosition = 0
         playWhenReady = true
         memo = ""
-        _uiState.value = AddVideoUiState.NONE
         videoFilePath.deleteIfFileUri()
     }
 
-    fun onGolfCourseTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
+    fun onMemoTextChanged(charSequence: CharSequence) {
+        memo = charSequence.toString()
+    }
+
+    fun onGolfCourseTextChanged(charSequence: CharSequence) {
         golfCourse = charSequence.toString()
     }
 

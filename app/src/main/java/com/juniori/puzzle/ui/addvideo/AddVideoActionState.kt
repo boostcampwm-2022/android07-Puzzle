@@ -4,7 +4,6 @@ import android.net.Uri
 
 sealed class AddVideoActionState {
 
-    object StartingToAdd : AddVideoActionState()
     data class VideoPicked(val uri: Uri, val videoBytes: ByteArray) : AddVideoActionState()
     data class TakingVideoCompleted(val videoName: String) : AddVideoActionState()
 }

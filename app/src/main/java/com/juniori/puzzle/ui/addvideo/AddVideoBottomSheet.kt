@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -17,6 +18,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
 import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
 import com.juniori.puzzle.util.readBytes
+import kotlinx.coroutines.flow.collectLatest
 
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
@@ -30,7 +32,6 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initActivityLauncher()
-        addVideoViewModel.notifyAction(AddVideoActionState.StartingToAdd)
     }
 
     override fun onCreateView(
@@ -52,13 +53,16 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
             startCameraActivity()
         }
 
-        addVideoViewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK -> {
-                    showDurationLimitFeedback()
-                }
-                AddVideoUiState.GO_TO_UPLOAD -> findNavController().navigate(R.id.fragment_upload_step1)
-                AddVideoUiState.NONE -> {
+        lifecycleScope.launchWhenStarted {
+            addVideoViewModel.uiState.collectLatest { uiState ->
+                if (uiState == null) return@collectLatest
+                when (uiState) {
+                    AddVideoUiState.SHOW_DURATION_LIMIT_FEEDBACK -> {
+                        showDurationLimitFeedback()
+                    }
+                    AddVideoUiState.GO_TO_UPLOAD -> {
+                        findNavController().navigate(R.id.fragment_upload_step1)
+                    }
                 }
             }
         }
@@ -99,11 +103,8 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                     val videoNameInCacheDir = result.data?.getStringExtra(VIDEO_NAME_KEY)
                         ?: return@registerForActivityResult
                     addVideoViewModel.notifyAction(
-                        AddVideoActionState.TakingVideoCompleted(
-                            videoNameInCacheDir
-                        )
+                        AddVideoActionState.TakingVideoCompleted(videoNameInCacheDir)
                     )
-                    findNavController().navigate(R.id.fragment_upload_step1, arguments)
                 }
             }
     }
