@@ -21,8 +21,6 @@ import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,10 +48,6 @@ class UploadStep2Fragment : Fragment() {
         _binding = FragmentUploadStep2Binding.inflate(inflater, container, false).apply {
             vm = viewModel
             lifecycleOwner = viewLifecycleOwner
-            dateFormatter =
-                SimpleDateFormat(getString(R.string.upload2_dates_format), Locale.getDefault())
-            timeFormatter =
-                SimpleDateFormat(getString(R.string.upload2_time_format), Locale.getDefault())
         }
         stateManager.createLoadingDialog(container)
         return binding.root
@@ -61,9 +55,7 @@ class UploadStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setOnClickListener()
-
-        binding.datespicker.maxDate = System.currentTimeMillis()
+        initOnClickListener()
 
         binding.containerRadiogroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicUpload.not()) {
@@ -96,28 +88,23 @@ class UploadStep2Fragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.saveMemo(binding.memo.text.toString())
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun setOnClickListener() {
+    private fun initOnClickListener() {
         binding.buttonSave.setOnClickListener {
             uploadDialog.show()
         }
 
         binding.buttonGoback.setOnClickListener {
             findNavController().navigateUp()
-        }
-
-        binding.datesButton.setOnClickListener {
-            binding.datespicker.visibility = View.VISIBLE
-            binding.timepicker.visibility = View.GONE
-        }
-
-        binding.timeButton.setOnClickListener {
-            binding.datespicker.visibility = View.GONE
-            binding.timepicker.visibility = View.VISIBLE
         }
     }
 
