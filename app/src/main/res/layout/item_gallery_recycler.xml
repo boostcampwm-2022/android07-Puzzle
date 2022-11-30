@@ -30,7 +30,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                setImage="@{data.thumbnailUrl}"
+                setImageByPalette="@{data.thumbnailUrl}"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="#D5D5D5"
