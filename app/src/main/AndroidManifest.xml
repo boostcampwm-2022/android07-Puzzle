@@ -23,6 +23,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.sensor.SensorActivity"
+            android:theme="@style/Theme.Puzzle"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".ui.playvideo.PlayVideoActivity"
             android:exported="false"
             android:theme="@style/Theme.Puzzle">
@@ -32,9 +37,8 @@
         </activity>
         <activity
             android:name=".ui.mypage.UpdateNicknameActivity"
-            android:theme="@style/Theme.Puzzle"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.Puzzle" />
         <activity
             android:name=".ui.addvideo.camera.CameraActivity"
             android:exported="true"
@@ -52,14 +56,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
