@@ -1,8 +1,8 @@
 package com.juniori.puzzle.di
 
 import com.google.gson.Gson
-import com.juniori.puzzle.data.weather.WeatherRepository
-import com.juniori.puzzle.data.weather.WeatherRepositoryImpl
+import com.juniori.puzzle.data.weather.WeatherDataSource
+import com.juniori.puzzle.data.weather.WeatherDataSourceImpl
 import com.juniori.puzzle.network.WeatherService
 import com.juniori.puzzle.util.WEATHER_BASE_URL
 import dagger.Module
@@ -20,7 +20,7 @@ object WeatherModule {
 
     @Singleton
     @Provides
-    fun providesWeatherRepository(impl: WeatherRepositoryImpl): WeatherRepository = impl
+    fun providesWeatherDataSource(impl: WeatherDataSourceImpl): WeatherDataSource = impl
 
     @Singleton
     @Provides

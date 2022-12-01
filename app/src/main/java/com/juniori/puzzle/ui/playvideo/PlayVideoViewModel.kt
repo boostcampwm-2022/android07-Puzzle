@@ -3,11 +3,13 @@ package com.juniori.puzzle.ui.playvideo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.firebase.FirestoreDataSource
-import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.usecase.ChangeVideoScopeUseCase
+import com.juniori.puzzle.domain.usecase.DeleteVideoUseCase
+import com.juniori.puzzle.domain.usecase.GetUserInfoByUidUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.domain.usecase.UpdateLikeStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayVideoViewModel @Inject constructor(
     getUserInfoUseCase: GetUserInfoUseCase,
-    private val firestoreDataSource: FirestoreDataSource,
-    private val storageDataSource: StorageDataSource
+    private val updateLikeStatusUseCase: UpdateLikeStatusUseCase,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
+    private val changeVideoScopeUseCase: ChangeVideoScopeUseCase,
+    private val getUserInfoByUidUseCase: GetUserInfoByUidUseCase
 ) : ViewModel() {
     private val _getLoginInfoFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
     val getLoginInfoFlow: StateFlow<Resource<UserInfoEntity>?> = _getLoginInfoFlow
@@ -48,7 +52,7 @@ class PlayVideoViewModel @Inject constructor(
 
     fun getPublisherInfo(uid: String) {
         viewModelScope.launch {
-            _getPublisherInfoFlow.value = firestoreDataSource.getUserItem(uid)
+            _getPublisherInfoFlow.value = getUserInfoByUidUseCase(uid)
         }
     }
 
@@ -59,48 +63,22 @@ class PlayVideoViewModel @Inject constructor(
     }
 
     fun changeLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
-        if (likeState.value) {
-            cancelLike(currentVideo, currentUid)
-        } else {
-            like(currentVideo, currentUid)
-        }
-    }
-
-    private fun like(currentVideo: VideoInfoEntity, currentUid: String) {
         viewModelScope.launch {
-            val result = firestoreDataSource.addVideoItemLike(
-                currentVideo, currentUid
-            )
+            val result = updateLikeStatusUseCase(currentVideo, currentUid, likeState.value)
             if (result is Resource.Success) {
                 _videoFlow.emit(result)
-                _likeState.emit(true)
-            }
-        }
-    }
-
-    private fun cancelLike(currentVideo: VideoInfoEntity, currentUid: String) {
-        viewModelScope.launch {
-            val result = firestoreDataSource.removeVideoItemLike(
-                currentVideo, currentUid
-            )
-            if (result is Resource.Success) {
-                _videoFlow.emit(result)
-                _likeState.emit(false)
+                _likeState.emit(likeState.value.not())
             }
         }
     }
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        storageDataSource.deleteVideo(documentId).onSuccess {
-            _deleteFlow.emit(firestoreDataSource.deleteVideoItem(documentId))
-        }.onFailure {
-            _deleteFlow.emit(Resource.Failure(it as Exception))
-        }
+        _deleteFlow.emit(deleteVideoUseCase(documentId))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _videoFlow.emit(Resource.Loading)
-        _videoFlow.emit(firestoreDataSource.changeVideoItemPrivacy(documentInfo))
+        _videoFlow.emit(changeVideoScopeUseCase(documentInfo))
     }
 }

@@ -1,7 +1,7 @@
 <resources>
     <dimen name="activity_horizontal_margin">20dp</dimen>
     <dimen name="activity_vertical_margin">20dp</dimen>
-    <dimen name="toolbar_border_radius">16dp</dimen>
+    <dimen name="toolbar_border_radius">20dp</dimen>
     <dimen name="toolbar_text_horizontal_margin">24dp</dimen>
     <dimen name="toolbar_box_border_radius">10000dp</dimen>
     <dimen name="toolbar_horizontal_padding">16dp</dimen>
@@ -15,4 +15,6 @@
     <dimen name="item_horizontal_margin">8dp</dimen>
     <dimen name="item_vertical_margin">8dp</dimen>
     <dimen name="item_elevation">8dp</dimen>
+    <dimen name="toolbar_bottom_depth">-12dp</dimen>
+    <dimen name="home_background_flag_depth">-30dp</dimen>
 </resources>

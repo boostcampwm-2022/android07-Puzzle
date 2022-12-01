@@ -10,6 +10,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityUpdateNicknameBinding
 import com.juniori.puzzle.domain.usecase.UpdateNicknameUseCase
+import com.juniori.puzzle.domain.usecase.UpdateServerNicknameUseCase
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ class UpdateNicknameActivity : AppCompatActivity() {
     private val binding: ActivityUpdateNicknameBinding by lazy { ActivityUpdateNicknameBinding.inflate(layoutInflater) }
     @Inject lateinit var stateManager: StateManager
     @Inject lateinit var updateNicknameUseCase: UpdateNicknameUseCase
+    @Inject lateinit var updateServerNicknameUseCase: UpdateServerNicknameUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,17 @@ class UpdateNicknameActivity : AppCompatActivity() {
 
             lifecycleScope.launch(Dispatchers.Main.immediate) {
                 stateManager.showLoadingDialog()
-                val result = withContext(Dispatchers.IO) {
+                val newUserInfo = withContext(Dispatchers.IO) {
                     updateNicknameUseCase(newNickname)
+                }
+
+                val result = withContext(Dispatchers.IO) {
+                    if (newUserInfo is Resource.Success) {
+                        updateServerNicknameUseCase(newUserInfo.result)
+                    }
+                    else {
+                        Resource.Failure(Exception())
+                    }
                 }
                 stateManager.dismissLoadingDialog()
 

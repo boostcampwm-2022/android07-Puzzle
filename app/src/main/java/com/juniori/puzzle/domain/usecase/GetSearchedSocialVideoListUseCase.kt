@@ -8,6 +8,12 @@ import com.juniori.puzzle.util.SortType
 import javax.inject.Inject
 
 class GetSearchedSocialVideoListUseCase @Inject constructor(private val videoRepository: VideoRepository) {
-    suspend operator fun invoke(index: Int, keyword: String, order: SortType, time: Long = 0, likeCount: Long = 0): Resource<List<VideoInfoEntity>> =
+    suspend operator fun invoke(
+        index: Int,
+        keyword: String,
+        order: SortType,
+        time: Long = 0,
+        likeCount: Long = 0
+    ): Resource<List<VideoInfoEntity>> =
         videoRepository.getSearchedSocialVideoList(index, order, keyword, time, likeCount)
 }

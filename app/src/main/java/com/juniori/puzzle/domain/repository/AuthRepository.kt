@@ -9,5 +9,5 @@ interface AuthRepository {
     suspend fun requestLogin(acct: GoogleSignInAccount): Resource<UserInfoEntity>
     suspend fun requestLogout(): Resource<Unit>
     suspend fun requestWithdraw(): Resource<Unit>
-    suspend fun updateNickname(newNickname: String): Resource<Unit>
+    suspend fun updateNickname(newNickname: String): Resource<UserInfoEntity>
 }
