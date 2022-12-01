@@ -16,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
-import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +27,7 @@ class UploadStep2Fragment : Fragment() {
 
     private var _binding: FragmentUploadStep2Binding? = null
     private val binding get() = _binding!!
-    private val viewModel: AddVideoViewModel by activityViewModels()
+    private val viewModel: UploadViewModel by activityViewModels()
 
     private val uploadDialog: AlertDialog by lazy {
         createSaveDialog()
@@ -69,6 +68,7 @@ class UploadStep2Fragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uploadFlow.collectLatest { resource ->
+                    if (resource == null) return@collectLatest
                     when (resource) {
                         is Resource.Success -> {
                             stateManager.dismissLoadingDialog()

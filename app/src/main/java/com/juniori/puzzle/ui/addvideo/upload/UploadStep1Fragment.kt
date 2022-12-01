@@ -13,17 +13,18 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentUploadStep1Binding
-import com.juniori.puzzle.ui.addvideo.AddVideoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UploadStep1Fragment : Fragment() {
 
     private var _binding: FragmentUploadStep1Binding? = null
     private val binding get() = _binding!!
 
-    private val addVideoViewModel: AddVideoViewModel by activityViewModels()
+    private val viewModel: UploadViewModel by activityViewModels()
     private var exoPlayer: ExoPlayer? = null
     private val mediaItem: MediaItem by lazy {
-        MediaItem.fromUri(addVideoViewModel.videoFilePath)
+        MediaItem.fromUri(viewModel.videoFilePath)
     }
 
     private val cancelDialog: AlertDialog by lazy {
@@ -32,7 +33,11 @@ class UploadStep1Fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(addVideoViewModel)
+        lifecycle.addObserver(viewModel)
+        viewModel.initializeMediaData(
+            arguments?.getString(VIDEO_FILE_PATH_KEY) ?: return,
+            arguments?.getByteArray(THUMBNAIL_BYTE_ARRAY) ?: return
+        )
     }
 
     override fun onCreateView(
@@ -41,7 +46,7 @@ class UploadStep1Fragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUploadStep1Binding.inflate(inflater, container, false).apply {
-            vm = addVideoViewModel
+            vm = viewModel
         }
         return binding.root
     }
@@ -75,8 +80,8 @@ class UploadStep1Fragment : Fragment() {
     private fun initVideoPlayer() {
         exoPlayer = ExoPlayer.Builder(requireContext()).build().also { player ->
             player.setMediaItem(mediaItem)
-            player.seekTo(addVideoViewModel.playPosition)
-            player.playWhenReady = addVideoViewModel.playWhenReady
+            player.seekTo(viewModel.playPosition)
+            player.playWhenReady = viewModel.playWhenReady
             player.prepare()
             binding.videoplayer.player = player
         }
@@ -84,7 +89,7 @@ class UploadStep1Fragment : Fragment() {
 
     private fun releaseVideoPlayer() {
         exoPlayer?.let { player ->
-            addVideoViewModel.saveVideoPlayState(player.currentPosition, player.playWhenReady)
+            viewModel.saveVideoPlayState(player.currentPosition, player.playWhenReady)
             player.release()
             exoPlayer = null
         }
@@ -101,5 +106,10 @@ class UploadStep1Fragment : Fragment() {
                 cancelDialog.dismiss()
             }
             .create()
+    }
+
+    companion object {
+        const val VIDEO_FILE_PATH_KEY = "VIDEO_FILE_PATH_KEY"
+        const val THUMBNAIL_BYTE_ARRAY = "THUMBNAIL_BYTE_ARRAY"
     }
 }

@@ -3,13 +3,12 @@ package com.juniori.puzzle.ui.addvideo
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,16 +18,21 @@ import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.BottomsheetAddvideoBinding
 import com.juniori.puzzle.ui.addvideo.camera.CameraActivity
+import com.juniori.puzzle.ui.addvideo.upload.UploadStep1Fragment.Companion.THUMBNAIL_BYTE_ARRAY
+import com.juniori.puzzle.ui.addvideo.upload.UploadStep1Fragment.Companion.VIDEO_FILE_PATH_KEY
 import com.juniori.puzzle.util.readBytes
+import com.juniori.puzzle.util.saveInFile
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AddVideoBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetAddvideoBinding? = null
     private val binding get() = _binding!!
 
-    private val addVideoViewModel: AddVideoViewModel by activityViewModels()
+    private val addVideoViewModel: AddVideoViewModel by viewModels()
     private var videoPickActivityLauncher: ActivityResultLauncher<Intent>? = null
     private var cameraActivityLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -65,7 +69,11 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
                             showDurationLimitFeedback()
                         }
                         AddVideoUiState.GO_TO_UPLOAD -> {
-                            findNavController().navigate(R.id.fragment_upload_step1)
+                            val arguments = Bundle().apply {
+                                putString(VIDEO_FILE_PATH_KEY, addVideoViewModel.videoFilePath)
+                                putByteArray(THUMBNAIL_BYTE_ARRAY, addVideoViewModel.thumbnailBytes)
+                            }
+                            findNavController().navigate(R.id.fragment_upload_step1, arguments)
                         }
                     }
                 }
@@ -77,39 +85,33 @@ class AddVideoBottomSheet : BottomSheetDialogFragment() {
         Intent().apply {
             type = "video/*"
             action = Intent.ACTION_PICK
-            putExtra(MediaStore.EXTRA_DURATION_LIMIT, VIDEO_DURATION_LIMIT_SECONDS)
         }.run {
             videoPickActivityLauncher?.launch(this)
         }
     }
 
     private fun startCameraActivity() {
-        cameraActivityLauncher?.launch(Intent(requireContext(), CameraActivity::class.java).apply {
-            putExtra("uid", addVideoViewModel.getUid())
-        })
+        cameraActivityLauncher?.launch(Intent(requireContext(), CameraActivity::class.java))
     }
 
     private fun initActivityLauncher() {
         videoPickActivityLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val videoUri = result.data?.data ?: return@registerForActivityResult
-                    val videoBytes = videoUri.readBytes(requireContext().contentResolver)
-                        ?: return@registerForActivityResult
-                    addVideoViewModel.notifyAction(
-                        AddVideoActionState.VideoPicked(videoUri, videoBytes)
-                    )
+                    val videoContentUri = result.data?.data ?: return@registerForActivityResult
+                    val videoFilePath = "${requireContext().cacheDir}/${System.currentTimeMillis()}.mp4"
+                    videoContentUri.readBytes(requireContext().contentResolver)
+                        ?.saveInFile(videoFilePath) ?: return@registerForActivityResult
+                    addVideoViewModel.notifyVideoPicked(videoFilePath)
                 }
             }
 
         cameraActivityLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val videoNameInCacheDir = result.data?.getStringExtra(VIDEO_NAME_KEY)
+                    val videoFilePath = result.data?.getStringExtra(VIDEO_NAME_KEY)
                         ?: return@registerForActivityResult
-                    addVideoViewModel.notifyAction(
-                        AddVideoActionState.TakingVideoCompleted(videoNameInCacheDir)
-                    )
+                    addVideoViewModel.notifyTakingVideoFinished(videoFilePath)
                 }
             }
     }
