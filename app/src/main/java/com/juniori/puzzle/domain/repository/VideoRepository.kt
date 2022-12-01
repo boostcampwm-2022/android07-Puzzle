@@ -42,4 +42,9 @@ interface VideoRepository {
 
     suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity>
     suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity>
+    suspend fun postUserInfoInFirestore(
+        uid: String,
+        nickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity>
 }
