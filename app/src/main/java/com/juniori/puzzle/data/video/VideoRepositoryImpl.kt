@@ -120,4 +120,12 @@ class VideoRepositoryImpl @Inject constructor(
     override suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity> {
         return firestoreDataSource.getUserItem(uid)
     }
+
+    override suspend fun postUserInfoInFirestore(
+        uid: String,
+        nickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity> {
+        return firestoreDataSource.postUserItem(uid, nickname, profileImage)
+    }
 }

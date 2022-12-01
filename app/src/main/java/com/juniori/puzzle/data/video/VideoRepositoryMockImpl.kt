@@ -94,4 +94,12 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
     override suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun postUserInfoInFirestore(
+        uid: String,
+        nickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity> {
+        TODO("Not yet implemented")
+    }
 }
