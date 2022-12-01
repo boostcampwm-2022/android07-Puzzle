@@ -107,4 +107,12 @@
     <string name="gallery_retry">재시도</string>
     <string name="gallery_check">확인</string>
 
+    <!--play video-->
+    <string name="play_share_title">공유하기</string>
+    <string name="play_hiding_title">나만보기</string>
+    <string name="play_share_message">동영상을 공유하시겠습니까?</string>
+    <string name="play_hiding_message">동영상을 나만 보시겠습니까?</string>
+    <string name="play_delete_title">삭제하기</string>
+    <string name="play_delete_message">동영상을 정말 삭제하시겠습니까?</string>
+
 </resources>
