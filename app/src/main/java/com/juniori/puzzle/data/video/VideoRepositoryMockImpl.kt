@@ -8,7 +8,7 @@ import com.juniori.puzzle.util.SortType
 import java.io.File
 import javax.inject.Inject
 
-class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>):
+class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>) :
     VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
@@ -16,15 +16,22 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         )
     }
 
-    override suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSearchedMyVideoList(
+        uid: String,
+        index: Int,
+        keyword: String
+    ): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
             videoList.filter { videoInfoEntity -> videoInfoEntity.ownerUid == uid }
                 .filter { videoInfoEntity -> videoInfoEntity.location == keyword }
         )
     }
 
-    override suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>> {
-        return when(sortType) {
+    override suspend fun getSocialVideoList(
+        index: Int,
+        sortType: SortType
+    ): Resource<List<VideoInfoEntity>> {
+        return when (sortType) {
             SortType.NEW -> {
                 Resource.Success(
                     videoList.sortedByDescending { it.updateTime }
@@ -40,8 +47,12 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         }
     }
 
-    override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>> {
-        return when(sortType) {
+    override suspend fun getSearchedSocialVideoList(
+        index: Int,
+        sortType: SortType,
+        keyword: String
+    ): Resource<List<VideoInfoEntity>> {
+        return when (sortType) {
             SortType.NEW -> {
                 Resource.Success(
                     videoList.sortedByDescending { it.updateTime }
@@ -100,6 +111,8 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         nickname: String,
         profileImage: String
     ): Resource<UserInfoEntity> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
         TODO("Not yet implemented")

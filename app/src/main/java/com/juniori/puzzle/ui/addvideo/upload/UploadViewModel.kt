@@ -5,10 +5,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.firebase.FirestoreDataSource
-import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.domain.usecase.PostVideoUseCase
 import com.juniori.puzzle.util.deleteIfFileUri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UploadViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val storageDataSource: StorageDataSource,
-    private val firestoreDataSource: FirestoreDataSource
+    private val postVideoUseCase: PostVideoUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
     var videoFilePath = ""
@@ -61,24 +59,17 @@ class UploadViewModel @Inject constructor(
 
         val uid = getUid() ?: return@launch
         val videoName = "${uid}_${System.currentTimeMillis()}"
-
-        storageDataSource.insertThumbnail(videoName, thumbnailBytes).onSuccess {
-            storageDataSource.insertVideo(
-                videoName,
-                File(videoFilePath).readBytes()
-            ).onSuccess {
-                val result = firestoreDataSource.postVideoItem(
-                    uid = uid,
-                    videoName = videoName,
-                    isPrivate = isPublicUpload.not(),
-                    location = golfCourse,
-                    memo = memo
-                )
-                _uploadFlow.emit(result)
-            }.onFailure {
-                _uploadFlow.emit(Resource.Failure(it as Exception))
-            }
-        }
+        _uploadFlow.emit(
+            postVideoUseCase(
+                uid = uid,
+                videoName = videoName,
+                isPrivate = isPublicUpload.not(),
+                location = golfCourse,
+                memo = memo,
+                imageByteArray = thumbnailBytes,
+                videoByteArray = File(videoFilePath).readBytes()
+            )
+        )
     }
 
     private fun getUid(): String? {
