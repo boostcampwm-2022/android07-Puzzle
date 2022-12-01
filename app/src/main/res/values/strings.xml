@@ -99,6 +99,7 @@
     
     <!--other gallery-->
     <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
+    <string name="gallery_item_icon_description">동영상 위치 정보 아이콘</string>
 
     <!--other gallery-->
     <string name="gallery_paging_error">다음 데이터를 불러오는데 실패했습니다.</string>
@@ -106,5 +107,13 @@
     <string name="gallery_end_paging">더이상 표시할 데이터가 없습니다.</string>
     <string name="gallery_retry">재시도</string>
     <string name="gallery_check">확인</string>
+
+    <!--play video-->
+    <string name="play_share_title">공유하기</string>
+    <string name="play_hiding_title">나만보기</string>
+    <string name="play_share_message">동영상을 공유하시겠습니까?</string>
+    <string name="play_hiding_message">동영상을 나만 보시겠습니까?</string>
+    <string name="play_delete_title">삭제하기</string>
+    <string name="play_delete_message">동영상을 정말 삭제하시겠습니까?</string>
 
 </resources>

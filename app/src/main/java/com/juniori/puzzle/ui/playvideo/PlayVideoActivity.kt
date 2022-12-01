@@ -1,5 +1,6 @@
 package com.juniori.puzzle.ui.playvideo
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,6 +32,40 @@ class PlayVideoActivity : AppCompatActivity() {
     private val viewModel: PlayVideoViewModel by viewModels()
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var currentVideoItem: VideoInfoEntity
+    private val shareDialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.play_share_title))
+            .setMessage(getString(R.string.play_share_message))
+            .setPositiveButton(R.string.all_yes) { _, _ ->
+                viewModel.updateVideoPrivacy(currentVideoItem)
+            }
+            .setNegativeButton(R.string.all_no) { _, _ ->
+            }
+            .create()
+    }
+    private val hidingDialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.play_hiding_title))
+            .setMessage(getString(R.string.play_hiding_message))
+            .setPositiveButton(R.string.all_yes) { _, _ ->
+                viewModel.updateVideoPrivacy(currentVideoItem)
+            }
+            .setNegativeButton(R.string.all_no) { _, _ ->
+            }
+            .create()
+    }
+    private val deleteDialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.play_delete_title))
+            .setMessage(getString(R.string.play_delete_message))
+            .setPositiveButton(R.string.all_yes) { _, _ ->
+                viewModel.deleteVideo(currentVideoItem.documentId)
+            }
+            .setNegativeButton(R.string.all_no) { _, _ ->
+            }
+            .create()
+    }
+
 
     @Inject
     lateinit var stateManager: StateManager
@@ -178,11 +213,18 @@ class PlayVideoActivity : AppCompatActivity() {
     private fun setItemOnClickListener() {
         with(binding.materialToolbar) {
             menu.findItem(R.id.video_privacy).setOnMenuItemClickListener {
-                viewModel.updateVideoPrivacy(currentVideoItem)
+                when (currentVideoItem.isPrivate) {
+                    true -> {
+                        shareDialog.show()
+                    }
+                    false -> {
+                        hidingDialog.show()
+                    }
+                }
                 true
             }
             menu.findItem(R.id.video_delete).setOnMenuItemClickListener {
-                viewModel.deleteVideo(currentVideoItem.documentId)
+                deleteDialog.show()
                 true
             }
             setNavigationOnClickListener {
