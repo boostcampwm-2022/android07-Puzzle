@@ -196,13 +196,15 @@ class FirestoreDataSource @Inject constructor(
     suspend fun getPublicVideoItemsOrderBy(
         orderBy: SortType,
         offset: Int? = null,
-        limit: Int? = null
+        limit: Int? = null,
+        time: Long,
+        likeCount: Long
     ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
+                        QueryUtil.getPublicVideoQuery(orderBy, offset, limit, time, likeCount)
                     )
                 ).getVideoInfoEntity()
             )
@@ -217,18 +219,22 @@ class FirestoreDataSource @Inject constructor(
         toSearch: String,
         keyword: String,
         offset: Int? = null,
-        limit: Int? = null
+        limit: Int? = null,
+        time: Long,
+        likeCount: Long
     ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoWithKeywordQuery(
-                            orderBy.value,
+                            orderBy,
                             toSearch,
                             keyword,
                             offset,
-                            limit
+                            limit,
+                            time,
+                            likeCount
                         )
                     )
                 ).getVideoInfoEntity()

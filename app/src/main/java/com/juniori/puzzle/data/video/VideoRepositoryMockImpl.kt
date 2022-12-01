@@ -22,7 +22,12 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         )
     }
 
-    override suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSocialVideoList(
+        index: Int,
+        sortType: SortType,
+        time: Long,
+        likeCount: Long
+    ): Resource<List<VideoInfoEntity>> {
         return when(sortType) {
             SortType.NEW -> {
                 Resource.Success(
@@ -39,7 +44,7 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         }
     }
 
-    override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String, time: Long, likeCount: Long): Resource<List<VideoInfoEntity>> {
         return when(sortType) {
             SortType.NEW -> {
                 Resource.Success(

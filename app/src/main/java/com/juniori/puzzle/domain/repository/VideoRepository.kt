@@ -8,8 +8,8 @@ import java.io.File
 interface VideoRepository {
     suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>>
     suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>>
-    suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>>
-    suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>>
+    suspend fun getSocialVideoList(index: Int, sortType: SortType, time: Long, likeCount: Long): Resource<List<VideoInfoEntity>>
+    suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String, time: Long, likeCount: Long): Resource<List<VideoInfoEntity>>
     suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File>
     suspend fun updateLikeStatus(uid: String, videoName: String): Resource<Unit>
     suspend fun deleteVideo(uid: String, videoName: String): Resource<Unit>

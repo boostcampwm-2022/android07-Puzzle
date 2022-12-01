@@ -8,7 +8,7 @@ import com.juniori.puzzle.util.SortType
 import java.io.File
 import javax.inject.Inject
 
-class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: FirestoreDataSource):
+class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: FirestoreDataSource) :
     VideoRepository {
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItems(
@@ -18,31 +18,50 @@ class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: Firestore
         )
     }
 
-    override suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSearchedMyVideoList(
+        uid: String,
+        index: Int,
+        keyword: String
+    ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItemsWithKeyword(
             uid = uid,
             toSearch = "location",
-            keyword =  keyword,
+            keyword = keyword,
             offset = index,
             limit = 10
         )
     }
 
-    override suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSocialVideoList(
+        index: Int,
+        sortType: SortType,
+        time: Long,
+        likeCount: Long
+    ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getPublicVideoItemsOrderBy(
             orderBy = sortType,
             offset = index,
-            limit = 10
+            limit = 10,
+            time = time,
+            likeCount = likeCount
         )
     }
 
-    override suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>> {
+    override suspend fun getSearchedSocialVideoList(
+        index: Int,
+        sortType: SortType,
+        keyword: String,
+        time: Long,
+        likeCount: Long
+    ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
             orderBy = sortType,
             toSearch = "location",
             keyword = keyword,
             offset = index,
-            limit = 10
+            limit = 10,
+            time = time,
+            likeCount = likeCount
         )
     }
 
@@ -58,11 +77,18 @@ class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: Firestore
         TODO("Not yet implemented")
     }
 
-    override suspend fun setVideoScope(uid: String, isPrivate: Boolean, videoName: String): Resource<Unit> {
+    override suspend fun setVideoScope(
+        uid: String,
+        isPrivate: Boolean,
+        videoName: String
+    ): Resource<Unit> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun postVideoUseCase(videoFile: File, videoInfoEntity: VideoInfoEntity): Resource<Unit> {
+    override suspend fun postVideoUseCase(
+        videoFile: File,
+        videoInfoEntity: VideoInfoEntity
+    ): Resource<Unit> {
         TODO("Not yet implemented")
     }
 }
