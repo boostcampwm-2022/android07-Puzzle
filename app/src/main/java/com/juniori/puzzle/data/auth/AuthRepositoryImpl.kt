@@ -14,7 +14,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : AuthRepository {
 
-    override suspend fun updateNickname(newNickname: String): Resource<Unit> {
+    override suspend fun updateNickname(newNickname: String): Resource<UserInfoEntity> {
         val newProfile = UserProfileChangeRequest.Builder()
             .setDisplayName(newNickname)
             .build()
@@ -22,7 +22,11 @@ class AuthRepositoryImpl @Inject constructor(
         val result = firebaseAuth.currentUser?.updateProfile(newProfile)
 
         return result?.let {
-            Resource.Success(Unit)
+            val uid = firebaseAuth.currentUser?.uid ?: ""
+            val profileUrl = firebaseAuth.currentUser?.photoUrl?.toString() ?: ""
+            val userInfoEntity = UserInfoEntity(uid, newNickname, profileUrl)
+
+            Resource.Success(userInfoEntity)
         } ?: kotlin.run { Resource.Failure(Exception()) }
     }
 
