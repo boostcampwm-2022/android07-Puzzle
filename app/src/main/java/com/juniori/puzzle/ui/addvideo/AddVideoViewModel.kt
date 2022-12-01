@@ -7,11 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
-import com.juniori.puzzle.data.firebase.FirestoreDataSource
-import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.di.LocalCacheModule
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.domain.usecase.PostVideoUseCase
 import com.juniori.puzzle.util.VideoMetaDataUtil
 import com.juniori.puzzle.util.deleteIfFileUri
 import com.juniori.puzzle.util.saveInFile
@@ -30,8 +29,7 @@ class AddVideoViewModel @Inject constructor(
     private val cacheDirPath: String,
     private val videoMetaDataUtil: VideoMetaDataUtil,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val storageDataSource: StorageDataSource,
-    private val firestoreDataSource: FirestoreDataSource
+    private val postVideoUseCase: PostVideoUseCase
 ) : ViewModel(), DefaultLifecycleObserver {
 
     private var videoName: String = ""
@@ -83,7 +81,8 @@ class AddVideoViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     actionState.videoBytes.saveInFile(videoFilePath)
                     _uiState.postValue(AddVideoUiState.GO_TO_UPLOAD)
-                    thumbnailBytes = videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
+                    thumbnailBytes =
+                        videoMetaDataUtil.extractThumbnail(videoFilePath) ?: return@launch
                 }
             }
             is AddVideoActionState.TakingVideoCompleted -> {
@@ -101,24 +100,17 @@ class AddVideoViewModel @Inject constructor(
 
         isUploadingToServer = true
         _uploadFlow.emit(Resource.Loading)
-
-        storageDataSource.insertThumbnail(videoName, thumbnailBytes).onSuccess {
-            storageDataSource.insertVideo(
+        _uploadFlow.emit(
+            postVideoUseCase(
+                uid,
                 videoName,
-                File(videoFilePath).readBytes()
-            ).onSuccess {
-                val result = firestoreDataSource.postVideoItem(
-                    uid = uid,
-                    videoName = videoName,
-                    isPrivate = isPublicUpload.not(),
-                    location = golfCourse,
-                    memo = memo
-                )
-                _uploadFlow.emit(result)
-            }.onFailure {
-                _uploadFlow.emit(Resource.Failure(it as Exception))
-            }
-        }
+                isPublicUpload.not(),
+                golfCourse,
+                memo,
+                File(videoFilePath).readBytes(),
+                thumbnailBytes
+            )
+        )
         isUploadingToServer = false
     }
 
