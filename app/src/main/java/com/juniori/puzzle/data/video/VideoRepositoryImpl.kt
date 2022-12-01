@@ -61,6 +61,10 @@ class VideoRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
+        return firestoreDataSource.changeUserNickname(userInfoEntity.uid, userInfoEntity.nickname, userInfoEntity.profileImage)
+    }
+
     override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {
         TODO("Not yet implemented")
     }

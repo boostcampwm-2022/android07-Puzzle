@@ -102,4 +102,8 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
     ): Resource<UserInfoEntity> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
+        TODO("Not yet implemented")
+    }
 }
