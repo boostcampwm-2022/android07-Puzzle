@@ -14,9 +14,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,8 +31,10 @@ class OthersGalleryFragment : Fragment() {
     private val viewModel: OthersGalleryViewModel by viewModels()
     private val activityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.getMyData()
+            viewModel.getMainData()
         }
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,13 +57,16 @@ class OthersGalleryFragment : Fragment() {
                     this.putExtra(VIDEO_EXTRA_NAME, it)
                 })
         }
+
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), ITEM_ROW_COUNT)
+            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
             layoutManager = gridLayoutManager
         }
 
-
+        binding.otherGallerySwipeRefresh.setOnRefreshListener {
+            viewModel.getMainData()
+        }
         val items = resources.getStringArray(R.array.other_order_type)
         val spinnerAdapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
@@ -66,6 +74,8 @@ class OthersGalleryFragment : Fragment() {
 
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            binding.otherGallerySwipeRefresh.isRefreshing = false
+
             recyclerAdapter.submitList(dataList)
 
             binding.textOtherGalleryNotFound.isVisible = dataList.isEmpty()
@@ -75,9 +85,59 @@ class OthersGalleryFragment : Fragment() {
             binding.progressOtherGallery.isVisible = isRefresh
         }
 
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                GalleryState.NONE -> {
+                    snackBar?.dismiss()
+                }
+
+                GalleryState.END_PAGING -> {
+                    snackBar = Snackbar.make(
+                        view,
+                        R.string.gallery_end_paging,
+                        Snackbar.LENGTH_SHORT
+                    ).apply {
+                        setAction(R.string.gallery_check) {
+                            dismiss()
+                        }
+                    }
+
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_PAGING -> {
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_paging_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getPaging(recyclerAdapter.itemCount)
+                            }
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_BASE -> {
+                    binding.otherGallerySwipeRefresh.isRefreshing = false
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_init_load_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getMainData()
+                            }
+                    snackBar?.show()
+                }
+            }
+
+        }
+
         viewModel.list.value.also { list ->
             if (list == null || list.isEmpty()) {
-                viewModel.getMyData()
+                viewModel.getMainData()
             }
         }
 

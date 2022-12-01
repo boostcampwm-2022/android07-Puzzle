@@ -122,7 +122,7 @@ class AddVideoViewModel @Inject constructor(
         isUploadingToServer = false
     }
 
-    private fun getUid(): String? {
+    fun getUid(): String? {
         val currentUserInfo = getUserInfoUseCase()
         return if (currentUserInfo is Resource.Success) {
             currentUserInfo.result.uid

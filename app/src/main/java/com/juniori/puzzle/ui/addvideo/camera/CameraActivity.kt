@@ -11,7 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
+import androidx.camera.video.FileOutputOptions
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
@@ -20,10 +26,12 @@ import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.ActivityCameraBinding
 import com.juniori.puzzle.ui.addvideo.AddVideoBottomSheet
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -57,7 +65,7 @@ class CameraActivity : AppCompatActivity() {
         requestCode: Int,
         permissions: Array<String>,
         grantResults:
-            IntArray
+        IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (checkCameraPermissions()) {
@@ -129,7 +137,7 @@ class CameraActivity : AppCompatActivity() {
         val curRecording = recording
         if (curRecording != null) {
             progressJob?.cancel()
-            binding.progressCamera.setProgressCompat(0,false)
+            binding.progressCamera.setProgressCompat(0, false)
             binding.progressCamera.isVisible = false
             curRecording.stop()
             recording = null
@@ -138,18 +146,17 @@ class CameraActivity : AppCompatActivity() {
 
         binding.progressCamera.isVisible = true
         progressJob = lifecycleScope.launch(Dispatchers.IO) {
-            for(i in 1..20){
+            for (i in 1..20) {
                 delay(1000)
-                withContext(Dispatchers.Main){
-                    binding.progressCamera.setProgressCompat(i*100/20, true)
+                withContext(Dispatchers.Main) {
+                    binding.progressCamera.setProgressCompat(i * 100 / 20, true)
                 }
             }
             recording?.stop()
             recording = null
         }
 
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.KOREA) // todo 이름
-            .format(System.currentTimeMillis())
+        val name = "${intent.extras?.get("uid")}_${System.currentTimeMillis()}"
 
         val fileOutputOptions = FileOutputOptions
             .Builder(File(cacheDir, "$name.mp4"))
@@ -178,7 +185,7 @@ class CameraActivity : AppCompatActivity() {
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
                             val msg = "비디오가 저장되었습니다 :  " +
-                                "${recordEvent.outputResults.outputUri}"
+                                    "${recordEvent.outputResults.outputUri}"
                             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
                                 .show()
                             setVideoNameInActivityResult(name)
@@ -205,7 +212,6 @@ class CameraActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "CameraActivity"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =
             mutableListOf(

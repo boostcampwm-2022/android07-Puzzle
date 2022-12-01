@@ -9,8 +9,8 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
+import com.juniori.puzzle.util.GalleryState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,32 +28,65 @@ class MyGalleryViewModel @Inject constructor(
     val refresh: LiveData<Boolean>
         get() = _refresh
 
+    private val _state = MutableLiveData(GalleryState.NONE)
+    val state: LiveData<GalleryState>
+        get() = _state
+
     private var query = ""
 
     fun setQueryText(nowQuery: String?) {
-        if (nowQuery.isNullOrBlank()) {
-            query = ""
-            getMyData()
-            return
+        query = if (nowQuery != null && nowQuery.isNotBlank()) {
+            nowQuery
+        } else {
+            ""
         }
 
-        query = nowQuery
+        getMyData()
+    }
+
+    private fun getQueryData() {
         val uid = getUid()
 
         if (uid == null) {
-            //todo network err
+            _state.value = GalleryState.NETWORK_ERROR_BASE
         } else {
             viewModelScope.launch {
                 val data = getSearchedMyVideoUseCase(uid, 0, query)
                 if (data is Resource.Success) {
+                    _state.value = GalleryState.NONE
+
                     val result = data.result
-                    if(result==null||result.isEmpty()){
-                        _list.postValue(emptyList())
-                    }else {
-                        _list.postValue(result)
+                    if (result == null || result.isEmpty()) {
+                        _list.value = emptyList()
+                    } else {
+                        _list.value = result
                     }
                 } else {
-                    //todo network err
+                    _state.value = GalleryState.NETWORK_ERROR_BASE
+                }
+            }
+        }
+    }
+
+    private fun getBaseData() {
+        val uid = getUid()
+
+        if (uid == null) {
+            _state.value = GalleryState.NETWORK_ERROR_BASE
+        } else {
+            viewModelScope.launch {
+                val data = getMyVideoListUseCase(uid, 0)
+                if (data is Resource.Success) {
+                    _state.value = GalleryState.NONE
+
+                    val result = data.result
+                    if (result == null || result.isEmpty()) {
+                        _list.value = emptyList()
+                    } else {
+                        _list.value = result
+                    }
+                } else {
+                    _state.value = GalleryState.NETWORK_ERROR_BASE
                 }
             }
         }
@@ -66,7 +99,7 @@ class MyGalleryViewModel @Inject constructor(
 
         val uid = getUid()
         if (uid == null) {
-            //todo network err
+            _state.value = GalleryState.NETWORK_ERROR_PAGING
         } else {
             viewModelScope.launch {
                 _refresh.value = true
@@ -78,9 +111,14 @@ class MyGalleryViewModel @Inject constructor(
 
                 if (data is Resource.Success) {
                     val result = data.result
-                    addItems(result)//empty list paging
+                    if (result == null || result.isEmpty()) {
+                        _state.value = GalleryState.END_PAGING
+                    } else {
+                        _state.value = GalleryState.NONE
+                        addItems(result)
+                    }
                 } else {
-                    //todo network err
+                    _state.value = GalleryState.NETWORK_ERROR_PAGING
                 }
 
                 _refresh.value = false
@@ -89,24 +127,10 @@ class MyGalleryViewModel @Inject constructor(
     }
 
     fun getMyData() {
-        val uid = getUid()
-
-        if (uid == null) {
-            //todo network err
+        if (query.isEmpty()) {
+            getBaseData()
         } else {
-            viewModelScope.launch {
-                val data = getMyVideoListUseCase(uid, 0)
-                if (data is Resource.Success) {
-                    val result = data.result
-                    if(result==null||result.isEmpty()){
-                        _list.postValue(emptyList())
-                    }else {
-                        _list.postValue(result)
-                    }
-                } else {
-                    //todo network err
-                }
-            }
+            getQueryData()
         }
     }
 

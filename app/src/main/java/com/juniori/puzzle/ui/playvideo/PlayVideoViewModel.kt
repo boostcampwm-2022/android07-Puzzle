@@ -29,16 +29,64 @@ class PlayVideoViewModel @Inject constructor(
     private val _deleteFlow = MutableStateFlow<Resource<Unit>?>(null)
     val deleteFlow: StateFlow<Resource<Unit>?> = _deleteFlow
 
-    private val _updateFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
-    val updateFlow: StateFlow<Resource<VideoInfoEntity>?> = _updateFlow
+    private val _videoFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
+    val videoFlow: StateFlow<Resource<VideoInfoEntity>?> = _videoFlow
+
+    private val _likeState = MutableStateFlow(false)
+    val likeState: StateFlow<Boolean>
+        get() = _likeState
 
     init {
         _getLoginInfoFlow.value = getUserInfoUseCase()
     }
 
+    fun initVideoFlow(currentVideo: VideoInfoEntity) {
+        viewModelScope.launch {
+            _videoFlow.emit(Resource.Success(currentVideo))
+        }
+    }
+
     fun getPublisherInfo(uid: String) {
         viewModelScope.launch {
             _getPublisherInfoFlow.value = firestoreDataSource.getUserItem(uid)
+        }
+    }
+
+    fun setCurrentLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            _likeState.emit(currentVideo.likedUserUidList.contains(currentUid))
+        }
+    }
+
+    fun changeLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
+        if (likeState.value) {
+            cancelLike(currentVideo, currentUid)
+        } else {
+            like(currentVideo, currentUid)
+        }
+    }
+
+    private fun like(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            val result = firestoreDataSource.addVideoItemLike(
+                currentVideo, currentUid
+            )
+            if (result is Resource.Success) {
+                _videoFlow.emit(result)
+                _likeState.emit(true)
+            }
+        }
+    }
+
+    private fun cancelLike(currentVideo: VideoInfoEntity, currentUid: String) {
+        viewModelScope.launch {
+            val result = firestoreDataSource.removeVideoItemLike(
+                currentVideo, currentUid
+            )
+            if (result is Resource.Success) {
+                _videoFlow.emit(result)
+                _likeState.emit(false)
+            }
         }
     }
 
@@ -52,7 +100,7 @@ class PlayVideoViewModel @Inject constructor(
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
-        _updateFlow.emit(Resource.Loading)
-        _updateFlow.emit(firestoreDataSource.changeVideoItemPrivacy(documentInfo))
+        _videoFlow.emit(Resource.Loading)
+        _videoFlow.emit(firestoreDataSource.changeVideoItemPrivacy(documentInfo))
     }
 }

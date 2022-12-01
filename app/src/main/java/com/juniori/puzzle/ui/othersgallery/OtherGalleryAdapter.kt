@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.ui.mygallery.MyGalleryViewModel
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class OtherGalleryAdapter(
