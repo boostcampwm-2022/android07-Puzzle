@@ -25,21 +25,22 @@
                 android:id="@+id/search_other_gallery"
                 style="@style/Theme.Puzzle.SearchView"
                 android:layout_width="0dp"
-                android:layout_weight="7"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="7" />
 
             <Spinner
-                android:layout_marginStart="16dp"
-                android:layout_weight="3"
                 android:id="@+id/spinner_other_gallery"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:paddingVertical="10dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="3"
+                android:padding="@dimen/text_vertical_margin"
                 android:background="@drawable/all_search_view_background"
                 android:entries="@array/other_order_type" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
-
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/other_gallery_swipe_refresh"
@@ -50,6 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_other_gallery"
             android:layout_width="match_parent"
@@ -67,6 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/other_gallery_swipe_refresh"
         app:layout_constraintTop_toBottomOf="@+id/materialToolbar" />
+
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_other_gallery"
         android:layout_width="wrap_content"

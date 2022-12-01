@@ -15,6 +15,6 @@
     <dimen name="item_horizontal_margin">8dp</dimen>
     <dimen name="item_vertical_margin">8dp</dimen>
     <dimen name="item_elevation">8dp</dimen>
-    <dimen name="toolbar_bottom_depth">-20dp</dimen>
+    <dimen name="toolbar_bottom_depth">-12dp</dimen>
     <dimen name="home_background_flag_depth">-30dp</dimen>
 </resources>
