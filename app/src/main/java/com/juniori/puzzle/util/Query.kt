@@ -1,15 +1,7 @@
 package com.juniori.puzzle.util
 
-import com.juniori.puzzle.data.firebase.dto.BooleanFieldFilter
-import com.juniori.puzzle.data.firebase.dto.BooleanValue
-import com.juniori.puzzle.data.firebase.dto.CompositeFilter
-import com.juniori.puzzle.data.firebase.dto.FieldReference
-import com.juniori.puzzle.data.firebase.dto.Filter
-import com.juniori.puzzle.data.firebase.dto.Order
-import com.juniori.puzzle.data.firebase.dto.StringFieldFilter
-import com.juniori.puzzle.data.firebase.dto.StringValue
-import com.juniori.puzzle.data.firebase.dto.StructuredQuery
-import com.juniori.puzzle.data.firebase.dto.Where
+import com.google.gson.Gson
+import com.juniori.puzzle.data.firebase.dto.*
 
 object QueryUtil {
     fun getMyVideoQuery(uid: String, offset: Int?, limit: Int?) = StructuredQuery(
@@ -79,30 +71,97 @@ object QueryUtil {
         limit = limit
     )
 
-    fun getPublicVideoQuery(orderBy: String, offset: Int?, limit: Int?) = StructuredQuery(
-        where = Filter(
-            fieldFilter = BooleanFieldFilter(
-                field = FieldReference("is_private"),
-                op = "EQUAL",
-                value = BooleanValue(false)
+    fun getPublicVideoQuery(
+        orderBy: SortType,
+        offset: Int?,
+        limit: Int?,
+        time: Long,
+        likeCount: Long
+    ): StructuredQuery {
+        return if (orderBy == SortType.NEW) {
+            StructuredQuery(
+                where = Where(
+                    CompositeFilter(
+                        op = "AND",
+                        filters = listOf(
+                            Filter(
+                                fieldFilter = BooleanFieldFilter(
+                                    field = FieldReference("is_private"),
+                                    op = "EQUAL",
+                                    value = BooleanValue(false)
+                                )
+                            ),
+                            Filter(
+                                fieldFilter = IntegerFieldFilter(
+                                    field = FieldReference("update_time"),
+                                    op = "LESS_THAN_OR_EQUAL",
+                                    value = IntegerValue(time)
+                                )
+                            )
+                        )
+                    )
+                ),
+                orderBy = listOf(
+                    Order(
+                        field = FieldReference(SortType.NEW.value),
+                        direction = "DESCENDING"
+                    ),
+                    Order(
+                        field = FieldReference(SortType.LIKE.value),
+                        direction = "DESCENDING"
+                    )
+                ),
+                offset = offset,
+                limit = limit
             )
-        ),
-        orderBy = listOf(
-            Order(
-                field = FieldReference(orderBy),
-                direction = "DESCENDING"
+        } else {
+            StructuredQuery(
+                where = Where(
+                    CompositeFilter(
+                        op = "AND",
+                        filters = listOf(
+                            Filter(
+                                fieldFilter = BooleanFieldFilter(
+                                    field = FieldReference("is_private"),
+                                    op = "EQUAL",
+                                    value = BooleanValue(false)
+                                )
+                            ),
+                            Filter(
+                                fieldFilter = IntegerFieldFilter(
+                                    field = FieldReference("like_count"),
+                                    op = "LESS_THAN_OR_EQUAL",
+                                    value = IntegerValue(likeCount)
+                                )
+                            )
+                        )
+                    )
+                ),
+                orderBy = listOf(
+                    Order(
+                        field = FieldReference(SortType.LIKE.value),
+                        direction = "DESCENDING"
+                    ),
+                    Order(
+                        field = FieldReference(SortType.NEW.value),
+                        direction = "DESCENDING"
+                    )
+                ),
+                offset = offset,
+                limit = limit
             )
-        ),
-        offset = offset,
-        limit = limit
-    )
+        }
+
+    }
 
     fun getPublicVideoWithKeywordQuery(
-        orderBy: String,
+        orderBy: SortType,
         toSearch: String,
         keyword: String,
         offset: Int?,
-        limit: Int?
+        limit: Int?,
+        time: Long,
+        likeCount: Long
     ) = StructuredQuery(
         where = Where(
             CompositeFilter(
@@ -138,7 +197,7 @@ object QueryUtil {
                 direction = "ASCENDING"
             ),
             Order(
-                field = FieldReference(orderBy),
+                field = FieldReference(orderBy.value),
                 direction = "DESCENDING"
             )
         ),
