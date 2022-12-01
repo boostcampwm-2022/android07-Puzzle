@@ -48,7 +48,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".50" />
+            app:layout_constraintGuide_percent=".65" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="@id/button_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/alpha_gradient_background"
+            android:alpha="0.2"
+            android:shadowColor="@color/black"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_like"

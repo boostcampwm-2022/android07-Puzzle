@@ -4,12 +4,10 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.FitCenter
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.button.MaterialButton
 import com.juniori.puzzle.R
+import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import java.util.Calendar
 import java.util.Date
 
@@ -19,6 +17,13 @@ private val calendar = Calendar.getInstance()
 fun <T> setAdapter(view: RecyclerView, itemList: List<T>) {
     val adapter = view.adapter as ListAdapter<T, RecyclerView.ViewHolder>
     adapter.submitList(itemList)
+}
+
+@BindingAdapter("setLikeCount")
+fun setLikeCount(view: MaterialButton, updateFlow: Resource<VideoInfoEntity>?) {
+    if (updateFlow is Resource.Success) {
+        view.text = updateFlow.result.likedCount.toString()
+    }
 }
 
 @BindingAdapter("setFullDate")
