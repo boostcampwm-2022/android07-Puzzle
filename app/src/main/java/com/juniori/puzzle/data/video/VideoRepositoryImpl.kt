@@ -98,11 +98,27 @@ class VideoRepositoryImpl @Inject constructor(
         return firestoreDataSource.changeVideoItemPrivacy(documentInfo)
     }
 
-    override suspend fun postVideoUseCase(
-        videoFile: File,
-        videoInfoEntity: VideoInfoEntity
-    ): Resource<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun uploadVideo(
+        uid: String,
+        videoName: String,
+        isPrivate: Boolean,
+        location: String,
+        memo: String,
+        videoByteArray: ByteArray,
+        imageByteArray: ByteArray
+    ): Resource<VideoInfoEntity> {
+        return if (storageDataSource.insertVideo(
+                videoName,
+                videoByteArray
+            ).isSuccess && storageDataSource.insertThumbnail(
+                videoName,
+                imageByteArray
+            ).isSuccess
+        ) {
+            firestoreDataSource.postVideoItem(uid, videoName, isPrivate, location, memo)
+        } else {
+            Resource.Failure(Exception("upload video and thumbnail in Storage failed"))
+        }
     }
 
     override suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity> {

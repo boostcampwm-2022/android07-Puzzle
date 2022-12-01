@@ -79,7 +79,15 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
         TODO("Not yet implemented")
     }
 
-    override suspend fun postVideoUseCase(videoFile: File, videoInfoEntity: VideoInfoEntity): Resource<Unit> {
+    override suspend fun uploadVideo(
+        uid: String,
+        videoName: String,
+        isPrivate: Boolean,
+        location: String,
+        memo: String,
+        videoByteArray: ByteArray,
+        imageByteArray: ByteArray
+    ): Resource<VideoInfoEntity> {
         TODO("Not yet implemented")
     }
 
