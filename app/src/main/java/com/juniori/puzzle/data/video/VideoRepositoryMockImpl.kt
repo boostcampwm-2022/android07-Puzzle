@@ -1,6 +1,7 @@
 package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
@@ -75,6 +76,10 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
     }
 
     override suspend fun postVideoUseCase(videoFile: File, videoInfoEntity: VideoInfoEntity): Resource<Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
         TODO("Not yet implemented")
     }
 }

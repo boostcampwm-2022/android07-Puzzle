@@ -2,6 +2,7 @@ package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
@@ -44,6 +45,10 @@ class VideoRepositoryImpl @Inject constructor(val firestoreDataSource: Firestore
             offset = index,
             limit = 10
         )
+    }
+
+    override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
+        return firestoreDataSource.changeUserNickname(userInfoEntity.uid, userInfoEntity.nickname, userInfoEntity.profileImage)
     }
 
     override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {
