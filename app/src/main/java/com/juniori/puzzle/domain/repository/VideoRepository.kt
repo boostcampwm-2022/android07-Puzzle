@@ -8,13 +8,43 @@ import java.io.File
 
 interface VideoRepository {
     suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>>
-    suspend fun getSearchedMyVideoList(uid: String, index: Int, keyword: String): Resource<List<VideoInfoEntity>>
+    suspend fun getSearchedMyVideoList(
+        uid: String,
+        index: Int,
+        keyword: String
+    ): Resource<List<VideoInfoEntity>>
+
     suspend fun getSocialVideoList(index: Int, sortType: SortType): Resource<List<VideoInfoEntity>>
-    suspend fun getSearchedSocialVideoList(index: Int, sortType: SortType, keyword: String): Resource<List<VideoInfoEntity>>
+    suspend fun getSearchedSocialVideoList(
+        index: Int,
+        sortType: SortType,
+        keyword: String
+    ): Resource<List<VideoInfoEntity>>
+
     suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File>
-    suspend fun updateLikeStatus(uid: String, videoName: String): Resource<Unit>
-    suspend fun deleteVideo(uid: String, videoName: String): Resource<Unit>
-    suspend fun setVideoScope(uid: String, isPrivate: Boolean, videoName: String): Resource<Unit>
-    suspend fun postVideoUseCase(videoFile: File, videoInfoEntity: VideoInfoEntity): Resource<Unit>
+    suspend fun updateLikeStatus(
+        documentInfo: VideoInfoEntity,
+        uid: String,
+        isLiked: Boolean
+    ): Resource<VideoInfoEntity>
+
+    suspend fun deleteVideo(documentId: String): Resource<Unit>
+    suspend fun changeVideoScope(documentInfo: VideoInfoEntity): Resource<VideoInfoEntity>
+    suspend fun uploadVideo(
+        uid: String,
+        videoName: String,
+        isPrivate: Boolean,
+        location: String,
+        memo: String,
+        videoByteArray: ByteArray,
+        imageByteArray: ByteArray
+    ): Resource<VideoInfoEntity>
+
+    suspend fun getUserInfoByUidUseCase(uid: String): Resource<UserInfoEntity>
+    suspend fun postUserInfoInFirestore(
+        uid: String,
+        nickname: String,
+        profileImage: String
+    ): Resource<UserInfoEntity>
     suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity>
 }
