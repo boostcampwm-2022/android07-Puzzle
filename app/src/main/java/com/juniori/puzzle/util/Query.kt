@@ -53,25 +53,14 @@ object QueryUtil {
                     Filter(
                         StringFieldFilter(
                             field = FieldReference(toSearch),
-                            op = "GREATER_THAN_OR_EQUAL",
+                            op = "ARRAY_CONTAINS",
                             value = StringValue(keyword)
-                        )
-                    ),
-                    Filter(
-                        StringFieldFilter(
-                            field = FieldReference(toSearch),
-                            op = "LESS_THAN_OR_EQUAL",
-                            value = StringValue("${keyword}힣")
                         )
                     )
                 )
             )
         ),
         orderBy = listOf(
-            Order(
-                field = FieldReference(toSearch),
-                direction = "ASCENDING"
-            ),
             Order(
                 field = FieldReference("update_time"),
                 direction = "DESCENDING"

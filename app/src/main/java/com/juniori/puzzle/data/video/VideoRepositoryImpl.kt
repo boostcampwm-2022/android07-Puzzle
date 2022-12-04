@@ -35,7 +35,7 @@ class VideoRepositoryImpl @Inject constructor(
     ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItemsWithKeyword(
             uid = uid,
-            toSearch = "location",
+            toSearch = "location_keyword",
             keyword = keyword,
             offset = index,
             limit = 10
