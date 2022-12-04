@@ -1,9 +1,9 @@
 package com.juniori.puzzle.ui.addvideo.camera
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -20,7 +20,6 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
@@ -41,6 +40,7 @@ class CameraActivity : AppCompatActivity() {
     private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
     private var progressJob: Job? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -64,8 +64,7 @@ class CameraActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults:
-        IntArray
+        grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (checkCameraPermissions()) {
@@ -87,11 +86,9 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun checkCameraPermissions(): Boolean {
-        return REQUIRED_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                baseContext,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+        return REQUIRED_PERMISSIONS.all { permission ->
+            ContextCompat.checkSelfPermission(baseContext, permission) ==
+                PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -116,7 +113,6 @@ class CameraActivity : AppCompatActivity() {
 
             try {
                 cameraProvider.unbindAll()
-
                 cameraProvider.bindToLifecycle(
                     this,
                     cameraSelector,
@@ -129,6 +125,7 @@ class CameraActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    @SuppressLint("MissingPermission")
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return
 
@@ -157,7 +154,6 @@ class CameraActivity : AppCompatActivity() {
         }
 
         val file = File(cacheDir, "${System.currentTimeMillis()}.mp4")
-
         val fileOutputOptions = FileOutputOptions
             .Builder(file)
             .build()
@@ -165,14 +161,7 @@ class CameraActivity : AppCompatActivity() {
         recording = videoCapture.output
             .prepareRecording(this, fileOutputOptions)
             .apply {
-                if (PermissionChecker.checkSelfPermission(
-                        this@CameraActivity,
-                        Manifest.permission.RECORD_AUDIO
-                    ) ==
-                    PermissionChecker.PERMISSION_GRANTED
-                ) {
-                    withAudioEnabled()
-                }
+                withAudioEnabled()
             }
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
                 when (recordEvent) {
@@ -185,9 +174,8 @@ class CameraActivity : AppCompatActivity() {
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
                             val msg = "비디오가 저장되었습니다 :  " +
-                                    "${recordEvent.outputResults.outputUri}"
-                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
-                                .show()
+                                "${recordEvent.outputResults.outputUri}"
+                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                             setVideoNameInActivityResult(file.path)
                             finish()
                         } else {
@@ -217,10 +205,10 @@ class CameraActivity : AppCompatActivity() {
             mutableListOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO
-            ).apply {
+            )/*.apply {
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
-            }.toTypedArray()
+            }*/.toTypedArray()
     }
 }
