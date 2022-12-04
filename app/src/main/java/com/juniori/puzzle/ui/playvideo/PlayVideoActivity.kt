@@ -30,7 +30,7 @@ class PlayVideoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayvideoBinding
     private val viewModel: PlayVideoViewModel by viewModels()
-    private lateinit var exoPlayer: ExoPlayer
+    private var exoPlayer: ExoPlayer? = null
     private lateinit var currentVideoItem: VideoInfoEntity
     private val shareDialog: AlertDialog by lazy {
         AlertDialog.Builder(this)
@@ -132,6 +132,8 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
+                                exoPlayer?.release()
+                                exoPlayer = null
                                 stateManager.dismissLoadingDialog()
                                 finish()
                             }
@@ -228,6 +230,8 @@ class PlayVideoActivity : AppCompatActivity() {
                 true
             }
             setNavigationOnClickListener {
+                exoPlayer?.release()
+                exoPlayer = null
                 finish()
             }
         }
