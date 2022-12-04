@@ -5,6 +5,8 @@ import com.juniori.puzzle.data.firebase.dto.BooleanValue
 import com.juniori.puzzle.data.firebase.dto.CompositeFilter
 import com.juniori.puzzle.data.firebase.dto.FieldReference
 import com.juniori.puzzle.data.firebase.dto.Filter
+import com.juniori.puzzle.data.firebase.dto.IntegerFieldFilter
+import com.juniori.puzzle.data.firebase.dto.IntegerValue
 import com.juniori.puzzle.data.firebase.dto.Order
 import com.juniori.puzzle.data.firebase.dto.StringFieldFilter
 import com.juniori.puzzle.data.firebase.dto.StringValue
@@ -79,28 +81,45 @@ object QueryUtil {
         limit = limit
     )
 
-    fun getPublicVideoQuery(orderBy: String, offset: Int?, limit: Int?) = StructuredQuery(
-        where = Filter(
-            fieldFilter = BooleanFieldFilter(
-                field = FieldReference("is_private"),
-                op = "EQUAL",
-                value = BooleanValue(false)
-            )
-        ),
-        orderBy = listOf(
-            Order(
-                field = FieldReference(orderBy),
-                direction = "DESCENDING"
-            )
-        ),
-        offset = offset,
-        limit = limit
-    )
+    fun getPublicVideoQuery(orderBy: String, latestData: Long?, offset: Int?, limit: Int?) =
+        StructuredQuery(
+            where = Where(
+                CompositeFilter(
+                    op = "AND",
+                    filters = listOf(
+                        Filter(
+                            fieldFilter = BooleanFieldFilter(
+                                field = FieldReference("is_private"),
+                                op = "EQUAL",
+                                value = BooleanValue(false)
+                            )
+                        ),
+                        Filter(
+                            fieldFilter = IntegerFieldFilter(
+                                field = FieldReference(orderBy),
+                                op = "LESS_THAN_OR_EQUAL",
+                                value = latestData?.let { IntegerValue(it) }
+                                    ?: IntegerValue(Long.MAX_VALUE)
+                            )
+                        )
+                    )
+                )
+            ),
+            orderBy = listOf(
+                Order(
+                    field = FieldReference(orderBy),
+                    direction = "DESCENDING"
+                )
+            ),
+            offset = offset,
+            limit = limit
+        )
 
     fun getPublicVideoWithKeywordQuery(
         orderBy: String,
         toSearch: String,
         keyword: String,
+        latestData: Long?,
         offset: Int?,
         limit: Int?
     ) = StructuredQuery(
@@ -118,25 +137,22 @@ object QueryUtil {
                     Filter(
                         StringFieldFilter(
                             field = FieldReference(toSearch),
-                            op = "GREATER_THAN_OR_EQUAL",
+                            op = "ARRAY_CONTAINS",
                             value = StringValue(keyword)
                         )
                     ),
                     Filter(
-                        StringFieldFilter(
-                            field = FieldReference(toSearch),
+                        IntegerFieldFilter(
+                            field = FieldReference(orderBy),
                             op = "LESS_THAN_OR_EQUAL",
-                            value = StringValue("${keyword}힣")
+                            value = latestData?.let { IntegerValue(it) }
+                                ?: IntegerValue(Long.MAX_VALUE)
                         )
                     )
                 )
             )
         ),
         orderBy = listOf(
-            Order(
-                field = FieldReference(toSearch),
-                direction = "ASCENDING"
-            ),
             Order(
                 field = FieldReference(orderBy),
                 direction = "DESCENDING"

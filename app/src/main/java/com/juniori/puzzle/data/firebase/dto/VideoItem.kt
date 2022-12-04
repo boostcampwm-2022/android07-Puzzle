@@ -23,6 +23,7 @@ data class VideoDetail(
     @SerializedName("liked_user_list") val likedUserList: ArrayValue,
     @SerializedName("update_time") val updateTime: IntegerValue,
     @SerializedName("location") val location: StringValue,
+    @SerializedName("location_keyword") val locationKeyword: ArrayValue,
     @SerializedName("memo") val memo: StringValue,
 ) {
     fun toVideoInfoEntity(documentId: String): VideoInfoEntity {
@@ -36,6 +37,7 @@ data class VideoDetail(
             likedUserList.arrayValue.values?.map { it.stringValue } ?: listOf(),
             updateTime.integerValue,
             location.stringValue,
+            locationKeyword.arrayValue.values?.map {it.stringValue} ?: listOf(),
             memo.stringValue
         )
     }
