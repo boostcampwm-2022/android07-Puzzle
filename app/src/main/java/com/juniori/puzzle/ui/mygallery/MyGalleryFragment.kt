@@ -46,7 +46,7 @@ class MyGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = MyGalleryAdapter(viewModel) {
+        val recyclerAdapter = MyGalleryAdapter(viewModel,binding.recycleMyGallery.height) {
             activityResult.launch(
                 Intent(
                     requireContext(),

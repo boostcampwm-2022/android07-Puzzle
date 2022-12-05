@@ -11,6 +11,7 @@ import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class MyGalleryAdapter(
     val viewModel: MyGalleryViewModel,
+    val height: Int,
     private val onClick: (VideoInfoEntity) -> Unit
 ) : ListAdapter<VideoInfoEntity, MyGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
@@ -34,7 +35,7 @@ class MyGalleryAdapter(
         val binding =
             ItemGalleryRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding, parent.height, onClick)
+        return ViewHolder(binding, height, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

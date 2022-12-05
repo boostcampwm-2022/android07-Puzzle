@@ -11,6 +11,7 @@ import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class OtherGalleryAdapter(
     val viewModel: OthersGalleryViewModel,
+    val height: Int,
     private val onClick: (VideoInfoEntity) -> Unit
 ) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
