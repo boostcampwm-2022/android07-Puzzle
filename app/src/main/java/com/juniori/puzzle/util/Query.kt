@@ -155,10 +155,6 @@ object QueryUtil {
         ),
         orderBy = listOf(
             Order(
-                field = FieldReference(toSearch),
-                direction = "ASCENDING"
-            ),
-            Order(
                 field = FieldReference(orderBy.value),
                 direction = "DESCENDING"
             ),
