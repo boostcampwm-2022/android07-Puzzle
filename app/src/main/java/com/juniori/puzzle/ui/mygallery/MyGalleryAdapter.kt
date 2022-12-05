@@ -11,19 +11,17 @@ import com.juniori.puzzle.util.GalleryDiffCallBack
 
 class MyGalleryAdapter(
     val viewModel: MyGalleryViewModel,
-    val height: Int,
     private val onClick: (VideoInfoEntity) -> Unit
 ) : ListAdapter<VideoInfoEntity, MyGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
 
     class ViewHolder(
-        val binding: ItemGalleryRecyclerBinding, val height: Int,
+        val binding: ItemGalleryRecyclerBinding,
         val onClick: (VideoInfoEntity) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
-            binding.root.layoutParams.height = height / VISIBLE_ITEM_COUNT
             binding.root.setOnClickListener {
                 onClick(item)
             }
@@ -35,7 +33,7 @@ class MyGalleryAdapter(
         val binding =
             ItemGalleryRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding, height, onClick)
+        return ViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

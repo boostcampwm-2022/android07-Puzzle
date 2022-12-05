@@ -46,7 +46,7 @@ class MyGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerAdapter = MyGalleryAdapter(viewModel,binding.recycleMyGallery.height) {
+        val recyclerAdapter = MyGalleryAdapter(viewModel) {
             activityResult.launch(
                 Intent(
                     requireContext(),
@@ -58,7 +58,16 @@ class MyGalleryFragment : Fragment() {
 
         binding.recycleMyGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2){
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                    if(lp!=null){
+                        if(lp.height < height/3) {
+                            lp.height = height / 3
+                        }
+                    }
+                    return super.checkLayoutParams(lp)
+                }
+            }
             layoutManager = gridLayoutManager
         }
 
