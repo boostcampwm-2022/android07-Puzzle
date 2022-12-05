@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
@@ -22,6 +21,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.ActivityCameraBinding
 import com.juniori.puzzle.ui.addvideo.AddVideoBottomSheet
@@ -70,10 +70,10 @@ class CameraActivity : AppCompatActivity() {
             if (checkCameraPermissions()) {
                 startCamera()
             } else {
-                Toast.makeText(
-                    this,
-                    "권한이 없오리",
-                    Toast.LENGTH_SHORT
+                Snackbar.make(
+                    binding.root,
+                    R.string.camera_no_permission,
+                    Snackbar.LENGTH_SHORT
                 ).show()
                 onBackPressed()
             }
@@ -173,9 +173,11 @@ class CameraActivity : AppCompatActivity() {
                     }
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
-                            val msg = "비디오가 저장되었습니다 :  " +
-                                "${recordEvent.outputResults.outputUri}"
-                            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                            Snackbar.make(
+                                binding.root,
+                                R.string.camera_video_saved,
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                             setVideoNameInActivityResult(file.path)
                             finish()
                         } else {
