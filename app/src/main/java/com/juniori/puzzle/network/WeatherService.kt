@@ -14,7 +14,7 @@ interface WeatherService {
         @Query("appid") apiKey: String,
         @Query("units") units: String = "metric",
         @Query("lang") lang: String = "kr",
-        @Query("cnt") cnt: Int = 10
+        @Query("cnt") cnt: Int = 11
     ): Response<WeatherResponse>
 
 }

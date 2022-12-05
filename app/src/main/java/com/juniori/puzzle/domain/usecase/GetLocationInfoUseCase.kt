@@ -1,5 +1,10 @@
 package com.juniori.puzzle.domain.usecase
 
-class GetLocationInfoUseCase {
+import com.juniori.puzzle.domain.repository.LocationRepository
+import javax.inject.Inject
 
+class GetLocationInfoUseCase @Inject constructor(
+    private val repository: LocationRepository
+) {
+    operator fun invoke() = repository.getLocationInfo()
 }

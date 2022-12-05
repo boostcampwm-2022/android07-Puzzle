@@ -156,10 +156,10 @@ class CameraActivity : AppCompatActivity() {
             recording = null
         }
 
-        val name = "${intent.extras?.get("uid")}_${System.currentTimeMillis()}"
+        val file = File(cacheDir, "${System.currentTimeMillis()}.mp4")
 
         val fileOutputOptions = FileOutputOptions
-            .Builder(File(cacheDir, "$name.mp4"))
+            .Builder(file)
             .build()
 
         recording = videoCapture.output
@@ -188,7 +188,7 @@ class CameraActivity : AppCompatActivity() {
                                     "${recordEvent.outputResults.outputUri}"
                             Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT)
                                 .show()
-                            setVideoNameInActivityResult(name)
+                            setVideoNameInActivityResult(file.path)
                             finish()
                         } else {
                             recording?.close()
