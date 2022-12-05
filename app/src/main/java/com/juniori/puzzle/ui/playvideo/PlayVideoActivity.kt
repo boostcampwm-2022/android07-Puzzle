@@ -1,13 +1,16 @@
 package com.juniori.puzzle.ui.playvideo
 
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -24,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class PlayVideoActivity : AppCompatActivity() {
@@ -80,12 +84,57 @@ class PlayVideoActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
-        initVideoPlayer(currentVideoItem.videoUrl)
 
         viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         viewModel.initVideoFlow(currentVideoItem)
         setItemOnClickListener()
         initCollector()
+
+        if (savedInstanceState != null) {
+            startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY)
+            startPosition = savedInstanceState.getLong(KEY_POSITION)
+        } else {
+            clearStartPosition()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT > 23) {
+            initVideoPlayer(currentVideoItem.videoUrl)
+            binding.playerView.onResume()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT <= 23 || exoPlayer == null) {
+            initVideoPlayer(currentVideoItem.videoUrl)
+            binding.playerView.onResume()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (Build.VERSION.SDK_INT <= 23) {
+            binding.playerView.onPause()
+            releasePlayer()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (Build.VERSION.SDK_INT > 23) {
+            binding.playerView.onPause()
+            releasePlayer()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        updateStartPosition()
+        outState.putBoolean(KEY_AUTO_PLAY, startAutoPlay)
+        outState.putLong(KEY_POSITION, startPosition)
     }
 
     private fun initCollector() {
@@ -132,8 +181,6 @@ class PlayVideoActivity : AppCompatActivity() {
                     if (resource != null) {
                         when (resource) {
                             is Resource.Success -> {
-                                exoPlayer?.release()
-                                exoPlayer = null
                                 stateManager.dismissLoadingDialog()
                                 finish()
                             }
@@ -192,9 +239,34 @@ class PlayVideoActivity : AppCompatActivity() {
             setMediaSource(
                 ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri))
             )
+            playWhenReady = startAutoPlay
+            if (startPosition != C.TIME_UNSET) {
+                seekTo(startPosition)
+            }
             prepare()
+            binding.playerView.player = this
         }
-        binding.playerView.player = exoPlayer
+    }
+
+    private fun updateStartPosition() {
+        exoPlayer?.run {
+            startAutoPlay = playWhenReady
+            startPosition = 0L.coerceAtLeast(contentPosition)
+        }
+    }
+
+    private fun clearStartPosition() {
+        startAutoPlay = true
+        startPosition = C.TIME_UNSET
+    }
+
+    private fun releasePlayer() {
+        exoPlayer?.let { player ->
+            updateStartPosition()
+            player.release()
+            exoPlayer = null
+            binding.playerView.player = null
+        }
     }
 
     private fun setMenuItems() {
@@ -230,8 +302,6 @@ class PlayVideoActivity : AppCompatActivity() {
                 true
             }
             setNavigationOnClickListener {
-                exoPlayer?.release()
-                exoPlayer = null
                 finish()
             }
         }
@@ -253,7 +323,11 @@ class PlayVideoActivity : AppCompatActivity() {
     companion object {
         lateinit var publisherUserInfo: UserInfoEntity
         lateinit var currentUserInfo: UserInfoEntity
-        const val VIDEO_EXTRA_NAME = "videoInfo"
-        const val PUBLISHER_EXTRA_NAME = "publisherInfo"
+        private var startAutoPlay: Boolean = true
+        private var startPosition: Long = C.TIME_UNSET
+        private const val VIDEO_EXTRA_NAME = "videoInfo"
+        private const val PUBLISHER_EXTRA_NAME = "publisherInfo"
+        private const val KEY_POSITION = "position"
+        private const val KEY_AUTO_PLAY = "auto_play"
     }
 }
