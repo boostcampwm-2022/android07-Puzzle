@@ -20,7 +20,7 @@ class VideoRepositoryImpl @Inject constructor(
         return firestoreDataSource.getMyVideoItems(
             uid = uid,
             offset = index,
-            limit = 10
+            limit = 12
         )
     }
 
@@ -38,7 +38,7 @@ class VideoRepositoryImpl @Inject constructor(
             toSearch = "location_keyword",
             keyword = keyword,
             offset = index,
-            limit = 10
+            limit = 12
         )
     }
 
@@ -54,8 +54,7 @@ class VideoRepositoryImpl @Inject constructor(
             orderBy = sortType,
             latestData = latestData,
             offset = index,
-            limit = 10,
-
+            limit = 12
         )
     }
 
@@ -75,7 +74,7 @@ class VideoRepositoryImpl @Inject constructor(
             keyword = keyword,
             latestData = latestData,
             offset = index,
-            limit = 10,
+            limit = 12,
         )
     }
 

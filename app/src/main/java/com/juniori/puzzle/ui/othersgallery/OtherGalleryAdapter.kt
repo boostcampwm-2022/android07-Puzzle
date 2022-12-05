@@ -41,12 +41,12 @@ class OtherGalleryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         if (position == itemCount - LOADING_FLAG_NUM) {
-            viewModel.getPaging(itemCount)
+            viewModel.getPaging()
         }
     }
 
     companion object {
         const val VISIBLE_ITEM_COUNT = 3
-        const val LOADING_FLAG_NUM = 3
+        const val LOADING_FLAG_NUM = 1
     }
 }

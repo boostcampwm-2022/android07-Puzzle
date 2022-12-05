@@ -46,7 +46,7 @@ class MyGalleryAdapter(
 
     companion object {
         const val VISIBLE_ITEM_COUNT = 3
-        const val LOADING_FLAG_NUM = 3
+        const val LOADING_FLAG_NUM = 1
     }
 
 }
