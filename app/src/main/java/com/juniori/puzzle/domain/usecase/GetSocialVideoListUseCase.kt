@@ -10,8 +10,7 @@ class GetSocialVideoListUseCase @Inject constructor(private val videoRepository:
     suspend operator fun invoke(
         index: Int,
         order: SortType,
-        time: Long = 0,
-        likeCount: Long = 0
+        latestData: Long? = null
     ): Resource<List<VideoInfoEntity>> =
-        videoRepository.getSocialVideoList(index, order, time, likeCount)
+        videoRepository.getSocialVideoList(index, order, latestData)
 }
