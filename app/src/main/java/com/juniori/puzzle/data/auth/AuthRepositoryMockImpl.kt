@@ -28,12 +28,5 @@ class AuthRepositoryMockImpl(private val status: Resource<UserInfoEntity>): Auth
         }
     }
 
-    override suspend fun updateNickname(newNickname: String): Resource<Unit> {
-        return if(status is Resource.Success) {
-            Resource.Success(Unit)
-        }
-        else {
-            Resource.Failure(Exception())
-        }
-    }
+    override suspend fun updateNickname(newNickname: String) = status
 }
