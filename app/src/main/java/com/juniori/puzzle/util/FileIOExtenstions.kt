@@ -7,32 +7,43 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-// TODO exception 처리
-fun ByteArray.saveInFile(filePath: String) {
-    val file = File(filePath)
-    FileOutputStream(file).use { fileOutputStream ->
-        fileOutputStream.write(this)
+fun ByteArray.saveInFile(filePath: String): Unit? {
+    return try {
+        val file = File(filePath)
+        FileOutputStream(file).use { fileOutputStream ->
+            fileOutputStream.write(this)
+        }
+    } catch (e: Exception) {
+        null
     }
 }
 
 fun Uri.readBytes(contentResolver: ContentResolver): ByteArray? {
-    return contentResolver.openInputStream(this)?.use { inputStream ->
-        inputStream.readBytes()
+    return try {
+        contentResolver.openInputStream(this)?.use { inputStream ->
+            inputStream.readBytes()
+        }
+    } catch (e: Exception) {
+        null
     }
 }
 
-fun Bitmap.compressToBytes(format: Bitmap.CompressFormat, quality: Int): ByteArray {
-    return ByteArrayOutputStream().use { outputStream ->
-        this.compress(format, quality, outputStream)
-        outputStream.toByteArray()
+fun Bitmap.compressToBytes(format: Bitmap.CompressFormat, quality: Int): ByteArray? {
+    return try {
+        ByteArrayOutputStream().use { outputStream ->
+            val compressed = this.compress(format, quality, outputStream)
+            if (compressed) outputStream.toByteArray() else null
+        }
+    } catch (e: Exception) {
+        null
     }
 }
 
 fun String.deleteIfFileUri(): Boolean =
-    File(this).let { file ->
-        if (file.exists()) {
-            file.delete()
-        } else {
-            false
+    try {
+        File(this).let { file ->
+            if (file.exists()) file.delete() else false
         }
+    } catch (e: Exception) {
+        false
     }

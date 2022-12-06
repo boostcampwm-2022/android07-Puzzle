@@ -13,8 +13,8 @@ import com.juniori.puzzle.data.firebase.dto.getVideoInfoEntity
 import com.juniori.puzzle.data.firebase.dto.toStringValues
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.GCS_OPEN_URL
 import com.juniori.puzzle.util.QueryUtil
-import com.juniori.puzzle.util.STORAGE_BASE_URL
 import com.juniori.puzzle.util.SortType
 import javax.inject.Inject
 
@@ -134,8 +134,8 @@ class FirestoreDataSource @Inject constructor(
                 mapOf(
                     "fields" to VideoDetail(
                         ownerUid = StringValue(uid),
-                        videoUrl = StringValue(STORAGE_BASE_URL + "o/video%2F" + videoName + "?alt=media"),
-                        thumbUrl = StringValue(STORAGE_BASE_URL + "o/thumb%2F" + videoName + "?alt=media"),
+                        videoUrl = StringValue(GCS_OPEN_URL + "video/" + videoName),
+                        thumbUrl = StringValue(GCS_OPEN_URL + "thumb/" + videoName),
                         isPrivate = BooleanValue(isPrivate),
                         likeCount = IntegerValue(0),
                         likedUserList = ArrayValue(StringValues(listOf())),
