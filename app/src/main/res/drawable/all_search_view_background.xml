@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid
-        android:color="?attr/colorOnPrimary"/>
+        android:color="@color/white"/>
 
     <corners
         android:radius="@dimen/toolbar_box_border_radius"/>

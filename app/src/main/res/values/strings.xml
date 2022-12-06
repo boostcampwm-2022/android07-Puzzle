@@ -83,6 +83,7 @@
     <string name="playvideo_delete">삭제</string>
 
     <!--mypage-->
+    <string name="search_hint">골프장 검색하기</string>
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
     <string name="change_nickname">닉네임 변경</string>
     <string name="logout">로그아웃</string>
