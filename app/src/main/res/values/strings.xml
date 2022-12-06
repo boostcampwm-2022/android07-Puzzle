@@ -42,6 +42,8 @@
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
     <string name="camera_capture_stop">중지</string>
+    <string name="camera_video_saved">영상이 저장되었습니다.</string>
+    <string name="camera_no_permission">권한을 확인해주세요.</string>
 
     <!--add_video-->
     <string name="addvideo_error_durationlimit">20초 이상의 동영상은 업로드할 수 없습니다.</string>
