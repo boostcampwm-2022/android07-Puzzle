@@ -1,12 +1,16 @@
 package com.juniori.puzzle.ui.othersgallery
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ListPopupWindow
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
@@ -15,6 +19,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
@@ -67,11 +74,6 @@ class OthersGalleryFragment : Fragment() {
         binding.otherGallerySwipeRefresh.setOnRefreshListener {
             viewModel.getMainData()
         }
-        val items = resources.getStringArray(R.array.other_order_type)
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-        binding.spinnerOtherGallery.adapter = spinnerAdapter
-
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             binding.otherGallerySwipeRefresh.isRefreshing = false
@@ -145,32 +147,42 @@ class OthersGalleryFragment : Fragment() {
     }
 
     private fun setListener() {
-        binding.spinnerOtherGallery.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    when (position) {
-                        0 -> {
-                            if (viewModel.setOrderType(SortType.NEW)) {
-                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
-                            }
-                        }
+        val listPopupWindow = ListPopupWindow(
+            requireContext(),
+            null,
+            com.google.android.material.R.attr.listPopupWindowStyle
+        )
+        listPopupWindow.anchorView = binding.spinnerOtherGallery
 
-                        1 -> {
-                            if (viewModel.setOrderType(SortType.LIKE)) {
-                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
-                            }
-                        }
+        val items = resources.getStringArray(R.array.other_order_type)
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
+        listPopupWindow.setAdapter(spinnerAdapter)
+
+        listPopupWindow.setOnItemClickListener { parent, view, position, id ->
+            binding.spinnerOtherGallery.text = items[position]
+            when (position) {
+                0 -> {
+                    if (viewModel.setOrderType(SortType.NEW)) {
+                        binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                     }
+
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-
+                1 -> {
+                    if (viewModel.setOrderType(SortType.LIKE)) {
+                        binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
+                    }
+                }
             }
+
+            listPopupWindow.dismiss()
+        }
+
+        binding.spinnerOtherGallery.text = items[0]
+        binding.spinnerOtherGallery.setOnClickListener {
+            listPopupWindow.show()
+        }
 
         binding.searchOtherGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
