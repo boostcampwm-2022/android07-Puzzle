@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.juniori.puzzle"
-        minSdk 21
+        minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -87,7 +87,10 @@ dependencies {
 
     //lottie
     implementation 'com.airbnb.android:lottie:5.2.0'
-    
+
+    //video compressor
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
