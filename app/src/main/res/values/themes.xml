@@ -20,6 +20,8 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/status_bar_color</item>
+
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Puzzle.BottomSheetDialog</item>
     </style>
 
     <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar">
@@ -79,15 +81,22 @@
         <item name="colorSurface">@color/secondary_color</item>>
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorOnSurface">@color/black</item>
-        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.Puzzle</item>
     </style>
 
-    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.MaterialComponents">
+    <style name="MaterialAlertDialog.Puzzle" parent="MaterialAlertDialog.MaterialComponents">
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
     </style>
 
-    <style name="Theme.Puzzle.BottomSheet" parent="Widget.Material3.BottomSheet">
 
+
+    <style name="ThemeOverlay.Puzzle.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Theme.Puzzle.BottomSheet</item>
+    </style>
+
+    <style name="Theme.Puzzle.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/secondary_color</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent.Top</item>
     </style>
 
     <style name="Theme.Puzzle.Button.Inplayvideo" parent="Widget.Material3.Button.IconButton">

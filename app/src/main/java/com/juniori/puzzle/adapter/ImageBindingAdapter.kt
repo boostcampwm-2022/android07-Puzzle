@@ -57,6 +57,7 @@ fun setDrawableLeft(view: TextView, url: String?) {
     } catch (e: Exception) {
         Glide.with(view.context)
             .load(url)
+            .circleCrop()
             .into(object : CustomTarget<Drawable>(DRAWABLE_WIDTH, DRAWABLE_HEIGHT) {
                 override fun onResourceReady(
                     resource: Drawable,

@@ -56,7 +56,7 @@ class PlayVideoActivity : AppCompatActivity() {
         PuzzleDialog(this)
             .buildAlertDialog({
                 viewModel.deleteVideo(currentVideoItem.documentId)
-            },{})
+            }, {})
             .setTitle(getString(R.string.play_delete_title))
             .setMessage(getString(R.string.play_delete_message))
     }

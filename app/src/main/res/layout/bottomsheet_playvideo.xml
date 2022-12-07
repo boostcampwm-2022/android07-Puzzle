@@ -13,6 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingStart="@dimen/text_vertical_margin"
+        android:paddingEnd="@dimen/text_vertical_margin"
+        android:paddingTop="@dimen/large_component_corner_radius"
         tools:context=".ui.addvideo.AddVideoBottomSheet">
 
         <include
@@ -31,11 +34,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="@drawable/all_outlined_box"
+            android:background="@drawable/all_memo_background"
             android:padding="8dp"
             android:text="@{memo}"
-            android:textColor="@color/black"
-            android:textStyle="bold"
+            android:lines="5"
+            style="@style/Theme.Puzzle.TextMedium"
             tools:text="메모가 들어갈\n자리입니다\n1\n2\n3\n4" />
 
     </LinearLayout>

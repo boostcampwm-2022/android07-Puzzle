@@ -17,4 +17,6 @@
     <dimen name="item_elevation">8dp</dimen>
     <dimen name="toolbar_bottom_depth">-12dp</dimen>
     <dimen name="home_background_flag_depth">-30dp</dimen>
+
+    <dimen name="large_component_corner_radius">28dp</dimen>
 </resources>
