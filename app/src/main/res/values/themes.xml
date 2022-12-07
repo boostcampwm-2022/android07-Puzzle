@@ -76,9 +76,18 @@
     </style>
 
     <style name="Theme.Puzzle.Dialog" parent="MaterialAlertDialog.Material3">
+        <item name="colorSurface">@color/secondary_color</item>>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>
+    </style>
+
+    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.MaterialComponents">
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
-        <item name="colorSurface">?attr/colorSecondary</item>>
-        <item name="colorPrimary">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="Theme.Puzzle.BottomSheet" parent="Widget.Material3.BottomSheet">
+
     </style>
 
     <style name="Theme.Puzzle.Button.Inplayvideo" parent="Widget.Material3.Button.IconButton">

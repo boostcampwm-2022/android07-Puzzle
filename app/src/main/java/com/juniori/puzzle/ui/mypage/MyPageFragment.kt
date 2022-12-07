@@ -16,6 +16,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentMypageBinding
 import com.juniori.puzzle.ui.login.LoginActivity
+import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class MyPageFragment : Fragment() {
     private val viewModel: MyPageViewModel by viewModels()
     private lateinit var updateActivityLauncher: ActivityResultLauncher<Intent>
     @Inject lateinit var stateManager: StateManager
-    private val warningDialog: AlertDialog.Builder by lazy { AlertDialog.Builder(context) }
+    private val warningDialog: PuzzleDialog by lazy { PuzzleDialog(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,25 +109,23 @@ class MyPageFragment : Fragment() {
 
     private fun makeLogoutDialog() {
         warningDialog
-            .setTitle(getString(R.string.logout))
-            .setMessage(getString(R.string.logout_remind))
-            .setPositiveButton(getString(R.string.all_yes)) { _, _ ->
+            .buildAlertDialog({
                 viewModel.requestLogout()
-            }
-            .setNegativeButton(getString(R.string.all_no)) { _, _ ->
-            }
+            },{
+
+            }).setMessage(getString(R.string.logout_remind))
+            .setTitle(getString(R.string.logout))
             .show()
     }
 
     private fun makeWithdrawDialog() {
         warningDialog
-            .setTitle(getString(R.string.withdraw))
-            .setMessage(getString(R.string.withdraw_remind))
-            .setPositiveButton(getString(R.string.all_yes)) { _, _ ->
+            .buildAlertDialog({
                 viewModel.requestWithdraw()
-            }
-            .setNegativeButton(getString(R.string.all_no)) { _, _ ->
-            }
+            },{
+
+            }).setMessage(getString(R.string.withdraw_remind))
+            .setTitle(getString(R.string.withdraw))
             .show()
     }
 
