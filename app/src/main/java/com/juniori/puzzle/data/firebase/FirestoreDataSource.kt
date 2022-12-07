@@ -16,6 +16,7 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GCS_OPEN_URL
 import com.juniori.puzzle.util.QueryUtil
 import com.juniori.puzzle.util.SortType
+import com.juniori.puzzle.util.toLocationKeyword
 import javax.inject.Inject
 
 class FirestoreDataSource @Inject constructor(
@@ -46,6 +47,7 @@ class FirestoreDataSource @Inject constructor(
                             likedUserList = ArrayValue(likedUserUidList.toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
+                            locationKeyword = ArrayValue(locationKeyword.toStringValues()),
                             memo = StringValue(memo)
                         )
                     }
@@ -77,6 +79,7 @@ class FirestoreDataSource @Inject constructor(
                             likedUserList = ArrayValue((likedUserUidList + uid).toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
+                            locationKeyword = ArrayValue(locationKeyword.toStringValues()),
                             memo = StringValue(memo)
                         )
                     }
@@ -108,6 +111,7 @@ class FirestoreDataSource @Inject constructor(
                             likedUserList = ArrayValue((likedUserUidList - uid).toStringValues()),
                             updateTime = IntegerValue(updateTime),
                             location = StringValue(location),
+                            locationKeyword = ArrayValue(locationKeyword.toStringValues()),
                             memo = StringValue(memo)
                         )
                     }
@@ -141,6 +145,7 @@ class FirestoreDataSource @Inject constructor(
                         likedUserList = ArrayValue(StringValues(listOf())),
                         updateTime = IntegerValue(System.currentTimeMillis()),
                         location = StringValue(location),
+                        locationKeyword = ArrayValue(location.toLocationKeyword().toStringValues()),
                         memo = StringValue(memo)
                     )
                 )
@@ -195,14 +200,20 @@ class FirestoreDataSource @Inject constructor(
 
     suspend fun getPublicVideoItemsOrderBy(
         orderBy: SortType,
+        latestData: Long?,
         offset: Int? = null,
-        limit: Int? = null
+        limit: Int? = null,
     ): Resource<List<VideoInfoEntity>> {
         return try {
             Resource.Success(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
-                        QueryUtil.getPublicVideoQuery(orderBy.value, offset, limit)
+                        QueryUtil.getPublicVideoQuery(
+                            orderBy = orderBy,
+                            latestData = latestData,
+                            offset = offset,
+                            limit = limit
+                        )
                     )
                 ).getVideoInfoEntity()
             )
@@ -216,6 +227,7 @@ class FirestoreDataSource @Inject constructor(
         orderBy: SortType,
         toSearch: String,
         keyword: String,
+        latestData: Long?,
         offset: Int? = null,
         limit: Int? = null
     ): Resource<List<VideoInfoEntity>> {
@@ -224,11 +236,12 @@ class FirestoreDataSource @Inject constructor(
                 service.getFirebaseItemByQuery(
                     RunQueryRequestDTO(
                         QueryUtil.getPublicVideoWithKeywordQuery(
-                            orderBy.value,
+                            orderBy,
                             toSearch,
                             keyword,
+                            latestData,
                             offset,
-                            limit
+                            limit,
                         )
                     )
                 ).getVideoInfoEntity()
