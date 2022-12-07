@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.Window
-import android.view.WindowManager
 import com.juniori.puzzle.databinding.DialogProgressBinding
 
 class ProgressDialog(context: Context) : Dialog(context) {
@@ -19,7 +18,6 @@ class ProgressDialog(context: Context) : Dialog(context) {
         setCancelable(false)
 
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     @SuppressLint("SetTextI18n")
