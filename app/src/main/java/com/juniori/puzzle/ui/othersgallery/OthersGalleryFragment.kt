@@ -27,6 +27,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -147,19 +148,17 @@ class OthersGalleryFragment : Fragment() {
     }
 
     private fun setListener() {
-        val listPopupWindow = ListPopupWindow(
-            requireContext(),
-            null,
-            com.google.android.material.R.attr.listPopupWindowStyle
-        )
-        listPopupWindow.anchorView = binding.spinnerOtherGallery
+//        val listPopupWindow = ListPopupWindow(
+//            requireContext(),
+//            null,
+//            com.google.android.material.R.attr.listPopupWindowStyle
+//        )
+//        listPopupWindow.anchorView = binding.spinnerOtherGallery
 
-        val items = resources.getStringArray(R.array.other_order_type)
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-        listPopupWindow.setAdapter(spinnerAdapter)
+         val items = resources.getStringArray(R.array.other_order_type)
+        val popup=PuzzleDialog(requireContext()).buildListPopup(binding.spinnerOtherGallery,items)
 
-        listPopupWindow.setOnItemClickListener { parent, view, position, id ->
+        popup.setListPopupItemListener{parent, view, position, id ->
             binding.spinnerOtherGallery.text = items[position]
             when (position) {
                 0 -> {
@@ -176,12 +175,19 @@ class OthersGalleryFragment : Fragment() {
                 }
             }
 
-            listPopupWindow.dismiss()
+            popup.dismissPopupList()
         }
+//        val spinnerAdapter =
+//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
+//        listPopupWindow.setAdapter(spinnerAdapter)
+//
+//        listPopupWindow.setOnItemClickListener { parent, view, position, id ->
+//
+//        }
 
         binding.spinnerOtherGallery.text = items[0]
         binding.spinnerOtherGallery.setOnClickListener {
-            listPopupWindow.show()
+            popup.showPopupList()
         }
 
         binding.searchOtherGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

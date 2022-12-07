@@ -45,12 +45,15 @@ fun setDrawableLeft(view: TextView, url: String?) {
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
-                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    resource.setBounds(0, 0, (DRAWABLE_WIDTH*0.7).toInt(),
+                        (DRAWABLE_HEIGHT*0.7).toInt()
+                    )
                     view.setCompoundDrawables(resource, null, null, null)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    placeholder?.setBounds(0, 0, (DRAWABLE_WIDTH*0.7).toInt(),
+                        (DRAWABLE_HEIGHT*0.7).toInt())
                     view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
                 }
             })
@@ -63,12 +66,14 @@ fun setDrawableLeft(view: TextView, url: String?) {
                     resource: Drawable,
                     transition: Transition<in Drawable>?
                 ) {
-                    resource.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    resource.setBounds(0, 0, (DRAWABLE_WIDTH*0.7).toInt(),
+                        (DRAWABLE_HEIGHT*0.7).toInt())
                     view.setCompoundDrawables(resource, null, null, null)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
-                    placeholder?.setBounds(0, 0, DRAWABLE_WIDTH, DRAWABLE_HEIGHT)
+                    placeholder?.setBounds(0, 0, (DRAWABLE_WIDTH*0.7).toInt(),
+                        (DRAWABLE_HEIGHT*0.7).toInt())
                     view.setCompoundDrawablesWithIntrinsicBounds(placeholder, null, null, null)
                 }
             })
