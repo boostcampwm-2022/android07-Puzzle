@@ -12,7 +12,10 @@ import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,7 +38,18 @@ class OthersGalleryViewModel @Inject constructor(
 
     var query = ""
     var sortType = SortType.NEW
+
+    private var lastLikeCount = Long.MAX_VALUE
+    private var lastTime = Long.MAX_VALUE
+    var lastOffset = 0
+
+    var pagingEndFlag = false
+        private set
+
     fun setQueryText(nowQuery: String?) {
+        if(query==nowQuery){
+            return
+        }
         query = if (nowQuery != null && nowQuery.isNotBlank()) {
             nowQuery
         } else {
@@ -45,9 +59,16 @@ class OthersGalleryViewModel @Inject constructor(
         getMainData()
     }
 
-
     private fun getQueryData() {
+        if (refresh.value == true) {
+            return
+        }
+        _list.value = emptyList()
+        pagingEndFlag = false
+        setLastData(Long.MAX_VALUE, Long.MAX_VALUE, 0)
         viewModelScope.launch {
+
+            _refresh.value = true
             val data = getSearchedSocialVideoListUseCase(
                 index = 0,
                 keyword = query,
@@ -56,61 +77,89 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result == null || result.isEmpty()) {
-                    _list.postValue(emptyList())
-                } else {
-                    _list.postValue(result)
+                if (result != null && result.isEmpty().not()) {
+                    result.last().also {
+                        setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
+                    }
+                    _list.value = result
                 }
             } else {
                 _state.value = GalleryState.NETWORK_ERROR_BASE
             }
+
+            _refresh.value = false
         }
     }
 
     private fun getBaseData() {
+        if (refresh.value == true) {
+            return
+        }
+        _list.value = emptyList()
+        pagingEndFlag = false
+        setLastData(Long.MAX_VALUE, Long.MAX_VALUE, 0)
         viewModelScope.launch {
+            _refresh.value = true
             val data = getSocialVideoList(
                 index = 0,
                 order = sortType
             )
+
             if (data is Resource.Success) {
                 val result = data.result
-                if (result == null || result.isEmpty()) {
-                    _list.postValue(emptyList())
-                } else {
+                if (result != null && result.isEmpty().not()) {
+                    result.last().also {
+                        setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
+                    }
                     _list.postValue(result)
                 }
             } else {
                 _state.value = GalleryState.NETWORK_ERROR_BASE
             }
+
+            _refresh.value = false
         }
     }
 
-    fun getPaging(start: Int) {
-        if (refresh.value == true) {
+    fun getPaging() {
+        if (refresh.value == true||pagingEndFlag) {
             return
         }
-
         viewModelScope.launch {
             _refresh.value = true
             val data = if (query.isBlank()) {
                 getSocialVideoList(
-                    index = start,
-                    order = sortType
+                    index = lastOffset,
+                    order = sortType,
+                    latestData = when(sortType){
+                        SortType.LIKE -> lastLikeCount
+                        SortType.NEW -> lastTime
+                    }
                 )
             } else {
                 getSearchedSocialVideoListUseCase(
-                    index = start,
+                    index = list.value?.size ?: 0,
                     keyword = query,
-                    order = sortType
+                    order = sortType,
+                    latestData = when(sortType){
+                        SortType.LIKE -> lastLikeCount
+                        SortType.NEW -> lastTime
+                    }
                 )
             }
-
             if (data is Resource.Success) {
                 val result = data.result
                 if (result == null || result.isEmpty()) {
-                    _state.value = GalleryState.END_PAGING
+                    viewModelScope.launch(Dispatchers.IO) {
+                        _state.postValue(GalleryState.END_PAGING)
+                        delay(1000)
+                        _state.postValue(GalleryState.NONE)
+                    }
+                    pagingEndFlag = true
                 } else {
+                    result.last().also {
+                        setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
+                    }
                     _state.value = GalleryState.NONE
                     addItems(result)
                 }
@@ -143,6 +192,18 @@ class OthersGalleryViewModel @Inject constructor(
         _list.value = newList
     }
 
+    private fun setLastData(time: Long, like: Long, offset: Int) {
+        if (sortType == SortType.NEW && lastTime == time) {
+            lastOffset += offset
+        } else if (sortType == SortType.LIKE && lastLikeCount == like) {
+            lastOffset += offset
+        } else {
+            lastOffset = offset
+        }
+        lastTime = time
+        lastLikeCount = like
+    }
+
     fun setOrderType(type: SortType): Boolean {
         if (sortType != type) {
             sortType = type
@@ -157,5 +218,25 @@ class OthersGalleryViewModel @Inject constructor(
         }
 
         return false
+    }
+
+    private fun List<VideoInfoEntity>.countWith(base: VideoInfoEntity): Int {
+        if (sortType == SortType.NEW) {
+            var cnt = 0
+            this.forEach {
+                if (it.updateTime == base.updateTime) {
+                    cnt++
+                }
+            }
+            return cnt
+        } else {
+            var cnt = 0
+            this.forEach {
+                if (it.likedCount == base.likedCount) {
+                    cnt++
+                }
+            }
+            return cnt
+        }
     }
 }

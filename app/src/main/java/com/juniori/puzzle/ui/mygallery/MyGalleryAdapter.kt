@@ -17,12 +17,11 @@ class MyGalleryAdapter(
 ) {
 
     class ViewHolder(
-        val binding: ItemGalleryRecyclerBinding, val height: Int,
+        val binding: ItemGalleryRecyclerBinding,
         val onClick: (VideoInfoEntity) -> Unit
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
-            binding.root.layoutParams.height = height / VISIBLE_ITEM_COUNT
             binding.root.setOnClickListener {
                 onClick(item)
             }
@@ -34,7 +33,7 @@ class MyGalleryAdapter(
         val binding =
             ItemGalleryRecyclerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return ViewHolder(binding, parent.height, onClick)
+        return ViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,7 +45,7 @@ class MyGalleryAdapter(
 
     companion object {
         const val VISIBLE_ITEM_COUNT = 3
-        const val LOADING_FLAG_NUM = 3
+        const val LOADING_FLAG_NUM = 1
     }
 
 }

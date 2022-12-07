@@ -14,5 +14,6 @@ data class VideoInfoEntity(
     val likedUserUidList: List<String>,
     val updateTime: Long,
     val location: String,
+    val locationKeyword: List<String>,
     val memo: String
 ) : Parcelable
