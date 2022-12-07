@@ -1,0 +1,126 @@
+<resources>
+    <string name="app_name">Puzzle</string>
+    <string name="all_cancel">cancel</string>
+    <string name="all_next">next</string>
+    <string name="all_go_back">back</string>
+    <string name="all_setting">Setting</string>
+    <string name="all_save">save</string>
+    <string name="all_yes">Yes</string>
+    <string name="all_no">No</string>
+    <string name="all_golf_course">golf course</string>
+
+    <!--date-->
+    <string name="full_date_format">%d-%02d-%02d %02d:%02d</string>
+    <string name="time_AM_date_format">AM %d</string>
+    <string name="time_PM_date_format">PM %d</string>
+
+    <!--activity_main-->
+    <string name="main_home">Home</string>
+    <string name="main_mygallery">My gallery</string>
+    <string name="main_addvideo">Add video</string>
+    <string name="main_othersgallery">Other gallery</string>
+    <string name="main_mypage">my page</string>
+
+    <!--fragment_home-->
+    <string name="home_background_image_description">home background image</string>
+    <string-array name="welcome_text">
+        <item>Nice shot today!</item>
+        <item>Have a nice putting!</item>
+        <item>Welcome!</item>
+        <item>Share your putting video!</item>
+        <item>You can set a new record today!</item>
+    </string-array>
+    <string name="display_name_format">Mr. %s</string>
+    <string name="display_anonymous">Anonymous</string>
+    <string name="weather_temp_format">%dº</string>
+    <string name="weather_feels_like_temp_format">Sensory temperature %dº</string>
+    <string name="weather_slash_divider">/</string>
+    <string name="green_lean_text">Find the Green Slope</string>
+    <string name="green_lean_image_description">Find Green Slope Button</string>
+    <string name="logo_dsecription">Puzzle Logo</string>
+
+    <!--acitivty_camera-->
+    <string name="camera_capture_start">Recoding</string>
+    <string name="camera_capture_stop">Stop</string>
+    <string name="camera_video_saved">Video has been saved.</string>
+    <string name="camera_no_permission">Please check the permission.</string>
+
+    <!--add_video-->
+    <string name="addvideo_error_durationlimit">You cannot upload videos for more than 20 seconds.</string>
+    <string name="addvideo_take_video">Recoding Video</string>
+    <string name="addvideo_search_gallery">View Gallery</string>
+
+    <!--upload-->
+    <string name="upload_title">Upload</string>
+    <string name="upload_isprivate_status">Is Public?</string>
+    <string name="upload_set_public">Public</string>
+    <string name="upload_set_private">Private</string>
+    <string name="uploadstep1_saying">message</string>
+    <string name="upload_canceldialog_title">Are you sure you want to cancel?</string>
+    <string name="upload_canceldialog_supporting_text">The video is not saved.</string>
+    <string name="upload2_savedialog_title">Do you want to save it?</string>
+    <string name="upload2_savedialog_supporting_text_private">The video is saved as private.</string>
+    <string name="upload2_savedialog_supporting_text_public">The video is saved as public.</string>
+    <string name="upload2_publicuploaddialog_title">Switch the video to public.</string>
+    <string name="upload2_publicuploaddialog_supporting_text">• Video is displayed in someone else\'s feed.\n• Other users can leave a response.</string>
+    <string name="upload2_input_golf_course_hint">Please enter the name of the golf course.</string>
+    <string name="upload2_input_memo_hint">Enter a message.</string>
+    <string name="upload_complete">The video has been uploaded!</string>
+    <string name="upload_fail">Video upload failed. Please try again.</string>
+
+    <!--network-->
+    <string name="network_fail">Network communication failed.</string>
+
+    <!--permission-->
+    <string name="location_permission">Please allow location permission.</string>
+    <string name="location_service_off">Please connect network and location services.</string>
+
+    <!--description-->
+    <string name="weather_icon_description">%d degrees Celsius %s</string>
+    <string name="weather_refresh_btn_description">Weather Re-request</string>
+
+    <!--acitivty_camera-->
+    <string name="playvideo_to_private">Only looking at me</string>
+    <string name="playvideo_to_public">To share</string>
+    <string name="playvideo_delete">Delete</string>
+
+    <!--mypage-->
+    <string name="mypage_title">Did you have a good putting today?</string>
+    <string name="change_nickname">Change Nickname</string>
+    <string name="logout">Logout</string>
+    <string name="logout_remind">Are you sure you want to log out?</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="withdraw_remind">If you withdraw from the service, all stored information, including putting videos, will be deleted. \nAre you sure you want to?</string>
+    <string name="open_source_lib">Open Source Library</string>
+    <string name="input_new_nickname">Please enter a new nickname.</string>
+    <string name="input_nickname_hint">enter it here!</string>
+    <string name="input_nickname_again">Please re-enter.</string>
+    <string name="nickname_change_impossible">Nickname cannot be changed.</string>
+    <string name="complete">Complete!</string>
+
+    <!--my gallery-->
+    <string name="mygallery_add_video_text">Take a nice putting video!</string>
+
+    <!--other gallery-->
+    <string name="othergallery_not_found_text">There\'s no video.\nShare your putting video to others!</string>
+    <string name="gallery_item_icon_description">Video Location Information Icon</string>
+    <string name="othergallery_orderby_new">latest</string>
+    <string name="othergallery_orderby_like">most likes</string>
+
+    <!--gallery-->
+    <string name="gallery_paging_error">Failed to load data.</string>
+    <string name="gallery_init_load_error">The refresh failed.</string>
+    <string name="gallery_end_paging">There is no more data to display.</string>
+    <string name="gallery_retry">Retry.</string>
+    <string name="gallery_check">OK.</string>
+    <string name="gallery_search_hint">search golf course</string>
+
+    <!--play video-->
+    <string name="play_share_title">To public</string>
+    <string name="play_hiding_title">To private</string>
+    <string name="play_share_message">Do you want to share the video?</string>
+    <string name="play_hiding_message">Do you want to watch the video only for me?</string>
+    <string name="play_delete_title">Delete</string>
+    <string name="play_delete_message">Are you sure you want to delete the video?</string>
+
+</resources>

@@ -44,7 +44,7 @@
     <style name="Theme.Puzzle.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:background">@drawable/all_search_view_background</item>
         <item name="searchIcon">@drawable/all_search_icon</item>
-        <item name="queryHint">골프장 검색하기</item>
+        <item name="queryHint">@string/gallery_search_hint</item>
         <item name="iconifiedByDefault">false</item>
     </style>
 
@@ -53,7 +53,7 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
 
         <item name="android:statusBarColor">@color/white</item>
-        <item name="android:navigationBarColor">@color/white</item><!--Todo 바텀바색상 초록색으로-->
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
 
     </style>
