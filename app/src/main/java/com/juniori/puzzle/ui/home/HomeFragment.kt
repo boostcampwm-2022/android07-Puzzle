@@ -11,6 +11,7 @@ import androidx.core.location.LocationListenerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
@@ -98,11 +99,8 @@ class HomeFragment : Fragment() {
             weatherDetailRecyclerView.adapter = adapter
         }
 
-        homeViewModel.run {
-            setWelcomeText(welcomeTextArray.random(random))
-            setDisplayName()
-
-            uiState.observe(viewLifecycleOwner) { resource ->
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.uiState.collect { resource ->
                 when (resource) {
                     is Resource.Success -> {
                         stateManager.dismissLoadingDialog()
@@ -124,6 +122,11 @@ class HomeFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        homeViewModel.run {
+            setWelcomeText(welcomeTextArray.random(random))
+            setDisplayName()
         }
     }
 
