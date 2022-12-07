@@ -186,6 +186,7 @@ class OthersGalleryViewModel @Inject constructor(
         }
 
         items.forEach {
+            if(list.value==null|| requireNotNull(list.value).contains(it).not())
             newList.add(it)
         }
 
