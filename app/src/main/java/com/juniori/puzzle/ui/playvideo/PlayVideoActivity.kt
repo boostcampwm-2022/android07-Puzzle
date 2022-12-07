@@ -279,16 +279,16 @@ class PlayVideoActivity : AppCompatActivity() {
             menu.findItem(R.id.video_privacy).setOnMenuItemClickListener {
                 when (currentVideoItem.isPrivate) {
                     true -> {
-                        shareDialog.show()
+                        shareDialog.showDialog()
                     }
                     false -> {
-                        hidingDialog.show()
+                        hidingDialog.showDialog()
                     }
                 }
                 true
             }
             menu.findItem(R.id.video_delete).setOnMenuItemClickListener {
-                deleteDialog.show()
+                deleteDialog.showDialog()
                 true
             }
             setNavigationOnClickListener {

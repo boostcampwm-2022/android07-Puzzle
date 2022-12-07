@@ -22,6 +22,8 @@
         <item name="android:statusBarColor">@color/status_bar_color</item>
 
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Puzzle.BottomSheetDialog</item>
+
+        <item name="popupMenuBackground">@drawable/all_popup_background</item>
     </style>
 
     <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar">
@@ -106,4 +108,5 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
     </style>
+
 </resources>

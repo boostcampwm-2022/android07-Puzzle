@@ -115,7 +115,7 @@ class MyPageFragment : Fragment() {
 
             }).setMessage(getString(R.string.logout_remind))
             .setTitle(getString(R.string.logout))
-            .show()
+            .showDialog()
     }
 
     private fun makeWithdrawDialog() {
@@ -126,7 +126,7 @@ class MyPageFragment : Fragment() {
 
             }).setMessage(getString(R.string.withdraw_remind))
             .setTitle(getString(R.string.withdraw))
-            .show()
+            .showDialog()
     }
 
     override fun onDestroyView() {
