@@ -10,9 +10,12 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +25,10 @@ import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class OthersGalleryFragment : Fragment() {
@@ -60,13 +67,23 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2){
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                    if(lp!=null){
+                        if(lp.height < height/3) {
+                            lp.height = height / 3
+                        }
+                    }
+                    return super.checkLayoutParams(lp)
+                }
+            }
             layoutManager = gridLayoutManager
         }
 
         binding.otherGallerySwipeRefresh.setOnRefreshListener {
             viewModel.getMainData()
         }
+
         val items = resources.getStringArray(R.array.other_order_type)
         val spinnerAdapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
@@ -113,7 +130,7 @@ class OthersGalleryFragment : Fragment() {
                             Snackbar.LENGTH_INDEFINITE
                         )
                             .setAction(R.string.gallery_retry) {
-                                viewModel.getPaging(recyclerAdapter.itemCount)
+                                viewModel.getPaging()
                             }
                     snackBar?.show()
                 }

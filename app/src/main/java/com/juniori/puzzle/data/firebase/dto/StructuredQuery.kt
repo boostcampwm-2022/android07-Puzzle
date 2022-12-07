@@ -47,6 +47,12 @@ data class StringFieldFilter(
     val value: StringValue
 ) : FieldFilter
 
+data class IntegerFieldFilter(
+    val field: FieldReference,
+    val op: String,
+    val value: IntegerValue
+) : FieldFilter
+
 data class FieldReference(
     val fieldPath: String
 )
