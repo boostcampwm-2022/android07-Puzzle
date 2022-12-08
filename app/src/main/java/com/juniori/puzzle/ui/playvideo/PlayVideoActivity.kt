@@ -22,6 +22,9 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
+import com.juniori.puzzle.util.PlayResultConst.RESULT_NOTTING
+import com.juniori.puzzle.util.PlayResultConst.RESULT_TO_PRIVATE
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -172,6 +175,7 @@ class PlayVideoActivity : AppCompatActivity() {
                         when (resource) {
                             is Resource.Success -> {
                                 stateManager.dismissLoadingDialog()
+                                setResult(RESULT_DELETE)
                                 finish()
                             }
                             is Resource.Loading -> {
@@ -200,6 +204,11 @@ class PlayVideoActivity : AppCompatActivity() {
                             is Resource.Success -> {
                                 stateManager.dismissLoadingDialog()
                                 currentVideoItem = resource.result
+                                if(currentVideoItem.isPrivate){
+                                    setResult(RESULT_TO_PRIVATE)
+                                }else{
+                                    setResult(RESULT_NOTTING)
+                                }
                                 setMenuItems()
                             }
                             is Resource.Loading -> {
