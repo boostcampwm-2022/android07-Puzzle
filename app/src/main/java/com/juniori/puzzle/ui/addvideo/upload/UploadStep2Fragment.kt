@@ -17,6 +17,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
 import com.juniori.puzzle.util.ProgressDialog
+import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -30,11 +31,14 @@ class UploadStep2Fragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: UploadViewModel by activityViewModels()
 
-    private val uploadDialog: AlertDialog by lazy {
+    private val uploadDialog: PuzzleDialog by lazy {
         createSaveDialog()
     }
-    private val publicModeDialog: AlertDialog by lazy {
+    private val publicModeDialog: PuzzleDialog by lazy {
         createPublicModeDialog()
+    }
+    private val confirmDialog: PuzzleDialog by lazy {
+        PuzzleDialog(requireContext()).buildConfirmationDialog({}, {})
     }
     private lateinit var progressDialog: ProgressDialog
 
@@ -62,7 +66,7 @@ class UploadStep2Fragment : Fragment() {
         binding.containerRadiogroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == binding.radiobuttonSetPublic.id && viewModel.isPublicUpload.not()) {
                 viewModel.isPublicUpload = true
-                publicModeDialog.show()
+                publicModeDialog.showDialog()
             } else if (checkedId == binding.radiobuttonSetPrivate.id && viewModel.isPublicUpload) {
                 viewModel.isPublicUpload = false
             }
@@ -112,7 +116,7 @@ class UploadStep2Fragment : Fragment() {
 
     private fun initOnClickListener() {
         binding.buttonSave.setOnClickListener {
-            uploadDialog.show()
+            if (checkInfo()) uploadDialog.showDialog()
         }
 
         binding.buttonGoback.setOnClickListener {
@@ -120,36 +124,50 @@ class UploadStep2Fragment : Fragment() {
         }
     }
 
-    private fun createSaveDialog(): AlertDialog {
-        return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
-            .setTitle(R.string.upload2_savedialog_title)
-            .setMessage(
-                if (binding.radiobuttonSetPrivate.isChecked) {
-                    R.string.upload2_savedialog_supporting_text_private
-                } else {
-                    R.string.upload2_savedialog_supporting_text_public
-                }
+    private fun createSaveDialog(): PuzzleDialog {
+        return PuzzleDialog(requireContext()).buildAlertDialog({
+            viewModel.compressVideo(
+                requireContext()
             )
-            .setPositiveButton(R.string.all_yes) { _, _ ->
-                viewModel.compressVideo(requireContext())
-            }
-            .setNegativeButton(R.string.all_no) { _, _ ->
-                uploadDialog.dismiss()
-            }
-            .create()
+        }, {})
+            .setTitle(getString(R.string.upload2_savedialog_title))
+            .setMessage(
+                getString(
+                    if (binding.radiobuttonSetPrivate.isChecked) {
+                        R.string.upload2_savedialog_supporting_text_private
+                    } else {
+                        R.string.upload2_savedialog_supporting_text_public
+                    }
+                )
+            )
     }
 
-    private fun createPublicModeDialog(): AlertDialog {
-        return MaterialAlertDialogBuilder(requireContext(), R.style.Theme_Puzzle_Dialog)
-            .setTitle(R.string.upload2_publicuploaddialog_title)
-            .setMessage(R.string.upload2_publicuploaddialog_supporting_text)
-            .setPositiveButton(R.string.all_yes) { _, _ ->
-                publicModeDialog.dismiss()
-            }
-            .setNegativeButton(R.string.all_no) { _, _ ->
-                binding.radiobuttonSetPrivate.isChecked = true
-            }
-            .create()
+    private fun createPublicModeDialog(): PuzzleDialog {
+        return PuzzleDialog(requireContext()).buildAlertDialog({ },
+            { binding.radiobuttonSetPrivate.isChecked = true })
+            .setTitle(getString(R.string.upload2_publicuploaddialog_title))
+            .setMessage(getString(R.string.upload2_publicuploaddialog_supporting_text))
+    }
+
+    private fun setConfirmMessage(message: String): PuzzleDialog {
+        return confirmDialog.setMessage(message)
+    }
+
+    private fun checkInfo(): Boolean {
+        val msg = if (binding.memo.text.isNullOrEmpty()) {
+            getString(R.string.upload_memo_empty)
+        } else if (binding.memo.text.length > 140) {
+            getString(R.string.upload_memo_overflow)
+        } else if (binding.golfCourseName.text.isNullOrEmpty()) {
+            getString(R.string.upload_location_empty)
+        } else if (binding.golfCourseLabel.text.length > 50) {
+            getString(R.string.upload_location_overflow)
+        } else {
+            ""
+        }
+        if (msg == "") return true
+        setConfirmMessage(msg).showDialog()
+        return false
     }
 
     private fun showUploadStateFeedback(feedbackText: String) {

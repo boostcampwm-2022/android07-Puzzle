@@ -37,7 +37,7 @@
     <dimen name="bottomSheet_peekHeight">600dp</dimen>
     <dimen name="weather_icon_width">50dp</dimen>
 
-    <!--ration-->
+    <!--ratio-->
     <integer name="others_gallery_toolbar_search_weight">9</integer>
     <integer name="others_gallery_toolbar_sort_weight">1</integer>
     <integer name="grid_column">3</integer>

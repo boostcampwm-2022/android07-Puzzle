@@ -43,7 +43,7 @@ class LocationDataSourceImpl @Inject constructor(
             val longitude = location?.longitude ?: DEFAULT_LONGITUDE
             return Pair(latitude, longitude)
         }
-        return Pair(0f.toDouble(), 0f.toDouble())
+        return Pair(100f.toDouble(), 200f.toDouble())
     }
 
     override fun getCurrentAddress(lat: Double, long: Double): List<Address> {

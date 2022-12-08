@@ -69,6 +69,10 @@
     <string name="upload_complete">영상이 업로드 됐어요!</string>
     <string name="upload_fail">영상 업로드에 실패했습니다, 다시 시도해주세요.</string>
     <string name="upload2_compress_title">비디오 파일 압축 중…</string>
+    <string name="upload_memo_empty">메모를 입력해주세요</string>
+    <string name="upload_memo_overflow">메모는 140자까지 작성할 수 있습니다</string>
+    <string name="upload_location_empty">골프장 이름을 입력해주세요</string>
+    <string name="upload_location_overflow">골프장 이름은 50자까지 작성할 수 있습니다.</string>
 
     <!--network-->
     <string name="network_fail">네트워크 통신에 실패했습니다</string>
