@@ -148,14 +148,7 @@ class OthersGalleryFragment : Fragment() {
     }
 
     private fun setListener() {
-//        val listPopupWindow = ListPopupWindow(
-//            requireContext(),
-//            null,
-//            com.google.android.material.R.attr.listPopupWindowStyle
-//        )
-//        listPopupWindow.anchorView = binding.spinnerOtherGallery
-
-         val items = resources.getStringArray(R.array.other_order_type)
+        val items = resources.getStringArray(R.array.other_order_type)
         val popup=PuzzleDialog(requireContext()).buildListPopup(binding.spinnerOtherGallery,items)
 
         popup.setListPopupItemListener{parent, view, position, id ->
@@ -177,13 +170,6 @@ class OthersGalleryFragment : Fragment() {
 
             popup.dismissPopupList()
         }
-//        val spinnerAdapter =
-//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-//        listPopupWindow.setAdapter(spinnerAdapter)
-//
-//        listPopupWindow.setOnItemClickListener { parent, view, position, id ->
-//
-//        }
 
         binding.spinnerOtherGallery.text = items[0]
         binding.spinnerOtherGallery.setOnClickListener {
