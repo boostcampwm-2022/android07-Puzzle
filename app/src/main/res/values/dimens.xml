@@ -13,7 +13,7 @@
 
     <!--card-->
     <dimen name="card_border_radius">14dp</dimen>
-    <dimen name="card_padding">8dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
     <dimen name="card_text_horizontal_margin">8dp</dimen>
 
     <!--text-->
@@ -34,4 +34,11 @@
     <dimen name="icon_width">20dp</dimen>
     <dimen name="home_ground_height">100dp</dimen>
     <dimen name="camera_button_size">60dp</dimen>
+    <dimen name="bottomSheet_peekHeight">600dp</dimen>
+    <dimen name="weather_icon_width">50dp</dimen>
+
+    <!--ration-->
+    <integer name="others_gallery_toolbar_search_weight">7</integer>
+    <integer name="others_gallery_toolbar_sort_weight">3</integer>
+    <integer name="grid_column">2</integer>
 </resources>

@@ -75,7 +75,7 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2){
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), resources.getInteger(R.integer.grid_column)){
                 override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
                     if(lp!=null){
                         if(lp.height < height/3) {
@@ -213,7 +213,7 @@ class OthersGalleryFragment : Fragment() {
     }
 
     companion object {
-        const val ITEM_ROW_COUNT = 2
+
         const val RECYCLER_TOP = 0
         const val VIDEO_EXTRA_NAME = "videoInfo"
 

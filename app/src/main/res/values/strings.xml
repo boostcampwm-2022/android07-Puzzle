@@ -80,6 +80,8 @@
     <!--description-->
     <string name="weather_icon_description">%d도 %s</string>
     <string name="weather_refresh_btn_description">날씨 재요청 버튼</string>
+    <string name="camera_button_description">카메라 녹화 버튼</string>
+    <string name="recyclerView_item_thumbnail_description">영상 썸네일</string>
 
     <!--acitivty_camera-->
     <string name="playvideo_to_private">나만 보기</string>
@@ -125,5 +127,4 @@
     <string name="play_hiding_message">동영상을 나만 보시겠습니까?</string>
     <string name="play_delete_title">삭제하기</string>
     <string name="play_delete_message">동영상을 정말 삭제하시겠습니까?</string>
-    <string name="camera_button_description">카메라 녹화 버튼</string>
 </resources>

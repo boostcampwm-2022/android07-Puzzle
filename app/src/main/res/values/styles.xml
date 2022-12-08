@@ -67,6 +67,7 @@
     <style name="Theme.Puzzle.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
         <item name="backgroundTint">@color/secondary_color</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent.Top</item>
+        <item name="behavior_peekHeight">@dimen/bottomSheet_peekHeight</item>
     </style>
 
 </resources>

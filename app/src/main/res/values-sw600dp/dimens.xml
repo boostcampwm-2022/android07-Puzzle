@@ -1,7 +1,7 @@
 <resources>
     <!--activity-->
     <dimen name="activity_horizontal_margin">40dp</dimen>
-    <dimen name="activity_vertical_margin">40dp</dimen>
+    <dimen name="activity_vertical_margin">30dp</dimen>
 
     <!--toolbar-->
     <dimen name="toolbar_border_radius">20dp</dimen>
@@ -12,7 +12,7 @@
     <dimen name="toolbar_top_padding">46dp</dimen>
 
     <!--card-->
-    <dimen name="card_border_radius">28dp</dimen>
+    <dimen name="card_border_radius">14dp</dimen>
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_text_horizontal_margin">16dp</dimen>
 
@@ -26,12 +26,19 @@
     <dimen name="item_elevation">16dp</dimen>
 
     <!--minus dp-->
-    <dimen name="toolbar_bottom_depth">-24dp</dimen>
-    <dimen name="home_background_flag_depth">-60dp</dimen>
+    <dimen name="toolbar_bottom_depth">-12dp</dimen>
+    <dimen name="home_background_flag_depth">-30dp</dimen>
 
     <!--component radius-->
-    <dimen name="large_component_corner_radius">56dp</dimen>
-    <dimen name="icon_width">40dp</dimen>
-    <dimen name="home_ground_height">50dp</dimen>
-    <dimen name="camera_button_size">110dp</dimen>
+    <dimen name="large_component_corner_radius">28dp</dimen>
+    <dimen name="icon_width">23dp</dimen>
+    <dimen name="home_ground_height">100dp</dimen>
+    <dimen name="camera_button_size">90dp</dimen>
+    <dimen name="bottomSheet_peekHeight">600dp</dimen>
+    <dimen name="weather_icon_width">50dp</dimen>
+
+    <!--ration-->
+    <integer name="others_gallery_toolbar_search_weight">9</integer>
+    <integer name="others_gallery_toolbar_sort_weight">1</integer>
+    <integer name="grid_column">3</integer>
 </resources>

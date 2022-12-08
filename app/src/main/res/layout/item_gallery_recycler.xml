@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/disabled_color"
+                android:contentDescription="@string/recyclerView_item_thumbnail_description"
                 app:layout_constraintBottom_toTopOf="@+id/imageView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -45,19 +46,19 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="15dp"
-                android:layout_height="20dp"
+                android:layout_width="@dimen/icon_width"
+                android:layout_height="@dimen/icon_width"
                 android:layout_margin="@dimen/item_horizontal_margin"
+                android:contentDescription="@string/gallery_item_icon_description"
                 android:src="@drawable/all_location_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/thumbnail"
-                android:contentDescription="@string/gallery_item_icon_description" />
+                app:layout_constraintTop_toBottomOf="@id/thumbnail" />
 
             <TextView
                 style="@style/Theme.Puzzle.TextCaption"
                 android:layout_width="0dp"
-                android:layout_height="20dp"
+                android:layout_height="@dimen/icon_width"
                 android:layout_marginHorizontal="@dimen/card_text_horizontal_margin"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
