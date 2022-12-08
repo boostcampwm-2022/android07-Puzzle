@@ -107,7 +107,7 @@
     <string name="othergallery_not_found_text">There\'s no video.\nShare your putting video to others!</string>
     <string name="gallery_item_icon_description">Video Location Information Icon</string>
     <string name="othergallery_orderby_new">latest</string>
-    <string name="othergallery_orderby_like">most likes</string>
+    <string name="othergallery_orderby_like">likes</string>
 
     <!--gallery-->
     <string name="gallery_paging_error">Failed to load data.</string>
