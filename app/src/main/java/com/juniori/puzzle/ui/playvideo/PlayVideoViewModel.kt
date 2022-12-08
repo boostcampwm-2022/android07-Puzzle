@@ -64,6 +64,7 @@ class PlayVideoViewModel @Inject constructor(
 
     fun changeLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
         viewModelScope.launch {
+            _videoFlow.emit(Resource.Loading)
             val result = updateLikeStatusUseCase(currentVideo, currentUid, likeState.value)
             if (result is Resource.Success) {
                 _videoFlow.emit(result)
