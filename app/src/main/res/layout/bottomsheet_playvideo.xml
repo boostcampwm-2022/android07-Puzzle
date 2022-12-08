@@ -35,11 +35,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/all_memo_background"
-            android:padding="8dp"
+            android:padding="@dimen/text_vertical_margin"
             android:layout_marginTop="@dimen/text_vertical_margin"
             android:text="@{memo}"
             android:lines="5"
             style="@style/Theme.Puzzle.TextMedium"
+            android:textColor="@color/black"
             tools:text="메모가 들어갈\n자리입니다\n1\n2\n3\n4" />
 
     </LinearLayout>

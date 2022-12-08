@@ -24,6 +24,7 @@
         android:padding="@dimen/text_vertical_margin"
         android:text="@{content}"
         style="@style/Theme.Puzzle.TextMedium"
+        android:textColor="@color/black"
         tools:drawableStart="@drawable/all_location_icon"
         tools:text="내용" />
 
