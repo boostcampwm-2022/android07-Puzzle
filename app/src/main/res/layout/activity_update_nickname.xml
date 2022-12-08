@@ -11,50 +11,50 @@
 
         <TextView
             android:id="@+id/input_nickname_title"
+            style="@style/Theme.Puzzle.TextMedium.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/input_new_nickname"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/input_new_nickname"
             app:layout_constraintBottom_toTopOf="@id/nickname_container"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0"
-            style="@style/Theme.Puzzle.TextMedium.Bold"/>
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <EditText
             android:id="@+id/nickname_container"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@drawable/text_container_background"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:paddingStart="@dimen/toolbar_text_horizontal_margin"
-            android:paddingEnd="@dimen/toolbar_text_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:background="@drawable/text_container_background"
             android:hint="@string/input_nickname_hint"
-            android:textCursorDrawable="@drawable/cursor_background"
             android:inputType="text"
             android:maxLines="1"
-            app:layout_constraintTop_toBottomOf="@id/input_nickname_title"
+            android:paddingStart="@dimen/toolbar_text_horizontal_margin"
+            android:paddingEnd="@dimen/toolbar_text_horizontal_margin"
+            android:textCursorDrawable="@drawable/cursor_background"
             app:layout_constraintBottom_toTopOf="@id/complete_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/input_nickname_title" />
 
         <Button
             android:id="@+id/complete_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/complete"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            app:layout_constraintTop_toBottomOf="@id/nickname_container"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/complete"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nickname_container" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

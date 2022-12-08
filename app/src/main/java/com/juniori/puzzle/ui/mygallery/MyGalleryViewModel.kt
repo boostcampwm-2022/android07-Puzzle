@@ -10,6 +10,7 @@ import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -38,7 +39,7 @@ class MyGalleryViewModel @Inject constructor(
     private var pagingEndFlag = false
 
     fun setQueryText(nowQuery: String?) {
-        if(query==nowQuery){
+        if (query == nowQuery) {
             return
         }
         query = if (nowQuery != null && nowQuery.isNotBlank()) {
@@ -69,9 +70,10 @@ class MyGalleryViewModel @Inject constructor(
                     _state.value = GalleryState.NONE
 
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
-
-                    } else {
+                    if (result.isNullOrEmpty().not()) {
+                        if (result.size < ITEM_CNT) {
+                            pagingEndFlag = true
+                        }
                         _list.value = result
                     }
                 } else {
@@ -102,9 +104,10 @@ class MyGalleryViewModel @Inject constructor(
                     _state.value = GalleryState.NONE
 
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
-
-                    } else {
+                    if (result.isNullOrEmpty().not()) {
+                        if (result.size < ITEM_CNT) {
+                            pagingEndFlag = true
+                        }
                         _list.value = result
                     }
                 } else {
@@ -117,7 +120,7 @@ class MyGalleryViewModel @Inject constructor(
     }
 
     fun getPaging(start: Int) {
-        if (refresh.value == true||pagingEndFlag) {
+        if (refresh.value == true || pagingEndFlag) {
             return
         }
 
@@ -135,7 +138,7 @@ class MyGalleryViewModel @Inject constructor(
 
                 if (data is Resource.Success) {
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
+                    if (result.isNullOrEmpty()) {
                         viewModelScope.launch(Dispatchers.IO) {
                             _state.postValue(GalleryState.END_PAGING)
                             delay(1000)

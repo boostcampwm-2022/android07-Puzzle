@@ -26,19 +26,19 @@
                 style="@style/Theme.Puzzle.SearchView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7" />
+                android:layout_weight="7.5" />
 
-            <Spinner
+            <TextView
                 android:id="@+id/spinner_other_gallery"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:paddingVertical="10dp"
-                android:layout_marginStart="16dp"
-                android:layout_weight="3"
-                android:padding="@dimen/text_vertical_margin"
-                android:background="@drawable/all_search_view_background"
-                android:entries="@array/other_order_type" />
+                android:gravity="center"
+                android:layout_marginStart="@dimen/toolbar_horizontal_padding"
+                android:layout_weight="2.5"
+                tools:text="최신순"
+                style="@style/Theme.Puzzle.TextMedium"
+                android:background="@drawable/all_search_view_background" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 

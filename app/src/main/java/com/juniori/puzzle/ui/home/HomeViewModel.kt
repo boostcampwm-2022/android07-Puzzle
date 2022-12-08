@@ -64,8 +64,8 @@ class HomeViewModel @Inject constructor(
         _uiState.value = Resource.Failure(Exception(text))
     }
 
-    private fun setCurrentAddress(lat:Double, long:Double) {
-        _currentAddress.value = getAddressUseCase(lat,long)[0].toAddressString()
+    private fun setCurrentAddress(lat: Double, long: Double) {
+        _currentAddress.value = getAddressUseCase(lat, long)[0].toAddressString()
     }
 
     fun registerListener(listener: LocationListenerCompat) {
@@ -78,7 +78,7 @@ class HomeViewModel @Inject constructor(
 
     fun getWeather() = viewModelScope.launch {
         val location = getLocationUseCase()
-        if(location.first==0f.toDouble() && location.second==0f.toDouble()){
+        if(location.first <= 0f.toDouble() && location.second <= 0f.toDouble()){
             setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
             return@launch
         }
@@ -86,7 +86,7 @@ class HomeViewModel @Inject constructor(
         when (val result = getWeatherUseCase(location.first, location.second)) {
             is Resource.Success<List<WeatherEntity>> -> {
                 val list = result.result
-                if (list.isNotEmpty()) {
+                if (list.size >= 3) {
                     _weatherMainList.value = list[1]
                     _weatherList.value = list.subList(2, list.size)
                     setCurrentAddress(location.first,location.second)

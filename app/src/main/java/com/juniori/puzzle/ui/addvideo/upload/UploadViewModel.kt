@@ -1,9 +1,15 @@
 package com.juniori.puzzle.ui.addvideo.upload
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.arthenica.mobileffmpeg.Config
+import com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS
+import com.arthenica.mobileffmpeg.FFmpeg
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
@@ -14,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +31,7 @@ class UploadViewModel @Inject constructor(
 
     var videoFilePath = ""
         private set
+    private var compressedVideoFilePath = ""
     var thumbnailBytes = ByteArray(0)
         private set
 
@@ -38,6 +46,9 @@ class UploadViewModel @Inject constructor(
         private set
     var isPublicUpload = false
 
+    private val _compressFlow = MutableStateFlow(-1)
+    val compressFlow: StateFlow<Int> = _compressFlow
+
     private val _uploadFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
     val uploadFlow: StateFlow<Resource<VideoInfoEntity>?> = _uploadFlow
 
@@ -51,10 +62,43 @@ class UploadViewModel @Inject constructor(
         playWhenReady = wasBeingPlayed
     }
 
-    fun uploadVideo() = viewModelScope.launch {
-        if (_uploadFlow.value == Resource.Loading) {
-            return@launch
+    fun compressVideo(context: Context) = viewModelScope.launch {
+        if (_compressFlow.value >= 0) return@launch
+        _compressFlow.emit(0)
+
+        val videoLength = MediaPlayer.create(context, Uri.parse(videoFilePath)).duration
+        compressedVideoFilePath = "${videoFilePath.substringBeforeLast(".mp4")}_compressed.mp4"
+
+        Config.resetStatistics()
+        Config.enableStatisticsCallback {
+            val percentile = it.time * 100 / videoLength
+            if (percentile <= 100) {
+                _compressFlow.value = percentile
+            }
         }
+
+        FFmpeg.executeAsync(
+            getFFMPEGCommand(
+                videoFilePath,
+                compressedVideoFilePath
+            )
+        ) { _, returnCode ->
+            when (returnCode) {
+                RETURN_CODE_SUCCESS -> {
+                    uploadVideo()
+                }
+                else -> {
+                    _uploadFlow.value = Resource.Failure(Exception("Compress Failed"))
+                }
+            }
+        }
+    }
+
+    private fun getFFMPEGCommand(inputPath: String, outputPath: String) =
+        "-i $inputPath -c:v mpeg4 -crf 18 -preset veryfast $outputPath"
+
+    private fun uploadVideo() = viewModelScope.launch {
+        if (_uploadFlow.value == Resource.Loading) return@launch
         _uploadFlow.emit(Resource.Loading)
 
         val uid = getUid() ?: return@launch
@@ -67,7 +111,7 @@ class UploadViewModel @Inject constructor(
                 location = golfCourse,
                 memo = memo,
                 imageByteArray = thumbnailBytes,
-                videoByteArray = File(videoFilePath).readBytes()
+                videoByteArray = File(compressedVideoFilePath).readBytes()
             )
         )
     }
@@ -87,7 +131,9 @@ class UploadViewModel @Inject constructor(
         memo = ""
         golfCourse = ""
         videoFilePath.deleteIfFileUri()
+        compressedVideoFilePath.deleteIfFileUri()
         _uploadFlow.value = null
+        _compressFlow.value = -1
     }
 
     fun onMemoTextChanged(charSequence: CharSequence) {
@@ -99,7 +145,7 @@ class UploadViewModel @Inject constructor(
     }
 
     override fun onDestroy(owner: LifecycleOwner) {
-        initializeMediaData("", ByteArray(0))
         removeCurrentData()
+        initializeMediaData("", ByteArray(0))
     }
 }

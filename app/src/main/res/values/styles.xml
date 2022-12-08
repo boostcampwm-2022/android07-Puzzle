@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Toolbar -->
+    <style name="Theme.Puzzle.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@drawable/all_toolbar_background</item>
+        <item name="android:paddingTop">@dimen/toolbar_top_padding</item>
+        <item name="android:paddingBottom">@dimen/toolbar_bottom_padding</item>
+        <item name="android:paddingStart">@dimen/toolbar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/toolbar_horizontal_padding</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="shapeAppearance">?shapeAppearanceCornerLarge</item>
+    </style>
+
+    <style name="Theme.Puzzle.PlayToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="backgroundColor">@android:color/transparent</item>
+        <item name="android:background">@drawable/all_toolbar_background</item>
+        <item name="android:paddingStart">@dimen/toolbar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/toolbar_horizontal_padding</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
+    </style>
+
+    <style name="Theme.Puzzle.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/all_search_view_background</item>
+        <item name="searchIcon">@drawable/all_search_icon</item>
+        <item name="queryHint">@string/search_hint</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="queryBackground">@null</item>
+        <item name="iconifiedByDefault">false</item>
+    </style>
+
+    <!-- Button -->
+    <style name="Theme.Puzzle.Button.Inaddvideo" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">8dp</item>
+        <item name="iconSize">28dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
+    </style>
+
+    <style name="Theme.Puzzle.Button.Inplayvideo" parent="Widget.Material3.Button.IconButton">
+        <item name="iconGravity">textStart</item>
+        <item name="iconSize">40dp</item>
+        <item name="iconTint">@null</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/Theme.Puzzle.TextSmall</item>
+    </style>
+
+    <!-- Dialog -->
+    <style name="Theme.Puzzle.Dialog" parent="MaterialAlertDialog.Material3">
+        <item name="colorSurface">@color/secondary_color</item>>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.Puzzle</item>
+    </style>
+
+    <style name="MaterialAlertDialog.Puzzle" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
+    </style>
+
+    <style name="ThemeOverlay.Puzzle.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Theme.Puzzle.BottomSheet</item>
+    </style>
+
+    <style name="Theme.Puzzle.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="backgroundTint">@color/secondary_color</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent.Top</item>
+    </style>
+
+</resources>

@@ -38,32 +38,27 @@ class GolfBallView(context: Context, attrs: AttributeSet) : AppCompatImageView(c
             event?.let {
                 var sensorX = x
                 var sensorY = y
-                var sensorZ = z
                 when (windowManager.defaultDisplay.rotation) {
                     Surface.ROTATION_0 -> {
                         sensorX = event.values[0]
                         sensorY = event.values[1]
-                        sensorZ = event.values[2]
                     }
                     Surface.ROTATION_90 -> {
                         sensorX = -event.values[1]
                         sensorY = event.values[0]
-                        sensorZ = event.values[2]
                     }
                     Surface.ROTATION_180 -> {
                         sensorX = -event.values[0]
                         sensorY = -event.values[1]
-                        sensorZ = event.values[2]
                     }
                     Surface.ROTATION_270 -> {
                         sensorX = event.values[1]
                         sensorY = -event.values[0]
-                        sensorZ = event.values[2]
                     }
                 }
 
-                x -= sensorX * sensorZ
-                y += sensorY * sensorZ
+                x -= sensorX
+                y += sensorY
 
                 var isDrawXNeeded = true
                 var isDrawYNeeded = true

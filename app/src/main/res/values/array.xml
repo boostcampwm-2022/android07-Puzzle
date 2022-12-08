@@ -4,4 +4,9 @@
         <item>@string/othergallery_orderby_new</item>
         <item>@string/othergallery_orderby_like</item>
     </string-array>
+
+    <string-array name="my_video_setting">
+        <item>공유하기</item>
+        <item>삭제</item>
+    </string-array>
 </resources>

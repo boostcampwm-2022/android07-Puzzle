@@ -5,17 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -23,12 +18,11 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
+import com.juniori.puzzle.util.PlayResultConst.RESULT_TO_PRIVATE
+import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class OthersGalleryFragment : Fragment() {
@@ -38,7 +32,9 @@ class OthersGalleryFragment : Fragment() {
     private val viewModel: OthersGalleryViewModel by viewModels()
     private val activityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.getMainData()
+            if (it.resultCode == RESULT_TO_PRIVATE || it.resultCode == RESULT_DELETE) {
+                viewModel.getMainData()
+            }
         }
 
     private var snackBar: Snackbar? = null
@@ -67,10 +63,10 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2){
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2) {
                 override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
-                    if(lp!=null){
-                        if(lp.height < height/3) {
+                    if (lp != null) {
+                        if (lp.height < height / 3) {
                             lp.height = height / 3
                         }
                     }
@@ -83,12 +79,6 @@ class OthersGalleryFragment : Fragment() {
         binding.otherGallerySwipeRefresh.setOnRefreshListener {
             viewModel.getMainData()
         }
-
-        val items = resources.getStringArray(R.array.other_order_type)
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-        binding.spinnerOtherGallery.adapter = spinnerAdapter
-
 
         viewModel.list.observe(viewLifecycleOwner) { dataList ->
             binding.otherGallerySwipeRefresh.isRefreshing = false
@@ -162,32 +152,34 @@ class OthersGalleryFragment : Fragment() {
     }
 
     private fun setListener() {
-        binding.spinnerOtherGallery.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    when (position) {
-                        0 -> {
-                            if (viewModel.setOrderType(SortType.NEW)) {
-                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
-                            }
-                        }
+        val items = resources.getStringArray(R.array.other_order_type)
+        val popup =
+            PuzzleDialog(requireContext()).buildListPopup(binding.spinnerOtherGallery, items)
 
-                        1 -> {
-                            if (viewModel.setOrderType(SortType.LIKE)) {
-                                binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
-                            }
-                        }
+        popup.setListPopupItemListener { parent, view, position, id ->
+            binding.spinnerOtherGallery.text = items[position]
+            when (position) {
+                0 -> {
+                    if (viewModel.setOrderType(SortType.NEW)) {
+                        binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                     }
+
                 }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {}
-
+                1 -> {
+                    if (viewModel.setOrderType(SortType.LIKE)) {
+                        binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
+                    }
+                }
             }
+
+            popup.dismissPopupList()
+        }
+
+        binding.spinnerOtherGallery.text = items[0]
+        binding.spinnerOtherGallery.setOnClickListener {
+            popup.showPopupList()
+        }
 
         binding.searchOtherGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
