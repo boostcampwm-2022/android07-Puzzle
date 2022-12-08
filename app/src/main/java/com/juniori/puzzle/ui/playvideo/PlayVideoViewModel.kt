@@ -29,7 +29,7 @@ class PlayVideoViewModel @Inject constructor(
     var currentUserInfo: UserInfoEntity? = getUserInfo()
 
     val videoListFlow: StateFlow<List<VideoInfoEntity>> =
-        repository.videoList
+        repository.othersVideoList
 
     var currentVideoIndex = 0
         private set
@@ -86,11 +86,13 @@ class PlayVideoViewModel @Inject constructor(
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        _deleteFlow.emit(deleteVideoUseCase(documentId))
+        // _deleteFlow.emit(deleteVideoUseCase(documentId))
+        _deleteFlow.emit(repository.deleteVideo(documentId))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _privacyFlow.emit(Resource.Loading)
-        _privacyFlow.emit(changeVideoScopeUseCase(documentInfo))
+        // _privacyFlow.emit(changeVideoScopeUseCase(documentInfo))
+        _privacyFlow.emit(repository.changeVideoScope(documentInfo))
     }
 }

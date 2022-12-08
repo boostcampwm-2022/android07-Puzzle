@@ -60,7 +60,10 @@ class PlayVideoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPlayvideoBinding.inflate(layoutInflater)
+        binding = ActivityPlayvideoBinding.inflate(layoutInflater).apply {
+            vm = viewModel
+            lifecycleOwner = this@PlayVideoActivity
+        }
 
         stateManager.createLoadingDialog(binding.activityPlayVideo)
         setContentView(binding.root)
@@ -105,10 +108,9 @@ class PlayVideoActivity : AppCompatActivity() {
                 } else {
                     getString(R.string.playvideo_to_private)
                 }
-        } else {
-            binding.materialToolbar.menu.forEach {
-                it.isVisible = false
-            }
+        }
+        binding.materialToolbar.menu.forEach {
+            it.isVisible = currentUserId == videoOwnerId
         }
     }
 

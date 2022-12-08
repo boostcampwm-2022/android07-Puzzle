@@ -21,7 +21,7 @@ class OthersGalleryViewModelk @Inject constructor(
 ) : ViewModel() {
 
     val videoList: StateFlow<List<VideoInfoEntity>>
-        get() = repositoryk.videoList
+        get() = repositoryk.othersVideoList
 
     val videoFetchingState: StateFlow<VideoFetchingState>
         get() = repositoryk.fetchingState

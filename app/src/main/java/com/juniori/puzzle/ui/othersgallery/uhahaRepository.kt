@@ -1,10 +1,11 @@
 package com.juniori.puzzle.ui.othersgallery
 
 import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.data.firebase.FirestoreDataSource
+import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.SortType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,13 +25,14 @@ enum class VideoFetchingState {
 
 @Singleton
 class Repositoryk @Inject constructor(
+    private val firestoreDataSource: FirestoreDataSource,
+    private val storageDataSource: StorageDataSource,
     private val getSocialVideoList: GetSocialVideoListUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getSearchedSocialVideoListUseCase: GetSearchedSocialVideoListUseCase
 ) {
-    private val _videoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
-    val videoList: StateFlow<List<VideoInfoEntity>>
-        get() = _videoList
+    private val _othersVideoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
+    val othersVideoList: StateFlow<List<VideoInfoEntity>>
+        get() = _othersVideoList
 
     private val _fetchingState = MutableStateFlow(VideoFetchingState.NONE)
     val fetchingState: StateFlow<VideoFetchingState>
@@ -46,7 +48,7 @@ class Repositoryk @Inject constructor(
         if (_fetchingState.value == VideoFetchingState.Loading) {
             return
         }
-        _videoList.value = emptyList()
+        _othersVideoList.value = emptyList()
         pagingEndFlag = false
         setLastData(Long.MAX_VALUE, Long.MAX_VALUE, 0, sortType)
 
@@ -68,7 +70,7 @@ class Repositoryk @Inject constructor(
                         sortType = sortType
                     )
                 }
-                _videoList.value = result
+                _othersVideoList.value = result
             }
         } else {
             _fetchingState.value = VideoFetchingState.NETWORK_ERROR_BASE
@@ -99,7 +101,7 @@ class Repositoryk @Inject constructor(
         sortType: SortType
     ): Resource<List<VideoInfoEntity>> =
         getSearchedSocialVideoListUseCase.invoke(
-            index = if (isFirstPage) 0 else videoList.value.size,
+            index = if (isFirstPage) 0 else othersVideoList.value.size,
             keyword = query,
             order = sortType,
             latestData = if (isFirstPage) {
@@ -149,7 +151,7 @@ class Repositoryk @Inject constructor(
     }
 
     private fun addItems(items: List<VideoInfoEntity>) {
-        _videoList.value = (_videoList.value ?: mutableListOf()) + items
+        _othersVideoList.value = (_othersVideoList.value ?: mutableListOf()) + items
     }
 
     private fun setLastData(time: Long, like: Long, offset: Int, sortType: SortType) {
@@ -173,6 +175,47 @@ class Repositoryk @Inject constructor(
             this.count { another ->
                 another.likedCount == base.likedCount
             }
+        }
+    }
+
+    suspend fun changeVideoScope(
+        documentInfo: VideoInfoEntity
+    ): Resource<VideoInfoEntity> {
+        val changeResult = firestoreDataSource.changeVideoItemPrivacy(documentInfo)
+        if (changeResult is Resource.Success) {
+            val updatedVideoInfo = changeResult.result
+            updateVideoList(_othersVideoList, updatedVideoInfo)
+        }
+        return changeResult
+    }
+
+    private fun updateVideoList(
+        listFlow: MutableStateFlow<List<VideoInfoEntity>>,
+        updatedVideoInfo: VideoInfoEntity
+    ) {
+        listFlow.value = listFlow.value.map { videoInfo ->
+            if (videoInfo.documentId == updatedVideoInfo.documentId) {
+                updatedVideoInfo
+            } else {
+                videoInfo
+            }
+        }
+    }
+
+    suspend fun deleteVideo(documentId: String): Resource<Unit> {
+        return if (
+            storageDataSource.deleteVideo(documentId).isSuccess &&
+            storageDataSource.deleteThumbnail(documentId).isSuccess
+        ) {
+            val deleteResult = firestoreDataSource.deleteVideoItem(documentId)
+            if (deleteResult is Resource.Success) {
+                _othersVideoList.value = _othersVideoList.value.filterNot { videoInfo ->
+                    videoInfo.documentId == documentId
+                }
+            }
+            deleteResult
+        } else {
+            Resource.Failure(Exception("delete video and thumbnail in Storage failed"))
         }
     }
 }
