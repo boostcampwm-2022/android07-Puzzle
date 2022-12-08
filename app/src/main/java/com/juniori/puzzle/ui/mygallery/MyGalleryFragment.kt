@@ -19,6 +19,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +30,9 @@ class MyGalleryFragment : Fragment() {
     private val viewModel: MyGalleryViewModel by viewModels()
     private val activityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            viewModel.getMyData()
+            if(it.resultCode==RESULT_DELETE) {
+                viewModel.getMyData()
+            }
         }
 
     private var snackBar: Snackbar? = null

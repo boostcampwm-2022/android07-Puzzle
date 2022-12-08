@@ -6,6 +6,7 @@ import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
+import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import com.juniori.puzzle.util.SortType
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class VideoRepositoryImpl @Inject constructor(
         return firestoreDataSource.getMyVideoItems(
             uid = uid,
             offset = index,
-            limit = 12
+            limit = ITEM_CNT
         )
     }
 
@@ -38,7 +39,7 @@ class VideoRepositoryImpl @Inject constructor(
             toSearch = "location_keyword",
             keyword = keyword,
             offset = index,
-            limit = 12
+            limit = ITEM_CNT
         )
     }
 
@@ -54,7 +55,7 @@ class VideoRepositoryImpl @Inject constructor(
             orderBy = sortType,
             latestData = latestData,
             offset = index,
-            limit = 12
+            limit = ITEM_CNT
         )
     }
 
@@ -74,7 +75,7 @@ class VideoRepositoryImpl @Inject constructor(
             keyword = keyword,
             latestData = latestData,
             offset = index,
-            limit = 12,
+            limit = ITEM_CNT,
         )
     }
 

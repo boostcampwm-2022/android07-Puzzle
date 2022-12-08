@@ -10,12 +10,12 @@ import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +47,7 @@ class OthersGalleryViewModel @Inject constructor(
         private set
 
     fun setQueryText(nowQuery: String?) {
-        if(query==nowQuery){
+        if (query == nowQuery) {
             return
         }
         query = if (nowQuery != null && nowQuery.isNotBlank()) {
@@ -77,9 +77,12 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result != null && result.isEmpty().not()) {
+                if (result.isNullOrEmpty().not()) {
                     result.last().also {
                         setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
+                    }
+                    if (result.size < ITEM_CNT) {
+                        pagingEndFlag = true
                     }
                     _list.value = result
                 }
@@ -107,11 +110,14 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result != null && result.isEmpty().not()) {
+                if (result.isNullOrEmpty().not()) {
                     result.last().also {
                         setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
                     }
-                    _list.postValue(result)
+                    if (result.size < ITEM_CNT) {
+                        pagingEndFlag = true
+                    }
+                    _list.value = result
                 }
             } else {
                 _state.value = GalleryState.NETWORK_ERROR_BASE
@@ -122,7 +128,7 @@ class OthersGalleryViewModel @Inject constructor(
     }
 
     fun getPaging() {
-        if (refresh.value == true||pagingEndFlag) {
+        if (refresh.value == true || pagingEndFlag) {
             return
         }
         viewModelScope.launch {
@@ -131,7 +137,7 @@ class OthersGalleryViewModel @Inject constructor(
                 getSocialVideoList(
                     index = lastOffset,
                     order = sortType,
-                    latestData = when(sortType){
+                    latestData = when (sortType) {
                         SortType.LIKE -> lastLikeCount
                         SortType.NEW -> lastTime
                     }
@@ -141,7 +147,7 @@ class OthersGalleryViewModel @Inject constructor(
                     index = list.value?.size ?: 0,
                     keyword = query,
                     order = sortType,
-                    latestData = when(sortType){
+                    latestData = when (sortType) {
                         SortType.LIKE -> lastLikeCount
                         SortType.NEW -> lastTime
                     }
@@ -149,7 +155,7 @@ class OthersGalleryViewModel @Inject constructor(
             }
             if (data is Resource.Success) {
                 val result = data.result
-                if (result == null || result.isEmpty()) {
+                if (result.isNullOrEmpty()) {
                     viewModelScope.launch(Dispatchers.IO) {
                         _state.postValue(GalleryState.END_PAGING)
                         delay(1000)
@@ -186,7 +192,7 @@ class OthersGalleryViewModel @Inject constructor(
         }
 
         items.forEach {
-            if(list.value==null|| requireNotNull(list.value).contains(it).not()) {
+            if (list.value == null || requireNotNull(list.value).contains(it).not()) {
                 newList.add(it)
             }
         }
