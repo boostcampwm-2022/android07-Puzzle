@@ -12,7 +12,7 @@
 
     <style name="ShapeAppearance.Puzzle.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">28dp</item>
+        <item name="cornerSize">@dimen/large_component_corner_radius</item>
     </style>
 
     <style name="ShapeAppearance.Puzzle.LargeComponent.Top">

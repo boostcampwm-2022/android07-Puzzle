@@ -19,11 +19,12 @@
         setDrawableLeft="@{image}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawablePadding="8dp"
+        android:drawablePadding="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:padding="@dimen/text_vertical_margin"
         android:text="@{content}"
-        android:textSize="16sp"
+        style="@style/Theme.Puzzle.TextMedium"
+        android:textColor="@color/black"
         tools:drawableStart="@drawable/all_location_icon"
         tools:text="내용" />
 

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Puzzle</string>
     <string name="all_cancel">취소</string>
+    <string name="all_accept">확인</string>
     <string name="all_next">다음</string>
     <string name="all_go_back">뒤로</string>
     <string name="all_setting">설정</string>
@@ -86,6 +87,7 @@
     <string name="playvideo_delete">삭제</string>
 
     <!--mypage-->
+    <string name="search_hint">골프장 검색하기</string>
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
     <string name="change_nickname">닉네임 변경</string>
     <string name="logout">로그아웃</string>
@@ -123,5 +125,4 @@
     <string name="play_hiding_message">동영상을 나만 보시겠습니까?</string>
     <string name="play_delete_title">삭제하기</string>
     <string name="play_delete_message">동영상을 정말 삭제하시겠습니까?</string>
-
 </resources>

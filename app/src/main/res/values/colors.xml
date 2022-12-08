@@ -8,6 +8,7 @@
     <color name="disabled_color">#FFE8EAEF</color>
     <color name="onDisabled_color">#FFAAAAAA</color>
     <color name="status_bar_color">#FF71BF8B</color>
+    <color name="toolbar_box_color">#FFFFFFFF</color>
     <color name="flag_color">#FFDD5B6E</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
