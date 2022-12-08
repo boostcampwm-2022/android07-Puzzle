@@ -68,7 +68,7 @@
     <string name="upload2_input_memo_hint">Enter a message.</string>
     <string name="upload_complete">The video has been uploaded!</string>
     <string name="upload_fail">Video upload failed. Please try again.</string>
-    <string name="upload2_compress_title">Video Compressing…</string>
+    <string name="upload2_compress_title">Compressing video…</string>
     <string name="upload_memo_empty">You should take a note</string>
     <string name="upload_memo_overflow">You can take memo until 140 characters</string>
     <string name="upload_location_empty">You should write a golf course name</string>
@@ -114,7 +114,7 @@
     <string name="othergallery_not_found_text">There\'s no video.\nShare your putting video to others!</string>
     <string name="gallery_item_icon_description">Video Location Information Icon</string>
     <string name="othergallery_orderby_new">latest</string>
-    <string name="othergallery_orderby_like">most likes</string>
+    <string name="othergallery_orderby_like">likes</string>
 
     <!--gallery-->
     <string name="gallery_paging_error">Failed to load data.</string>
@@ -122,7 +122,7 @@
     <string name="gallery_end_paging">There is no more data to display.</string>
     <string name="gallery_retry">Retry.</string>
     <string name="gallery_check">OK.</string>
-    <string name="gallery_search_hint">search golf course</string>
+    <string name="search_hint">search golf course</string>
 
     <!--play video-->
     <string name="play_share_title">To public</string>
