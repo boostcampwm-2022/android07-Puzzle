@@ -50,9 +50,7 @@ class UpdateNicknameUseCaseTest {
         mockAuthRepository = Mockito.mock(AuthRepository::class.java)
         mockVideoRepository = Mockito.mock(VideoRepository::class.java)
 
-        Mockito.`when`(mockAuthRepository.updateNickname(testNickname)).thenReturn(Resource.Failure(
-            Exception()
-        ))
+        Mockito.`when`(mockAuthRepository.updateNickname(testNickname)).thenReturn(Resource.Failure(Exception()))
         Mockito.`when`(mockVideoRepository.updateServerNickname(testUserInfoEntity)).thenReturn(Resource.Success(testUserInfoEntity))
 
         updateNicknameUseCase = UpdateNicknameUseCase(mockAuthRepository, mockVideoRepository)

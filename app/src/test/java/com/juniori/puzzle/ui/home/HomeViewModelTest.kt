@@ -51,11 +51,13 @@ class HomeViewModelTest {
 
     @Test
     fun emptyAddressTest(): Unit = runBlocking {
+        val mockWeatherEntity = WeatherEntity(Date(), 10, 10, 10, 10, "", "")
         Mockito.`when`(getLocationUseCase()).thenReturn(Pair(NORMAL_LOCATION, NORMAL_LOCATION))
         Mockito.`when`(getAddressUseCase(NORMAL_LOCATION, NORMAL_LOCATION)).thenReturn(emptyList())
-        homeViewModel.getWeather().join()
+        val mockWeatherList = listOf(mockWeatherEntity, mockWeatherEntity, mockWeatherEntity, mockWeatherEntity)
+        Mockito.`when`(getWeatherUseCase(NORMAL_LOCATION, NORMAL_LOCATION)).thenReturn(Resource.Success(mockWeatherList))
 
-        assertEquals(homeViewModel.currentAddress.value, "")
+        assertEquals(Resource.Success(mockWeatherList), homeViewModel.uiState.value)
     }
 
     @Test
