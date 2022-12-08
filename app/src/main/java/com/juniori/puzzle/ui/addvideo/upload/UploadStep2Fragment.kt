@@ -72,12 +72,12 @@ class UploadStep2Fragment : Fragment() {
                     when (resource) {
                         is Resource.Success -> {
                             stateManager.dismissLoadingDialog()
-                            showUploadStateFeedback("영상이 업로드 됐어요!")
+                            showUploadStateFeedback(getString(R.string.upload_complete))
                             findNavController().popBackStack(R.id.fragment_upload_step1, true)
                         }
                         is Resource.Failure -> {
                             stateManager.dismissLoadingDialog()
-                            showUploadStateFeedback("영상 업로드에 실패했습니다, 다시 시도해주세요.")
+                            showUploadStateFeedback(getString(R.string.upload_fail))
                         }
                         is Resource.Loading -> {
                             stateManager.showLoadingDialog()

@@ -24,6 +24,7 @@ class VideoItemConvertTest {
             ArrayValue(listValue),
             IntegerValue(987595293094203),
             StringValue("Location"),
+            ArrayValue(listValue),
             StringValue("Golf")
         )
         videoItem = VideoItem("videoReal/VideoName", videoDetail)
@@ -38,6 +39,7 @@ class VideoItemConvertTest {
             listOf("aaa", "bbb", "ccc", "ddd", "eee"),
             987595293094203,
             "Location",
+            listOf("aaa"),
             "Golf"
         )
     }
