@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val TIME_OUT_MILLIS = 5000L
+    private const val TIME_OUT_MILLIS = 8000L
 
     @Singleton
     @Provides

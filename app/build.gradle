@@ -61,7 +61,7 @@ dependencies {
 
     //firebase authentication
     implementation 'com.google.firebase:firebase-auth:21.1.0'
-    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
 
     //hilt
     implementation 'com.google.dagger:hilt-android:2.44'
@@ -87,6 +87,9 @@ dependencies {
 
     //lottie
     implementation 'com.airbnb.android:lottie:5.2.0'
+
+    //video compressor
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
 
     //test
     testImplementation 'junit:junit:4.13.2'

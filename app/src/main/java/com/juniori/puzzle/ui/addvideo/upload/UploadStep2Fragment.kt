@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentUploadStep2Binding
+import com.juniori.puzzle.util.ProgressDialog
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -35,6 +36,7 @@ class UploadStep2Fragment : Fragment() {
     private val publicModeDialog: AlertDialog by lazy {
         createPublicModeDialog()
     }
+    private lateinit var progressDialog: ProgressDialog
 
     @Inject
     lateinit var stateManager: StateManager
@@ -49,6 +51,7 @@ class UploadStep2Fragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
         stateManager.createLoadingDialog(container)
+        progressDialog = ProgressDialog(requireContext())
         return binding.root
     }
 
@@ -67,6 +70,19 @@ class UploadStep2Fragment : Fragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.compressFlow.collectLatest { compressPercentile ->
+                    if (compressPercentile == 0) {
+                        progressDialog.show()
+                    } else if (compressPercentile == -1) {
+                        return@collectLatest
+                    }
+                    progressDialog.setProgress(compressPercentile)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uploadFlow.collectLatest { resource ->
                     if (resource == null) return@collectLatest
                     when (resource) {
@@ -80,6 +96,7 @@ class UploadStep2Fragment : Fragment() {
                             showUploadStateFeedback(getString(R.string.upload_fail))
                         }
                         is Resource.Loading -> {
+                            progressDialog.dismiss()
                             stateManager.showLoadingDialog()
                         }
                     }
@@ -114,7 +131,7 @@ class UploadStep2Fragment : Fragment() {
                 }
             )
             .setPositiveButton(R.string.all_yes) { _, _ ->
-                viewModel.uploadVideo()
+                viewModel.compressVideo(requireContext())
             }
             .setNegativeButton(R.string.all_no) { _, _ ->
                 uploadDialog.dismiss()
