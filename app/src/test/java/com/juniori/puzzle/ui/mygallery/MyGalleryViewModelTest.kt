@@ -127,6 +127,19 @@ class MyGalleryViewModelTest {
         assertEquals(GalleryState.END_PAGING, mockMyGalleryViewModel.state.getOrAwaitValue())
     }
 
+    @Test
+    fun normalPagingTest(): Unit = runBlocking {
+        Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
+        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(mockVideoList))
+        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 1)).thenReturn(Resource.Success(mockVideoList))
+
+        mockMyGalleryViewModel.setQueryText(null)
+        mockMyGalleryViewModel.getMyData()
+        mockMyGalleryViewModel.getPaging(1)
+
+        assertEquals(mockVideoList + mockVideoList, mockMyGalleryViewModel.list.getOrAwaitValue())
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     @After
     fun tearDown() {
