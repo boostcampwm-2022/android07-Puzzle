@@ -16,4 +16,8 @@ data class VideoInfoEntity(
     val location: String,
     val locationKeyword: List<String>,
     val memo: String
-) : Parcelable
+) : Parcelable {
+    override fun equals(other: Any?): Boolean {
+        return this.videoUrl == (other as VideoInfoEntity).videoUrl
+    }
+}

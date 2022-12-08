@@ -46,6 +46,8 @@ class MyGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getMyData()
+
         val recyclerAdapter = MyGalleryAdapter(viewModel) {
             activityResult.launch(
                 Intent(
@@ -140,12 +142,6 @@ class MyGalleryFragment : Fragment() {
                 }
             }
 
-        }
-
-        viewModel.list.value.also {
-            if (it == null || it.isEmpty()) {
-                viewModel.getMyData()
-            }
         }
 
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
