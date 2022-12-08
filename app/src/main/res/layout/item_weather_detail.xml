@@ -29,14 +29,14 @@
         <ImageView
             android:id="@+id/weather_icon_iv"
             setImage="@{item.icon}"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/weather_icon_width"
+            android:layout_height="@dimen/weather_icon_width"
             android:contentDescription="@{@string/weather_icon_description(item.temp,item.description)}"
-            tools:src="@drawable/ic_launcher_foreground"
             app:layout_constraintBottom_toTopOf="@id/temp_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/time_tv" />
+            app:layout_constraintTop_toBottomOf="@id/time_tv"
+            tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/temp_tv"

@@ -167,7 +167,7 @@ class CameraActivity : AppCompatActivity() {
                 when (recordEvent) {
                     is VideoRecordEvent.Start -> {
                         binding.buttonCameraCapture.apply {
-                            text = getString(R.string.camera_capture_stop)
+                            setBackgroundResource(R.drawable.camera_button_recording)
                             isEnabled = true
                         }
                     }
@@ -185,7 +185,7 @@ class CameraActivity : AppCompatActivity() {
                             recording = null
                         }
                         binding.buttonCameraCapture.apply {
-                            text = getString(R.string.camera_capture_start)
+                            setBackgroundResource(R.drawable.camera_button)
                             isEnabled = true
                         }
                     }

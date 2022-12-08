@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Theme.Puzzle.TextMedium"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/text_vertical_margin"
-    android:singleLine="true"
-    style="@style/Theme.Puzzle.TextMedium"
     android:ellipsize="marquee"
-    android:gravity="center"/>
+    android:gravity="center"
+    android:padding="@dimen/text_vertical_margin"
+    android:singleLine="true" />

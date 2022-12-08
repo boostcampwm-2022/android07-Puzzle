@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Puzzle</string>
     <string name="all_cancel">cancel</string>
-    <string name="all_accept">OK</string>
+    <string name="all_accept">accept</string>
     <string name="all_next">next</string>
     <string name="all_go_back">back</string>
     <string name="all_setting">Setting</string>
@@ -68,7 +68,11 @@
     <string name="upload2_input_memo_hint">Enter a message.</string>
     <string name="upload_complete">The video has been uploaded!</string>
     <string name="upload_fail">Video upload failed. Please try again.</string>
-    <string name="upload2_compress_title">Compressing video files…</string>
+    <string name="upload2_compress_title">Compressing video…</string>
+    <string name="upload_memo_empty">You should take a note</string>
+    <string name="upload_memo_overflow">You can take memo until 140 characters</string>
+    <string name="upload_location_empty">You should write a golf course name</string>
+    <string name="upload_location_overflow">You can write golf course until 50 characters</string>
 
     <!--network-->
     <string name="network_fail">Network communication failed.</string>
@@ -80,6 +84,8 @@
     <!--description-->
     <string name="weather_icon_description">%d degrees Celsius %s</string>
     <string name="weather_refresh_btn_description">Weather Re-request</string>
+    <string name="camera_button_description">camera record button</string>
+    <string name="recyclerView_item_thumbnail_description">video thumbnail</string>
 
     <!--acitivty_camera-->
     <string name="playvideo_to_private">Only looking at me</string>
@@ -87,6 +93,7 @@
     <string name="playvideo_delete">Delete</string>
 
     <!--mypage-->
+    <string name="search_hint">search golf course</string>
     <string name="mypage_title">Did you have a good putting today?</string>
     <string name="change_nickname">Change Nickname</string>
     <string name="logout">Logout</string>
