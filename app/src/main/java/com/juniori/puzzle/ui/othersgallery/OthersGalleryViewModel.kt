@@ -77,9 +77,12 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result != null && result.isEmpty().not()) {
+                if (result.isNullOrEmpty().not()) {
                     result.last().also {
                         setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
+                    }
+                    if(result.size<12){
+                        pagingEndFlag = true
                     }
                     _list.value = result
                 }
@@ -107,11 +110,14 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result != null && result.isEmpty().not()) {
+                if (result.isNullOrEmpty().not()) {
                     result.last().also {
                         setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
                     }
-                    _list.postValue(result)
+                    if(result.size<12){
+                        pagingEndFlag = true
+                    }
+                    _list.value = result
                 }
             } else {
                 _state.value = GalleryState.NETWORK_ERROR_BASE
@@ -149,7 +155,7 @@ class OthersGalleryViewModel @Inject constructor(
             }
             if (data is Resource.Success) {
                 val result = data.result
-                if (result == null || result.isEmpty()) {
+                if (result.isNullOrEmpty()) {
                     viewModelScope.launch(Dispatchers.IO) {
                         _state.postValue(GalleryState.END_PAGING)
                         delay(1000)

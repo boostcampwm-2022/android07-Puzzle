@@ -69,9 +69,10 @@ class MyGalleryViewModel @Inject constructor(
                     _state.value = GalleryState.NONE
 
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
-
-                    } else {
+                    if (result.isNullOrEmpty().not()) {
+                        if(result.size<12){
+                            pagingEndFlag = true
+                        }
                         _list.value = result
                     }
                 } else {
@@ -102,9 +103,10 @@ class MyGalleryViewModel @Inject constructor(
                     _state.value = GalleryState.NONE
 
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
-
-                    } else {
+                    if (result.isNullOrEmpty().not()) {
+                        if(result.size<12){
+                            pagingEndFlag = true
+                        }
                         _list.value = result
                     }
                 } else {
@@ -135,7 +137,7 @@ class MyGalleryViewModel @Inject constructor(
 
                 if (data is Resource.Success) {
                     val result = data.result
-                    if (result == null || result.isEmpty()) {
+                    if (result.isNullOrEmpty()) {
                         viewModelScope.launch(Dispatchers.IO) {
                             _state.postValue(GalleryState.END_PAGING)
                             delay(1000)
