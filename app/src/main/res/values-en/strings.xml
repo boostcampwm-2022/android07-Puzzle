@@ -30,7 +30,7 @@
         <item>Share your putting video!</item>
         <item>You can set a new record today!</item>
     </string-array>
-    <string name="display_name_format">Mr. %s</string>
+    <string name="display_name_format">Hello, %s</string>
     <string name="display_anonymous">Anonymous</string>
     <string name="weather_temp_format">%dº</string>
     <string name="weather_feels_like_temp_format">Sensory temperature %dº</string>
@@ -88,7 +88,7 @@
     <string name="mypage_title">Did you have a good putting today?</string>
     <string name="change_nickname">Change Nickname</string>
     <string name="logout">Logout</string>
-    <string name="logout_remind">Are you sure you want to log out?</string>
+    <string name="logout_remind">Are you sure you want to logout?</string>
     <string name="withdraw">Withdraw</string>
     <string name="withdraw_remind">If you withdraw from the service, all stored information, including putting videos, will be deleted. \nAre you sure you want to?</string>
     <string name="open_source_lib">Open Source Library</string>
