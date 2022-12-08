@@ -24,6 +24,7 @@ class OthersGalleryViewModel @Inject constructor(
     val getUserInfoUseCase: GetUserInfoUseCase,
     val getSearchedSocialVideoListUseCase: GetSearchedSocialVideoListUseCase
 ) : ViewModel() {
+
     private val _list = MutableLiveData<List<VideoInfoEntity>>()
     val list: LiveData<List<VideoInfoEntity>>
         get() = _list

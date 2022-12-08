@@ -8,10 +8,10 @@ import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
-class OtherGalleryAdapter(
-    val viewModel: OthersGalleryViewModel,
+class OtherGalleryAdapterk(
+    val viewModel: OthersGalleryViewModelk,
     private val onClick: (position: Int) -> Unit
-) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
+) : ListAdapter<VideoInfoEntity, OtherGalleryAdapterk.ViewHolder>(
     GalleryDiffCallBack()
 ) {
 
@@ -19,7 +19,7 @@ class OtherGalleryAdapter(
         val binding: ItemGalleryRecyclerBinding,
         val onClick: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        
+
         init {
             binding.root.setOnClickListener {
                 onClick(layoutPosition)
@@ -28,7 +28,6 @@ class OtherGalleryAdapter(
 
         fun bind(item: VideoInfoEntity) {
             binding.data = item
-            binding.executePendingBindings()
         }
     }
 

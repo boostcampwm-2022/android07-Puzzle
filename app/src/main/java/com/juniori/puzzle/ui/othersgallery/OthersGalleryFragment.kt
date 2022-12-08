@@ -17,9 +17,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.CLICKED_VIDEO_INDEX_KEY
+import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.LAST_VIEWED_VIDEO_INDEX_KEY
 import com.juniori.puzzle.util.GalleryState
-import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
-import com.juniori.puzzle.util.PlayResultConst.RESULT_TO_PRIVATE
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,10 +30,23 @@ class OthersGalleryFragment : Fragment() {
     private var _binding: FragmentOthersgalleryBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val viewModel: OthersGalleryViewModel by viewModels()
-    private val activityResult: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_TO_PRIVATE || it.resultCode == RESULT_DELETE) {
-                viewModel.getMainData()
+    private val recyclerAdapter: OtherGalleryAdapter by lazy {
+        OtherGalleryAdapter(viewModel) { clickedIndex ->
+            playVideoActivityLauncher.launch(
+                Intent(requireContext(), PlayVideoActivity::class.java).apply {
+                    this.putExtra(CLICKED_VIDEO_INDEX_KEY, clickedIndex)
+                }
+            )
+        }
+    }
+    private val playVideoActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val lastViewedPosition = result.data?.extras?.getInt(
+                    LAST_VIEWED_VIDEO_INDEX_KEY,
+                    0
+                ) ?: return@registerForActivityResult
+                binding.recycleOtherGallery.scrollToPosition(lastViewedPosition)
             }
         }
 
@@ -50,16 +63,6 @@ class OthersGalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val recyclerAdapter = OtherGalleryAdapter(viewModel) {
-            activityResult.launch(
-                Intent(
-                    requireContext(),
-                    PlayVideoActivity::class.java
-                ).apply {
-                    this.putExtra(VIDEO_EXTRA_NAME, it)
-                })
-        }
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
@@ -139,7 +142,6 @@ class OthersGalleryFragment : Fragment() {
                     snackBar?.show()
                 }
             }
-
         }
 
         viewModel.list.value.also { list ->
@@ -173,6 +175,8 @@ class OthersGalleryFragment : Fragment() {
                 }
             }
 
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
             popup.dismissPopupList()
         }
 
@@ -202,9 +206,7 @@ class OthersGalleryFragment : Fragment() {
     }
 
     companion object {
-
         const val RECYCLER_TOP = 0
         const val VIDEO_EXTRA_NAME = "videoInfo"
-
     }
 }

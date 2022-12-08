@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/fragment_main_othersgallery"
-        android:name="com.juniori.puzzle.ui.othersgallery.OthersGalleryFragment"
+        android:name="com.juniori.puzzle.ui.othersgallery.OthersGalleryFragmentk"
         android:label="@string/main_othersgallery"
         tools:layout="@layout/fragment_othersgallery" />
 
