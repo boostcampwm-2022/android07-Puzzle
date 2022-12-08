@@ -11,6 +11,8 @@ import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.GalleryState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,8 +35,12 @@ class MyGalleryViewModel @Inject constructor(
         get() = _state
 
     private var query = ""
+    private var pagingEndFlag = false
 
     fun setQueryText(nowQuery: String?) {
+        if(query==nowQuery){
+            return
+        }
         query = if (nowQuery != null && nowQuery.isNotBlank()) {
             nowQuery
         } else {
@@ -45,55 +51,73 @@ class MyGalleryViewModel @Inject constructor(
     }
 
     private fun getQueryData() {
+        if (refresh.value == true) {
+            return
+        }
         val uid = getUid()
+
+        _list.value = emptyList()
+        pagingEndFlag = false
 
         if (uid == null) {
             _state.value = GalleryState.NETWORK_ERROR_BASE
         } else {
             viewModelScope.launch {
+                _refresh.value = true
                 val data = getSearchedMyVideoUseCase(uid, 0, query)
                 if (data is Resource.Success) {
                     _state.value = GalleryState.NONE
 
                     val result = data.result
                     if (result == null || result.isEmpty()) {
-                        _list.value = emptyList()
+
                     } else {
                         _list.value = result
                     }
                 } else {
                     _state.value = GalleryState.NETWORK_ERROR_BASE
                 }
+
+                _refresh.value = false
             }
         }
     }
 
     private fun getBaseData() {
+        if (refresh.value == true) {
+            return
+        }
         val uid = getUid()
+
+        _list.value = emptyList()
+        pagingEndFlag = false
 
         if (uid == null) {
             _state.value = GalleryState.NETWORK_ERROR_BASE
         } else {
             viewModelScope.launch {
+                _refresh.value = true
                 val data = getMyVideoListUseCase(uid, 0)
                 if (data is Resource.Success) {
                     _state.value = GalleryState.NONE
 
                     val result = data.result
                     if (result == null || result.isEmpty()) {
-                        _list.value = emptyList()
+
                     } else {
                         _list.value = result
                     }
                 } else {
                     _state.value = GalleryState.NETWORK_ERROR_BASE
                 }
+
+                _refresh.value = false
             }
         }
     }
 
     fun getPaging(start: Int) {
-        if (refresh.value == true) {
+        if (refresh.value == true||pagingEndFlag) {
             return
         }
 
@@ -112,7 +136,12 @@ class MyGalleryViewModel @Inject constructor(
                 if (data is Resource.Success) {
                     val result = data.result
                     if (result == null || result.isEmpty()) {
-                        _state.value = GalleryState.END_PAGING
+                        viewModelScope.launch(Dispatchers.IO) {
+                            _state.postValue(GalleryState.END_PAGING)
+                            delay(1000)
+                            _state.postValue(GalleryState.NONE)
+                        }
+                        pagingEndFlag = true
                     } else {
                         _state.value = GalleryState.NONE
                         addItems(result)

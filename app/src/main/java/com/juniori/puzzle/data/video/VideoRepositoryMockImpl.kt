@@ -5,7 +5,6 @@ import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
-import java.io.File
 import javax.inject.Inject
 
 class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>) :
@@ -29,48 +28,18 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
 
     override suspend fun getSocialVideoList(
         index: Int,
-        sortType: SortType
+        sortType: SortType,
+        latestData: Long?
     ): Resource<List<VideoInfoEntity>> {
-        return when (sortType) {
-            SortType.NEW -> {
-                Resource.Success(
-                    videoList.sortedByDescending { it.updateTime }
-                        .filter { it.isPrivate }
-                )
-            }
-            SortType.LIKE -> {
-                Resource.Success(
-                    videoList.sortedByDescending { it.likedUserUidList.size }
-                        .filter { it.isPrivate }
-                )
-            }
-        }
+        TODO("Not yet implemented")
     }
 
     override suspend fun getSearchedSocialVideoList(
         index: Int,
         sortType: SortType,
-        keyword: String
+        keyword: String,
+        latestData: Long?
     ): Resource<List<VideoInfoEntity>> {
-        return when (sortType) {
-            SortType.NEW -> {
-                Resource.Success(
-                    videoList.sortedByDescending { it.updateTime }
-                        .filter { it.isPrivate }
-                        .filter { it.location == keyword }
-                )
-            }
-            SortType.LIKE -> {
-                Resource.Success(
-                    videoList.sortedByDescending { it.likedUserUidList.size }
-                        .filter { it.isPrivate }
-                        .filter { it.location == keyword }
-                )
-            }
-        }
-    }
-
-    override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {
         TODO("Not yet implemented")
     }
 

@@ -14,9 +14,12 @@ import android.widget.ListPopupWindow
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -30,6 +33,10 @@ import com.juniori.puzzle.util.GalleryState
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class OthersGalleryFragment : Fragment() {
@@ -68,7 +75,16 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), 2){
+                override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
+                    if(lp!=null){
+                        if(lp.height < height/3) {
+                            lp.height = height / 3
+                        }
+                    }
+                    return super.checkLayoutParams(lp)
+                }
+            }
             layoutManager = gridLayoutManager
         }
 
@@ -116,7 +132,7 @@ class OthersGalleryFragment : Fragment() {
                             Snackbar.LENGTH_INDEFINITE
                         )
                             .setAction(R.string.gallery_retry) {
-                                viewModel.getPaging(recyclerAdapter.itemCount)
+                                viewModel.getPaging()
                             }
                     snackBar?.show()
                 }
@@ -148,14 +164,8 @@ class OthersGalleryFragment : Fragment() {
     }
 
     private fun setListener() {
-//        val listPopupWindow = ListPopupWindow(
-//            requireContext(),
-//            null,
-//            com.google.android.material.R.attr.listPopupWindowStyle
-//        )
-//        listPopupWindow.anchorView = binding.spinnerOtherGallery
 
-         val items = resources.getStringArray(R.array.other_order_type)
+        val items = resources.getStringArray(R.array.other_order_type)
         val popup=PuzzleDialog(requireContext()).buildListPopup(binding.spinnerOtherGallery,items)
 
         popup.setListPopupItemListener{parent, view, position, id ->
@@ -177,13 +187,6 @@ class OthersGalleryFragment : Fragment() {
 
             popup.dismissPopupList()
         }
-//        val spinnerAdapter =
-//            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, items)
-//        listPopupWindow.setAdapter(spinnerAdapter)
-//
-//        listPopupWindow.setOnItemClickListener { parent, view, position, id ->
-//
-//        }
 
         binding.spinnerOtherGallery.text = items[0]
         binding.spinnerOtherGallery.setOnClickListener {
