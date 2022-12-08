@@ -144,12 +144,6 @@ class MyGalleryFragment : Fragment() {
 
         }
 
-        viewModel.list.value.also {
-            if (it == null || it.isEmpty()) {
-                viewModel.getMyData()
-            }
-        }
-
         binding.searchMyGallery.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.setQueryText(query)
