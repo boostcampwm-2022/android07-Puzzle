@@ -92,6 +92,11 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-inline:4.9.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
+    testImplementation "androidx.test:core-ktx:1.5.0"
+    testImplementation "org.robolectric:robolectric:4.3.1"
+    testImplementation "androidx.test.ext:junit-ktx:1.1.4"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 
