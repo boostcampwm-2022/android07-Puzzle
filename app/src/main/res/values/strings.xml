@@ -65,6 +65,8 @@
     <string name="upload2_publicuploaddialog_supporting_text">• 다른 사용자의 피드에 영상이 표시됩니다.\n• 다른 사용자가 반응을 남길 수 있습니다.</string>
     <string name="upload2_input_golf_course_hint">골프장 이름을 입력해주세요</string>
     <string name="upload2_input_memo_hint">메모를 입력해보세요</string>
+    <string name="upload_complete">영상이 업로드 됐어요!</string>
+    <string name="upload_fail">영상 업로드에 실패했습니다, 다시 시도해주세요.</string>
 
     <!--network-->
     <string name="network_fail">네트워크 통신에 실패했습니다</string>
@@ -102,13 +104,16 @@
     <!--other gallery-->
     <string name="othergallery_not_found_text">영상이 없네요 ㅠ.ㅠ\n다른 사람들에게\n 자신의 퍼팅 영상을\n 공유해보세요!</string>
     <string name="gallery_item_icon_description">동영상 위치 정보 아이콘</string>
+    <string name="othergallery_orderby_new">최신순</string>
+    <string name="othergallery_orderby_like">좋아요순</string>
 
-    <!--other gallery-->
+    <!--gallery-->
     <string name="gallery_paging_error">다음 데이터를 불러오는데 실패했습니다.</string>
     <string name="gallery_init_load_error">데이터를 불러오는데 실패했습니다.</string>
     <string name="gallery_end_paging">더이상 표시할 데이터가 없습니다.</string>
     <string name="gallery_retry">재시도</string>
     <string name="gallery_check">확인</string>
+    <string name="gallery_search_hint">골프장 검색하기</string>
 
     <!--play video-->
     <string name="play_share_title">공유하기</string>
