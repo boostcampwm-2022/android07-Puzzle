@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Puzzle</string>
     <string name="all_cancel">cancel</string>
+    <string name="all_accept">OK</string>
     <string name="all_next">next</string>
     <string name="all_go_back">back</string>
     <string name="all_setting">Setting</string>
@@ -67,6 +68,7 @@
     <string name="upload2_input_memo_hint">Enter a message.</string>
     <string name="upload_complete">The video has been uploaded!</string>
     <string name="upload_fail">Video upload failed. Please try again.</string>
+    <string name="upload2_compress_title">Compressing video files…</string>
 
     <!--network-->
     <string name="network_fail">Network communication failed.</string>
@@ -113,7 +115,7 @@
     <string name="gallery_end_paging">There is no more data to display.</string>
     <string name="gallery_retry">Retry.</string>
     <string name="gallery_check">OK.</string>
-    <string name="gallery_search_hint">search golf course</string>
+    <string name="search_hint">search golf course</string>
 
     <!--play video-->
     <string name="play_share_title">To public</string>
