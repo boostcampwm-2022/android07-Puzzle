@@ -7,21 +7,27 @@ import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.SortType
-import java.io.File
 import javax.inject.Inject
 
 class VideoRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
     private val storageDataSource: StorageDataSource
 ) : VideoRepository {
+    /** 내 비디오 목록 가져오기
+     * @param uid: 사용자 uid
+     * @param index: 가져오기 시작할 바디오 index*/
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItems(
             uid = uid,
             offset = index,
-            limit = 10
+            limit = 12
         )
     }
 
+    /** 검색을 통해 내 비디오 목록 가져오기
+     * @param uid: 사용자 uid
+     * @param index: 가져오기 시작할 바디오 index
+     * @param keyword: 검색할 단어 */
     override suspend fun getSearchedMyVideoList(
         uid: String,
         index: Int,
@@ -29,44 +35,55 @@ class VideoRepositoryImpl @Inject constructor(
     ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItemsWithKeyword(
             uid = uid,
-            toSearch = "location",
+            toSearch = "location_keyword",
             keyword = keyword,
             offset = index,
-            limit = 10
+            limit = 12
         )
     }
 
+    /** 공개 상태인 비디오 목록 가져오기
+     * @param index: 가져오기 시작할 바디오 index
+     * @param sortType: 정렬 타입 */
     override suspend fun getSocialVideoList(
         index: Int,
-        sortType: SortType
+        sortType: SortType,
+        latestData: Long?
     ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getPublicVideoItemsOrderBy(
             orderBy = sortType,
+            latestData = latestData,
             offset = index,
-            limit = 10
+            limit = 12
         )
     }
 
+    /** 검색을 통해 공개 상태인 비디오 목록 가져오기
+     * @param index: 가져오기 시작할 바디오 index
+     * @param sortType: 정렬 타입
+     * @param keyword: 검색할 단어*/
     override suspend fun getSearchedSocialVideoList(
         index: Int,
         sortType: SortType,
-        keyword: String
+        keyword: String,
+        latestData: Long?
     ): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
             orderBy = sortType,
-            toSearch = "location",
+            toSearch = "location_keyword",
             keyword = keyword,
+            latestData = latestData,
             offset = index,
-            limit = 10
+            limit = 12,
         )
     }
 
     override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
-        return firestoreDataSource.changeUserNickname(userInfoEntity.uid, userInfoEntity.nickname, userInfoEntity.profileImage)
-    }
-
-    override suspend fun getVideoFile(ownerUid: String, videoName: String): Resource<File> {
-        TODO("Not yet implemented")
+        return firestoreDataSource.changeUserNickname(
+            userInfoEntity.uid,
+            userInfoEntity.nickname,
+            userInfoEntity.profileImage
+        )
     }
 
     override suspend fun updateLikeStatus(

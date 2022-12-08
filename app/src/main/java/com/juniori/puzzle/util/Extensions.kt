@@ -40,3 +40,13 @@ fun Address.toAddressString(): String {
 }
 
 fun String.toDate(): Date = formatter.parse(this) ?: Date()
+
+fun String.toLocationKeyword(): List<String> {
+    val result = mutableListOf<String>()
+    for (len in 1..length) {
+        for (index in 0..length - len) {
+            result.add(substring(index, index + len))
+        }
+    }
+    return result
+}

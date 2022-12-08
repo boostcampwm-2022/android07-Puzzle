@@ -1,10 +1,13 @@
 package com.juniori.puzzle.util
 
+
 import com.juniori.puzzle.data.firebase.dto.BooleanFieldFilter
 import com.juniori.puzzle.data.firebase.dto.BooleanValue
 import com.juniori.puzzle.data.firebase.dto.CompositeFilter
 import com.juniori.puzzle.data.firebase.dto.FieldReference
 import com.juniori.puzzle.data.firebase.dto.Filter
+import com.juniori.puzzle.data.firebase.dto.IntegerFieldFilter
+import com.juniori.puzzle.data.firebase.dto.IntegerValue
 import com.juniori.puzzle.data.firebase.dto.Order
 import com.juniori.puzzle.data.firebase.dto.StringFieldFilter
 import com.juniori.puzzle.data.firebase.dto.StringValue
@@ -51,25 +54,14 @@ object QueryUtil {
                     Filter(
                         StringFieldFilter(
                             field = FieldReference(toSearch),
-                            op = "GREATER_THAN_OR_EQUAL",
+                            op = "ARRAY_CONTAINS",
                             value = StringValue(keyword)
-                        )
-                    ),
-                    Filter(
-                        StringFieldFilter(
-                            field = FieldReference(toSearch),
-                            op = "LESS_THAN_OR_EQUAL",
-                            value = StringValue("${keyword}힣")
                         )
                     )
                 )
             )
         ),
         orderBy = listOf(
-            Order(
-                field = FieldReference(toSearch),
-                direction = "ASCENDING"
-            ),
             Order(
                 field = FieldReference("update_time"),
                 direction = "DESCENDING"
@@ -79,17 +71,44 @@ object QueryUtil {
         limit = limit
     )
 
-    fun getPublicVideoQuery(orderBy: String, offset: Int?, limit: Int?) = StructuredQuery(
-        where = Filter(
-            fieldFilter = BooleanFieldFilter(
-                field = FieldReference("is_private"),
-                op = "EQUAL",
-                value = BooleanValue(false)
+
+    fun getPublicVideoQuery(
+        orderBy: SortType,
+        offset: Int?,
+        limit: Int?,
+        latestData: Long?,
+    ) = StructuredQuery(
+        where = Where(
+            CompositeFilter(
+                op = "AND",
+                filters = listOf(
+                    Filter(
+                        fieldFilter = BooleanFieldFilter(
+                            field = FieldReference("is_private"),
+                            op = "EQUAL",
+                            value = BooleanValue(false)
+                        )
+                    ),
+                    Filter(
+                        fieldFilter = IntegerFieldFilter(
+                            field = FieldReference(orderBy.value),
+                            op = "LESS_THAN_OR_EQUAL",
+                            value = IntegerValue(latestData?:Long.MAX_VALUE)
+                        )
+                    )
+                )
             )
         ),
         orderBy = listOf(
             Order(
-                field = FieldReference(orderBy),
+                field = FieldReference(orderBy.value),
+                direction = "DESCENDING"
+            ),
+            Order(
+                field = FieldReference(when(orderBy){
+                    SortType.NEW -> SortType.LIKE.value
+                    SortType.LIKE -> SortType.NEW.value
+                }),
                 direction = "DESCENDING"
             )
         ),
@@ -98,9 +117,10 @@ object QueryUtil {
     )
 
     fun getPublicVideoWithKeywordQuery(
-        orderBy: String,
+        orderBy: SortType,
         toSearch: String,
         keyword: String,
+        latestData: Long?,
         offset: Int?,
         limit: Int?
     ) = StructuredQuery(
@@ -118,15 +138,16 @@ object QueryUtil {
                     Filter(
                         StringFieldFilter(
                             field = FieldReference(toSearch),
-                            op = "GREATER_THAN_OR_EQUAL",
+                            op = "ARRAY_CONTAINS",
                             value = StringValue(keyword)
                         )
                     ),
                     Filter(
-                        StringFieldFilter(
-                            field = FieldReference(toSearch),
+                        IntegerFieldFilter(
+                            field = FieldReference(orderBy.value),
                             op = "LESS_THAN_OR_EQUAL",
-                            value = StringValue("${keyword}힣")
+                            value = latestData?.let { IntegerValue(it) }
+                                ?: IntegerValue(Long.MAX_VALUE)
                         )
                     )
                 )
@@ -134,11 +155,14 @@ object QueryUtil {
         ),
         orderBy = listOf(
             Order(
-                field = FieldReference(toSearch),
-                direction = "ASCENDING"
+                field = FieldReference(orderBy.value),
+                direction = "DESCENDING"
             ),
             Order(
-                field = FieldReference(orderBy),
+                field = FieldReference(when(orderBy){
+                    SortType.NEW -> SortType.LIKE.value
+                    SortType.LIKE -> SortType.NEW.value
+                }),
                 direction = "DESCENDING"
             )
         ),
