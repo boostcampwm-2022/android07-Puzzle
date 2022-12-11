@@ -1,6 +1,5 @@
 package com.juniori.puzzle.ui.playvideo
 
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
@@ -12,6 +11,7 @@ class VideoSwipePagerAdapter(
 ) : FragmentStateAdapter(activity) {
 
     private var videoInfoList: List<VideoInfoEntity> = emptyList()
+    private val videoInfoIdSet = HashSet<Long>()
 
     override fun getItemCount(): Int = videoInfoList.size
 
@@ -20,9 +20,12 @@ class VideoSwipePagerAdapter(
     }
 
     fun updateVideoInfoList(newList: List<VideoInfoEntity>) {
-        Log.d("로그", "updateVideoInfoList - newList: $newList")
+        val outdatedListSize = videoInfoList.size
         videoInfoList = newList
-        notifyDataSetChanged()
+        if (outdatedListSize < newList.size) {
+            addNewItemsId(outdatedListSize, newList.size - outdatedListSize)
+            notifyItemRangeInserted(outdatedListSize, newList.size - outdatedListSize)
+        }
     }
 
     override fun onBindViewHolder(
@@ -34,5 +37,24 @@ class VideoSwipePagerAdapter(
             videoFetchListener.invoke()
         }
         super.onBindViewHolder(holder, position, payloads)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return videoInfoList[position].documentId.hashCode().toLong()
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return videoInfoIdSet.contains(itemId)
+    }
+
+    private fun addNewItemsId(start: Int, size: Int) {
+        for (position in start until start + size) {
+            videoInfoIdSet.add(videoInfoList[position].documentId.hashCode().toLong())
+        }
+    }
+
+    fun notifyVideoRemoved(removedDocumentId: String, removedPosition: Int) {
+        videoInfoIdSet.remove(removedDocumentId.hashCode().toLong())
+        notifyItemRemoved(removedPosition)
     }
 }

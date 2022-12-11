@@ -207,13 +207,13 @@ class Repositoryk @Inject constructor(
             storageDataSource.deleteVideo(documentId).isSuccess &&
             storageDataSource.deleteThumbnail(documentId).isSuccess
         ) {
-            val deleteResult = firestoreDataSource.deleteVideoItem(documentId)
-            if (deleteResult is Resource.Success) {
-                _othersVideoList.value = _othersVideoList.value.filterNot { videoInfo ->
-                    videoInfo.documentId == documentId
+            firestoreDataSource.deleteVideoItem(documentId).also { deletionResource ->
+                if (deletionResource is Resource.Success) {
+                    _othersVideoList.value = _othersVideoList.value.filterNot { videoInfo ->
+                        videoInfo.documentId == documentId
+                    }
                 }
             }
-            deleteResult
         } else {
             Resource.Failure(Exception("delete video and thumbnail in Storage failed"))
         }

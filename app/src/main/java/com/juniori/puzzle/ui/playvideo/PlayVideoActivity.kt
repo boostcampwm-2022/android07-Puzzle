@@ -94,7 +94,7 @@ class PlayVideoActivity : AppCompatActivity() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    viewModel.setCurrentVideoIndex(position)
+                    viewModel.syncCurrentVideoIndex(position)
                 }
             })
         }
@@ -182,24 +182,34 @@ class PlayVideoActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.deleteFlow.collectLatest { resource ->
-                    if (resource != null) {
-                        when (resource) {
-                            is Resource.Success -> {
-                                stateManager.dismissLoadingDialog()
-                                finish()
+                    if (resource == null) return@collectLatest
+                    when (resource) {
+                        is Resource.Success -> {
+                            stateManager.dismissLoadingDialog()
+                            with(viewModel) {
+                                val removedDocumentId = resource.result
+                                swipePagerAdapter.notifyVideoRemoved(
+                                    removedDocumentId = removedDocumentId,
+                                    removedPosition = currentVideoIndex
+                                )
+                                if (currentVideoIndex == videoListFlow.value.size) {
+                                    syncCurrentVideoIndex(currentVideoIndex - 1)
+                                } else {
+                                    syncCurrentVideoIndex(currentVideoIndex)
+                                }
                             }
-                            is Resource.Loading -> {
-                                stateManager.showLoadingDialog()
-                            }
-                            is Resource.Failure -> {
-                                stateManager.dismissLoadingDialog()
-                                resource.exception.printStackTrace()
-                                Snackbar.make(
-                                    binding.root,
-                                    "동영상 삭제에 실패했습니다.",
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
+                        }
+                        is Resource.Loading -> {
+                            stateManager.showLoadingDialog()
+                        }
+                        is Resource.Failure -> {
+                            stateManager.dismissLoadingDialog()
+                            resource.exception.printStackTrace()
+                            Snackbar.make(
+                                binding.root,
+                                "동영상 삭제에 실패했습니다.",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -209,27 +219,26 @@ class PlayVideoActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.privacyFlow.collectLatest { resource ->
-                    if (resource != null) {
-                        when (resource) {
-                            is Resource.Success -> {
-                                stateManager.dismissLoadingDialog()
-                                setMenuItems(
-                                    currentUserId = viewModel.currentUserInfo?.uid ?: return@collectLatest,
-                                    videoOwnerId = resource.result.ownerUid
-                                )
-                            }
-                            is Resource.Loading -> {
-                                stateManager.showLoadingDialog()
-                            }
-                            is Resource.Failure -> {
-                                stateManager.dismissLoadingDialog()
-                                resource.exception.printStackTrace()
-                                Snackbar.make(
-                                    binding.root,
-                                    "동영상 공유상태 전환에 실패했습니다.",
-                                    Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
+                    if (resource == null) return@collectLatest
+                    when (resource) {
+                        is Resource.Success -> {
+                            stateManager.dismissLoadingDialog()
+                            setMenuItems(
+                                currentUserId = viewModel.currentUserInfo?.uid ?: return@collectLatest,
+                                videoOwnerId = resource.result.ownerUid
+                            )
+                        }
+                        is Resource.Loading -> {
+                            stateManager.showLoadingDialog()
+                        }
+                        is Resource.Failure -> {
+                            stateManager.dismissLoadingDialog()
+                            resource.exception.printStackTrace()
+                            Snackbar.make(
+                                binding.root,
+                                "동영상 공유상태 전환에 실패했습니다.",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }

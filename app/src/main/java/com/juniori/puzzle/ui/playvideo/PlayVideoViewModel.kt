@@ -41,8 +41,8 @@ class PlayVideoViewModel @Inject constructor(
     private val _getPublisherInfoFlow = MutableStateFlow<Resource<UserInfoEntity>?>(null)
     val getPublisherInfoFlow: StateFlow<Resource<UserInfoEntity>?> = _getPublisherInfoFlow
 
-    private val _deleteFlow = MutableStateFlow<Resource<Unit>?>(null)
-    val deleteFlow: StateFlow<Resource<Unit>?> = _deleteFlow
+    private val _deleteFlow = MutableStateFlow<Resource<String>?>(null)
+    val deleteFlow: StateFlow<Resource<String>?> = _deleteFlow
 
     private val _privacyFlow = MutableStateFlow<Resource<VideoInfoEntity>?>(null)
     val privacyFlow: StateFlow<Resource<VideoInfoEntity>?> = _privacyFlow
@@ -62,10 +62,10 @@ class PlayVideoViewModel @Inject constructor(
     fun setData(query: String, sortType: SortType, clickedVideoIndex: Int) {
         this.query = query
         this.sortType = sortType
-        setCurrentVideoIndex(clickedVideoIndex)
+        syncCurrentVideoIndex(clickedVideoIndex)
     }
 
-    fun setCurrentVideoIndex(index: Int) {
+    fun syncCurrentVideoIndex(index: Int) {
         currentVideoIndex = index
         if (videoListFlow.value.lastIndex >= index) {
             _currentVideoFlow.value = videoListFlow.value[index]
@@ -87,7 +87,12 @@ class PlayVideoViewModel @Inject constructor(
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
         // _deleteFlow.emit(deleteVideoUseCase(documentId))
-        _deleteFlow.emit(repository.deleteVideo(documentId))
+        val resource = repository.deleteVideo(documentId)
+        _deleteFlow.value = when (resource) {
+            is Resource.Success -> Resource.Success(documentId)
+            is Resource.Failure -> resource
+            is Resource.Loading -> resource
+        }
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
