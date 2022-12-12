@@ -26,7 +26,7 @@
                 style="@style/Theme.Puzzle.SearchView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7.5" />
+                android:layout_weight="@integer/others_gallery_toolbar_search_weight" />
 
             <TextView
                 android:id="@+id/spinner_other_gallery"
@@ -35,7 +35,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:layout_marginStart="@dimen/toolbar_horizontal_padding"
-                android:layout_weight="2.5"
+                android:layout_weight="@integer/others_gallery_toolbar_sort_weight"
                 tools:text="최신순"
                 style="@style/Theme.Puzzle.TextMedium"
                 android:background="@drawable/all_search_view_background" />
