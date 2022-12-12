@@ -187,11 +187,7 @@ class PlayVideoActivity : AppCompatActivity() {
                         is Resource.Success -> {
                             stateManager.dismissLoadingDialog()
                             with(viewModel) {
-                                val removedDocumentId = resource.result
-                                swipePagerAdapter.notifyVideoRemoved(
-                                    removedDocumentId = removedDocumentId,
-                                    removedPosition = currentVideoIndex
-                                )
+                                swipePagerAdapter.notifyItemRemoved(currentVideoIndex)
                                 if (currentVideoIndex == videoListFlow.value.size) {
                                     syncCurrentVideoIndex(currentVideoIndex - 1)
                                 } else {

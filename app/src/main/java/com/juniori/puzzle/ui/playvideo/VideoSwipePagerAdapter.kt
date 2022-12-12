@@ -11,21 +11,11 @@ class VideoSwipePagerAdapter(
 ) : FragmentStateAdapter(activity) {
 
     private var videoInfoList: List<VideoInfoEntity> = emptyList()
-    private val videoInfoIdSet = HashSet<Long>()
 
     override fun getItemCount(): Int = videoInfoList.size
 
     override fun createFragment(position: Int): PlayVideoDetailFragment {
         return PlayVideoDetailFragment.newInstance(videoInfoList[position])
-    }
-
-    fun updateVideoInfoList(newList: List<VideoInfoEntity>) {
-        val outdatedListSize = videoInfoList.size
-        videoInfoList = newList
-        if (outdatedListSize < newList.size) {
-            addNewItemsId(outdatedListSize, newList.size - outdatedListSize)
-            notifyItemRangeInserted(outdatedListSize, newList.size - outdatedListSize)
-        }
     }
 
     override fun onBindViewHolder(
@@ -43,18 +33,11 @@ class VideoSwipePagerAdapter(
         return videoInfoList[position].documentId.hashCode().toLong()
     }
 
-    override fun containsItem(itemId: Long): Boolean {
-        return videoInfoIdSet.contains(itemId)
-    }
-
-    private fun addNewItemsId(start: Int, size: Int) {
-        for (position in start until start + size) {
-            videoInfoIdSet.add(videoInfoList[position].documentId.hashCode().toLong())
+    fun updateVideoInfoList(newList: List<VideoInfoEntity>) {
+        val outdatedListSize = videoInfoList.size
+        videoInfoList = newList
+        if (outdatedListSize < newList.size) {
+            notifyItemRangeInserted(outdatedListSize, newList.size - outdatedListSize)
         }
-    }
-
-    fun notifyVideoRemoved(removedDocumentId: String, removedPosition: Int) {
-        videoInfoIdSet.remove(removedDocumentId.hashCode().toLong())
-        notifyItemRemoved(removedPosition)
     }
 }
