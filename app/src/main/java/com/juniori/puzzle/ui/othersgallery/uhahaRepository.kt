@@ -4,11 +4,6 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.firebase.FirestoreDataSource
 import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.domain.usecase.GetMyVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetSearchedMyVideoUseCase
-import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.PagingConst
 import com.juniori.puzzle.util.SortType
 import kotlinx.coroutines.Dispatchers
@@ -30,13 +25,7 @@ enum class VideoFetchingState {
 @Singleton
 class Repositoryk @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
-    private val storageDataSource: StorageDataSource,
-    private val getSocialVideoList: GetSocialVideoListUseCase,
-    private val getSearchedSocialVideoListUseCase: GetSearchedSocialVideoListUseCase,
-
-    private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getMyVideoListUseCase: GetMyVideoListUseCase,
-    private val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
+    private val storageDataSource: StorageDataSource
 ) {
     private val _othersVideoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
     val othersVideoList = _othersVideoList.asStateFlow()
@@ -56,7 +45,7 @@ class Repositoryk @Inject constructor(
 
     private var pagingEndFlag = false
 
-    suspend fun getMainData(query: String, sortType: SortType) {
+    suspend fun fetchMainData(query: String, sortType: SortType) {
         if (_othersVideoFetchingState.value == VideoFetchingState.Loading) {
             return
         }
@@ -92,11 +81,10 @@ class Repositoryk @Inject constructor(
         _othersVideoFetchingState.value = VideoFetchingState.NONE
     }
 
-    suspend fun getMyData(query: String) {
+    suspend fun fetchMyData(uid: String?, query: String) {
         if (_myVideoFetchingState.value == VideoFetchingState.Loading) {
             return
         }
-        val uid = getUid()
 
         _myVideoList.value = emptyList()
         pagingEndFlag = false
@@ -106,9 +94,19 @@ class Repositoryk @Inject constructor(
         } else {
             _myVideoFetchingState.value = VideoFetchingState.Loading
             val data = if (query.isBlank()) {
-                getMyVideoListUseCase(uid, 0)
+                firestoreDataSource.getMyVideoItems(
+                    uid = uid,
+                    offset = 0,
+                    limit = 12
+                )
             } else {
-                getSearchedMyVideoUseCase(uid, 0, query)
+                firestoreDataSource.getMyVideoItemsWithKeyword(
+                    uid = uid,
+                    toSearch = "location_keyword",
+                    keyword = query,
+                    offset = 0,
+                    limit = 12
+                )
             }
 
             if (data is Resource.Success) {
@@ -132,9 +130,10 @@ class Repositoryk @Inject constructor(
         isFirstPage: Boolean,
         sortType: SortType
     ): Resource<List<VideoInfoEntity>> =
-        getSocialVideoList.invoke(
-            index = if (isFirstPage) 0 else lastOffset,
-            order = sortType,
+        firestoreDataSource.getPublicVideoItemsOrderBy(
+            limit = 12,
+            offset = if (isFirstPage) 0 else lastOffset,
+            orderBy = sortType,
             latestData = if (isFirstPage) {
                 null
             } else when (sortType) {
@@ -148,10 +147,12 @@ class Repositoryk @Inject constructor(
         query: String,
         sortType: SortType
     ): Resource<List<VideoInfoEntity>> =
-        getSearchedSocialVideoListUseCase.invoke(
-            index = if (isFirstPage) 0 else othersVideoList.value.size,
+        firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
+            limit = 12,
+            offset = if (isFirstPage) 0 else othersVideoList.value.size,
+            orderBy = sortType,
+            toSearch = "location_keyword",
             keyword = query,
-            order = sortType,
             latestData = if (isFirstPage) {
                 null
             } else when (sortType) {
@@ -160,7 +161,7 @@ class Repositoryk @Inject constructor(
             }
         )
 
-    suspend fun getPaging(query: String, sortType: SortType) {
+    suspend fun fetchNextOthersVideos(query: String, sortType: SortType) {
         if (_othersVideoFetchingState.value == VideoFetchingState.Loading || pagingEndFlag) {
             return
         }
@@ -198,20 +199,29 @@ class Repositoryk @Inject constructor(
         _othersVideoFetchingState.value = VideoFetchingState.NONE
     }
 
-    suspend fun getMyPaging(start: Int, query: String) {
+    suspend fun fetchMyNextVideos(uid: String?, start: Int, query: String) {
         if (_myVideoFetchingState.value == VideoFetchingState.Loading || pagingEndFlag) {
             return
         }
 
-        val uid = getUid()
         if (uid == null) {
             _myVideoFetchingState.value = VideoFetchingState.NETWORK_ERROR_BASE
         } else {
             _myVideoFetchingState.value = VideoFetchingState.Loading
             val data = if (query.isBlank()) {
-                getMyVideoListUseCase(uid, start)
+                firestoreDataSource.getMyVideoItems(
+                    uid = uid,
+                    offset = start,
+                    limit = 12
+                )
             } else {
-                getSearchedMyVideoUseCase(uid, start, query)
+                firestoreDataSource.getMyVideoItemsWithKeyword(
+                    uid = uid,
+                    toSearch = "location_keyword",
+                    keyword = query,
+                    offset = start,
+                    limit = 12
+                )
             }
 
             if (data is Resource.Success) {
@@ -297,16 +307,5 @@ class Repositoryk @Inject constructor(
         } else {
             Resource.Failure(Exception("delete video and thumbnail in Storage failed"))
         }
-    }
-
-    private fun getUid(): String? {
-        val userInfo = getUserInfoUseCase()
-        val uid: String? = if (userInfo is Resource.Success) {
-            userInfo.result.uid
-        } else {
-            null
-        }
-
-        return uid
     }
 }

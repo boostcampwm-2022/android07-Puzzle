@@ -41,7 +41,7 @@ class OtherGalleryAdapterk(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         if (position == itemCount - LOADING_FLAG_NUM) {
-            viewModel.getPaging()
+            viewModel.fetchNextVideoPage()
         }
     }
 

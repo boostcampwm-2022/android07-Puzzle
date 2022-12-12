@@ -83,7 +83,7 @@ class OthersGalleryFragmentk : Fragment() {
         }
 
         binding.otherGallerySwipeRefresh.setOnRefreshListener {
-            viewModel.getMainData()
+            viewModel.fetchFirstVideoPage()
         }
 
         val items = resources.getStringArray(R.array.other_order_type)
@@ -136,7 +136,7 @@ class OthersGalleryFragmentk : Fragment() {
                                 R.string.gallery_paging_error,
                                 Snackbar.LENGTH_INDEFINITE
                             ).setAction(R.string.gallery_retry) {
-                                viewModel.getPaging()
+                                viewModel.fetchNextVideoPage()
                             }
                             snackBar?.show()
                         }
@@ -148,7 +148,7 @@ class OthersGalleryFragmentk : Fragment() {
                                 R.string.gallery_init_load_error,
                                 Snackbar.LENGTH_INDEFINITE
                             ).setAction(R.string.gallery_retry) {
-                                viewModel.getMainData()
+                                viewModel.fetchFirstVideoPage()
                             }
                             snackBar?.show()
                         }

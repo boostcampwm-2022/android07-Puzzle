@@ -2,8 +2,13 @@ package com.juniori.puzzle.ui.mygallery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.ui.othersgallery.Repositoryk
+import com.juniori.puzzle.domain.usecase.FetchMyFirstVideosUseCase
+import com.juniori.puzzle.domain.usecase.FetchMyNextVideosUseCase
+import com.juniori.puzzle.domain.usecase.GetMyVideoFetchingStateUseCase
+import com.juniori.puzzle.domain.usecase.GetMyVideosUseCase
+import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.ui.othersgallery.VideoFetchingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -12,13 +17,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyGalleryViewModel @Inject constructor(
-    private val repositoryk: Repositoryk
+    getMyVideosUseCase: GetMyVideosUseCase,
+    getVideoFetchingStateUseCase: GetMyVideoFetchingStateUseCase,
+    private val fetchMyFirstVideosUseCase: FetchMyFirstVideosUseCase,
+    private val fetchMyNextVideosUseCase: FetchMyNextVideosUseCase,
+    private val getUserInfoUseCase: GetUserInfoUseCase
 ) : ViewModel() {
-    val list: StateFlow<List<VideoInfoEntity>>
-        get() = repositoryk.myVideoList
 
-    val state: StateFlow<VideoFetchingState>
-        get() = repositoryk.myVideoFetchingState
+    val videoList: StateFlow<List<VideoInfoEntity>> =
+        getMyVideosUseCase.invoke()
+
+    val videoFetchingState: StateFlow<VideoFetchingState> =
+        getVideoFetchingStateUseCase.invoke()
 
     private var query = ""
 
@@ -36,14 +46,27 @@ class MyGalleryViewModel @Inject constructor(
     }
 
     fun getPaging(start: Int) {
+        val uid = getUid()
         viewModelScope.launch {
-            repositoryk.getMyPaging(start, query)
+            fetchMyNextVideosUseCase.invoke(uid, start, query)
         }
     }
 
     fun getMyData() {
+        val uid = getUid()
         viewModelScope.launch {
-            repositoryk.getMyData(query)
+            fetchMyFirstVideosUseCase.invoke(uid, query)
         }
+    }
+
+    private fun getUid(): String? {
+        val userInfo = getUserInfoUseCase()
+        val uid: String? = if (userInfo is Resource.Success) {
+            userInfo.result.uid
+        } else {
+            null
+        }
+
+        return uid
     }
 }

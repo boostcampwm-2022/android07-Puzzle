@@ -85,7 +85,7 @@ class MyGalleryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.list.collectLatest { dataList ->
+                viewModel.videoList.collectLatest { dataList ->
                     binding.mygallerySwipeRefresh.isRefreshing = false
 
                     recyclerAdapter.submitList(dataList)
@@ -106,7 +106,7 @@ class MyGalleryFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collectLatest { state ->
+                viewModel.videoFetchingState.collectLatest { state ->
                     binding.progressMyGallery.isVisible = false
 
                     when (state) {

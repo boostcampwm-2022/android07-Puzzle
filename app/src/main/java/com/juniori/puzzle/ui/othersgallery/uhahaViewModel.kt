@@ -3,6 +3,10 @@ package com.juniori.puzzle.ui.othersgallery
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.usecase.FetchOthersFirstVideosUseCase
+import com.juniori.puzzle.domain.usecase.FetchOthersNextVideosUseCase
+import com.juniori.puzzle.domain.usecase.GetOthersVideoFetchingStateUseCase
+import com.juniori.puzzle.domain.usecase.GetOthersVideosUseCase
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -11,13 +15,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OthersGalleryViewModelk @Inject constructor(
-    val repositoryk: Repositoryk
+    getOthersVideosUseCase: GetOthersVideosUseCase,
+    getVideoFetchingStateUseCase: GetOthersVideoFetchingStateUseCase,
+    private val fetchOthersFirstVideosUseCase: FetchOthersFirstVideosUseCase,
+    private val fetchOthersNextVideosUseCase: FetchOthersNextVideosUseCase
 ) : ViewModel() {
 
-    val videoList: StateFlow<List<VideoInfoEntity>> = repositoryk.othersVideoList
+    val videoList: StateFlow<List<VideoInfoEntity>> =
+        getOthersVideosUseCase.invoke()
 
-    val videoFetchingState: StateFlow<VideoFetchingState>
-        get() = repositoryk.othersVideoFetchingState
+    val videoFetchingState: StateFlow<VideoFetchingState> =
+        getVideoFetchingStateUseCase.invoke()
 
     var query = ""
     var sortType = SortType.NEW
@@ -25,14 +33,14 @@ class OthersGalleryViewModelk @Inject constructor(
     init {
         if (videoList.value.isEmpty()) {
             viewModelScope.launch {
-                repositoryk.getMainData(query, sortType)
+                fetchOthersFirstVideosUseCase.invoke(query, sortType)
             }
         }
     }
 
-    fun getMainData() {
+    fun fetchFirstVideoPage() {
         viewModelScope.launch {
-            repositoryk.getMainData(query, sortType)
+            fetchOthersFirstVideosUseCase(query, sortType)
         }
     }
 
@@ -46,12 +54,12 @@ class OthersGalleryViewModelk @Inject constructor(
             ""
         }
 
-        getMainData()
+        fetchFirstVideoPage()
     }
 
-    fun getPaging() {
+    fun fetchNextVideoPage() {
         viewModelScope.launch {
-            repositoryk.getPaging(query, sortType)
+            fetchOthersNextVideosUseCase.invoke(query, sortType)
         }
     }
 
@@ -60,7 +68,7 @@ class OthersGalleryViewModelk @Inject constructor(
             sortType = type
 
             if (query.isBlank()) {
-                getMainData()
+                fetchFirstVideoPage()
             } else {
                 setQueryText(query)
             }

@@ -1,11 +1,11 @@
 package com.juniori.puzzle.domain.usecase
 
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.domain.repository.VideoRepository
+import com.juniori.puzzle.ui.othersgallery.Repositoryk
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class GetSocialVideoListUseCaseTest @Inject constructor(private val videoRepository: VideoRepository) {
+class GetMyVideosUseCase @Inject constructor(private val videoRepository: Repositoryk) {
     operator fun invoke(): StateFlow<List<VideoInfoEntity>> =
-        videoRepository.socialVideoList
+        videoRepository.myVideoList
 }
