@@ -21,8 +21,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
-import com.juniori.puzzle.ui.othersgallery.VideoFetchingState
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.util.VideoFetchingState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

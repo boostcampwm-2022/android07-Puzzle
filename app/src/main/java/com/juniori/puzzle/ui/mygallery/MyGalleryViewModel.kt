@@ -9,7 +9,7 @@ import com.juniori.puzzle.domain.usecase.FetchMyNextVideosUseCase
 import com.juniori.puzzle.domain.usecase.GetMyVideoFetchingStateUseCase
 import com.juniori.puzzle.domain.usecase.GetMyVideosUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
-import com.juniori.puzzle.ui.othersgallery.VideoFetchingState
+import com.juniori.puzzle.util.VideoFetchingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

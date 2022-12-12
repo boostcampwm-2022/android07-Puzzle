@@ -6,6 +6,7 @@ import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.PagingConst
 import com.juniori.puzzle.util.SortType
+import com.juniori.puzzle.util.VideoFetchingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,14 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-
-enum class VideoFetchingState {
-    NONE,
-    Loading,
-    NO_MORE_VIDEO,
-    NETWORK_ERROR_PAGING,
-    NETWORK_ERROR_BASE,
-}
 
 @Singleton
 class Repositoryk @Inject constructor(
@@ -45,7 +38,7 @@ class Repositoryk @Inject constructor(
 
     private var pagingEndFlag = false
 
-    suspend fun fetchMainData(query: String, sortType: SortType) {
+    suspend fun fetchOthersFirstPage(query: String, sortType: SortType) {
         if (_othersVideoFetchingState.value == VideoFetchingState.Loading) {
             return
         }
@@ -81,7 +74,7 @@ class Repositoryk @Inject constructor(
         _othersVideoFetchingState.value = VideoFetchingState.NONE
     }
 
-    suspend fun fetchMyData(uid: String?, query: String) {
+    suspend fun fetchMyFirstPage(uid: String?, query: String) {
         if (_myVideoFetchingState.value == VideoFetchingState.Loading) {
             return
         }
@@ -131,9 +124,9 @@ class Repositoryk @Inject constructor(
         sortType: SortType
     ): Resource<List<VideoInfoEntity>> =
         firestoreDataSource.getPublicVideoItemsOrderBy(
+            orderBy = sortType,
             limit = 12,
             offset = if (isFirstPage) 0 else lastOffset,
-            orderBy = sortType,
             latestData = if (isFirstPage) {
                 null
             } else when (sortType) {
@@ -148,9 +141,9 @@ class Repositoryk @Inject constructor(
         sortType: SortType
     ): Resource<List<VideoInfoEntity>> =
         firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
+            orderBy = sortType,
             limit = 12,
             offset = if (isFirstPage) 0 else othersVideoList.value.size,
-            orderBy = sortType,
             toSearch = "location_keyword",
             keyword = query,
             latestData = if (isFirstPage) {
@@ -161,7 +154,7 @@ class Repositoryk @Inject constructor(
             }
         )
 
-    suspend fun fetchNextOthersVideos(query: String, sortType: SortType) {
+    suspend fun fetchOthersNextVideos(query: String, sortType: SortType) {
         if (_othersVideoFetchingState.value == VideoFetchingState.Loading || pagingEndFlag) {
             return
         }

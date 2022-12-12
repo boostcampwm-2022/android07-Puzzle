@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.domain.usecase.ChangeVideoScopeUseCase
-import com.juniori.puzzle.domain.usecase.DeleteVideoUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoByUidUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.ui.othersgallery.Repositoryk
@@ -20,8 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayVideoViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val deleteVideoUseCase: DeleteVideoUseCase,
-    private val changeVideoScopeUseCase: ChangeVideoScopeUseCase,
     private val getUserInfoByUidUseCase: GetUserInfoByUidUseCase,
     private val repository: Repositoryk
 ) : ViewModel() {
@@ -74,7 +70,7 @@ class PlayVideoViewModel @Inject constructor(
 
     fun fetchMoreVideos() {
         viewModelScope.launch {
-            repository.fetchNextOthersVideos(query, sortType)
+            repository.fetchOthersNextVideos(query, sortType)
         }
     }
 
