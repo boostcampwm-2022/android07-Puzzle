@@ -14,7 +14,7 @@ import com.juniori.puzzle.util.SortType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,20 +39,16 @@ class Repositoryk @Inject constructor(
     private val getSearchedMyVideoUseCase: GetSearchedMyVideoUseCase
 ) {
     private val _othersVideoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
-    val othersVideoList: StateFlow<List<VideoInfoEntity>>
-        get() = _othersVideoList
-
-    private val _myVideoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
-    val myVideoList: StateFlow<List<VideoInfoEntity>>
-        get() = _myVideoList
+    val othersVideoList = _othersVideoList.asStateFlow()
 
     private val _othersVideoFetchingState = MutableStateFlow(VideoFetchingState.NONE)
-    val othersVideoFetchingState: StateFlow<VideoFetchingState>
-        get() = _othersVideoFetchingState
+    val othersVideoFetchingState = _othersVideoFetchingState.asStateFlow()
+
+    private val _myVideoList = MutableStateFlow<List<VideoInfoEntity>>(emptyList())
+    val myVideoList = _myVideoList.asStateFlow()
 
     private val _myVideoFetchingState = MutableStateFlow(VideoFetchingState.NONE)
-    val myVideoFetchingState: StateFlow<VideoFetchingState>
-        get() = _myVideoFetchingState
+    val myVideoFetchingState = _myVideoFetchingState.asStateFlow()
 
     private var lastLikeCount = Long.MAX_VALUE
     private var lastTime = Long.MAX_VALUE
@@ -102,7 +98,7 @@ class Repositoryk @Inject constructor(
         }
         val uid = getUid()
 
-        _othersVideoList.value = emptyList()
+        _myVideoList.value = emptyList()
         pagingEndFlag = false
 
         if (uid == null) {
@@ -117,7 +113,7 @@ class Repositoryk @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result.isNullOrEmpty().not()) {
+                if (result.isEmpty().not()) {
                     if (result.size < PagingConst.ITEM_CNT) {
                         pagingEndFlag = true
                     }
@@ -220,7 +216,7 @@ class Repositoryk @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result.isNullOrEmpty()) {
+                if (result.isEmpty()) {
                     withContext(Dispatchers.IO) {
                         _myVideoFetchingState.value = VideoFetchingState.NO_MORE_VIDEO
                         delay(1000)
