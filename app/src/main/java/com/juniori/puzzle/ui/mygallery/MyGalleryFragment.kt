@@ -107,6 +107,8 @@ class MyGalleryFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collectLatest { state ->
+                    binding.progressMyGallery.isVisible = false
+
                     when (state) {
                         VideoFetchingState.NONE -> {
                             snackBar?.dismiss()
