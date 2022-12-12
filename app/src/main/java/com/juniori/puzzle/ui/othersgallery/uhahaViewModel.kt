@@ -3,9 +3,6 @@ package com.juniori.puzzle.ui.othersgallery
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.domain.usecase.GetSearchedSocialVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetSocialVideoListUseCase
-import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +11,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OthersGalleryViewModelk @Inject constructor(
-    val getSocialVideoList: GetSocialVideoListUseCase,
-    val getUserInfoUseCase: GetUserInfoUseCase,
-    val getSearchedSocialVideoListUseCase: GetSearchedSocialVideoListUseCase,
     val repositoryk: Repositoryk
 ) : ViewModel() {
 
@@ -24,7 +18,7 @@ class OthersGalleryViewModelk @Inject constructor(
         get() = repositoryk.othersVideoList
 
     val videoFetchingState: StateFlow<VideoFetchingState>
-        get() = repositoryk.fetchingState
+        get() = repositoryk.othersVideoFetchingState
 
     var query = ""
     var sortType = SortType.NEW

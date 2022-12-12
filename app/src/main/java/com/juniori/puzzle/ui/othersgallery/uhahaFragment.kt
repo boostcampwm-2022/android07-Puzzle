@@ -3,7 +3,6 @@ package com.juniori.puzzle.ui.othersgallery
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.databinding.adapters.ViewGroupBindingAdapter.setListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -23,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
-import com.juniori.puzzle.ui.othersgallery.OthersGalleryFragment.Companion.RECYCLER_TOP
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.CLICKED_VIDEO_INDEX_KEY
 import com.juniori.puzzle.util.SortType
