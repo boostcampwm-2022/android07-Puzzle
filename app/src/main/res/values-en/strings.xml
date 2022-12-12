@@ -93,7 +93,7 @@
     <string name="playvideo_delete">Delete</string>
 
     <!--mypage-->
-    <string name="search_hint">search golf course</string>
+    <string name="gallery_search_hint">search golf course</string>
     <string name="mypage_title">Did you have a good putting today?</string>
     <string name="change_nickname">Change Nickname</string>
     <string name="logout">Logout</string>

@@ -59,6 +59,7 @@ class HomeFragment : Fragment() {
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
+        homeViewModel.setLocationPermitted(isPermitted)
         homeViewModel.setUiState(Resource.Loading)
         if (isPermitted) {
             homeViewModel.getWeather()
@@ -83,6 +84,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
+        println("viewCreated")
         checkPermission()
         adapter = WeatherRecyclerViewAdapter()
 
@@ -145,5 +147,5 @@ class HomeFragment : Fragment() {
         homeViewModel.unregisterListener()
         _binding = null
     }
-
 }
+

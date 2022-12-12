@@ -43,6 +43,12 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(WeatherEntity(Date(), 0, 0, 0, 0, "", ""))
     val weatherMainList: StateFlow<WeatherEntity> = _weatherMainList
 
+    private val _isLocationPermitted = MutableStateFlow(false)
+
+    fun setLocationPermitted(isPermitted: Boolean) {
+        _isLocationPermitted.value = isPermitted
+    }
+
     fun setUiState(state: Resource<List<WeatherEntity>>) {
         _uiState.value = state
     }
@@ -69,36 +75,42 @@ class HomeViewModel @Inject constructor(
     }
 
     fun registerListener(listener: LocationListenerCompat) {
+        if (_isLocationPermitted.value.not()) return
         registerLocationListenerUseCase(listener)
     }
 
     fun unregisterListener() {
+        if (_isLocationPermitted.value.not()) return
         unregisterLocationListenerUseCase()
     }
 
-    fun getWeather() = viewModelScope.launch {
-        val location = getLocationUseCase()
-        if(location.first <= 0f.toDouble() && location.second <= 0f.toDouble()){
-            setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
-            return@launch
-        }
+    fun getWeather() {
+        if (_isLocationPermitted.value.not()) return
 
-        when (val result = getWeatherUseCase(location.first, location.second)) {
-            is Resource.Success<List<WeatherEntity>> -> {
-                val list = result.result
-                if (list.size >= 3) {
-                    _weatherMainList.value = list[1]
-                    _weatherList.value = list.subList(2, list.size)
-                    setCurrentAddress(location.first,location.second)
-                    _uiState.value = Resource.Success(list)
-                } else {
+        viewModelScope.launch {
+            val location = getLocationUseCase()
+            if (location.first <= 0f.toDouble() && location.second <= 0f.toDouble()) {
+                setWeatherInfoText("네트워크 및 위치 서비스를 연결해주세요")
+                return@launch
+            }
+
+            when (val result = getWeatherUseCase(location.first, location.second)) {
+                is Resource.Success<List<WeatherEntity>> -> {
+                    val list = result.result
+                    if (list.size >= 3) {
+                        _weatherMainList.value = list[1]
+                        _weatherList.value = list.subList(2, list.size)
+                        setCurrentAddress(location.first, location.second)
+                        _uiState.value = Resource.Success(list)
+                    } else {
+                        _uiState.value = Resource.Failure(Exception("네트워크 통신에 실패하였습니다"))
+                    }
+                }
+                is Resource.Failure -> {
                     _uiState.value = Resource.Failure(Exception("네트워크 통신에 실패하였습니다"))
                 }
+                is Resource.Loading -> _uiState.value = Resource.Loading
             }
-            is Resource.Failure -> {
-                _uiState.value = Resource.Failure(Exception("네트워크 통신에 실패하였습니다"))
-            }
-            is Resource.Loading -> _uiState.value = Resource.Loading
         }
     }
 
