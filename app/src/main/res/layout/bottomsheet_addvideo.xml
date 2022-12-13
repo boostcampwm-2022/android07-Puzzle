@@ -14,7 +14,7 @@
 
         <Button
             android:id="@+id/button_search_gallery"
-            style="@style/Theme.Puzzle.Button.Inaddvideo"
+            style="@style/Style.Puzzle.Button.Inaddvideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/addvideo_search_gallery"
@@ -29,7 +29,7 @@
 
         <Button
             android:id="@+id/button_take_video"
-            style="@style/Theme.Puzzle.Button.Inaddvideo"
+            style="@style/Style.Puzzle.Button.Inaddvideo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/addvideo_take_video"

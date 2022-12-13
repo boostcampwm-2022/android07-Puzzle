@@ -21,7 +21,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/status_bar_color</item>
 
-        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Puzzle.BottomSheetDialog</item>
+        <item name="bottomSheetStyle">@style/Style.Puzzle.BottomSheet</item>
         <item name="popupMenuBackground">@drawable/all_popup_background</item>
     </style>
 
@@ -34,10 +34,17 @@
 
     </style>
 
-    <style name="LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.Puzzle.LoginTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+    <style name="Theme.Puzzle.Dialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="colorSurface">@color/secondary_color</item>>
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="alertDialogStyle">@style/Style.Puzzle.Dialog</item>
     </style>
 
 </resources>

@@ -11,20 +11,15 @@ import androidx.core.location.LocationListenerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.data.location.LocationInfo
 import com.juniori.puzzle.databinding.FragmentHomeBinding
-import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.ui.sensor.SensorActivity
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -111,7 +106,6 @@ class HomeFragment : Fragment() {
                 when (resource) {
                     is Resource.Success -> {
                         stateManager.dismissLoadingDialog()
-                        stateManager.removeNetworkDialog()
                         showWeather()
                     }
                     is Resource.Failure -> {
