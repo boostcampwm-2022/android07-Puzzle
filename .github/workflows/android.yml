@@ -1,0 +1,42 @@
+name: Android CI
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      GOOGLE_JSON: ${{ secrets.GOOGLE_JSON }}
+      CONST: ${{ secrets.CONST }}
+      WEATHER: ${{ secrets.WEATHER }}
+      
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Secret
+      run:
+        echo $GOOGLE_JSON >> ./app/google-services.json
+        echo $CONST >> ./app/src/main/java/com/juniori/puzzle/util/Const.kt
+        echo $WEATHER >> ./local.properties
+        
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'zulu'
+        cache: gradle
+      
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build
+      run: ./gradlew build
+
+    - name: UnitTest
+      run: ./gradlew testDebugUnitTest
+
+
