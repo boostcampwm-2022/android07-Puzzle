@@ -49,14 +49,18 @@
     </style>
 
     <!-- Dialog -->
-    <style name="Style.Puzzle.Dialog" parent="">
+    <style name="ThemeOverlay.Puzzle.Dialog" parent="">
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent</item>
     </style>
 
-    <style name="Style.Puzzle.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+    <style name="Style.Puzzle.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
         <item name="backgroundTint">@color/secondary_color</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Puzzle.LargeComponent.Top</item>
         <item name="behavior_peekHeight">@dimen/bottomSheet_peekHeight</item>
+    </style>
+
+    <style name="ThemeOverlay.Puzzle.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Style.Puzzle.BottomSheet</item>
     </style>
 
 </resources>
