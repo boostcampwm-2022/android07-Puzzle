@@ -7,6 +7,7 @@ import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
 import com.juniori.puzzle.util.PagingConst
+import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.VideoFetchingState
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +56,7 @@ class VideoRepositoryImpl2 @Inject constructor(
                 firestoreDataSource.getMyVideoItems(
                     uid = uid,
                     offset = 0,
-                    limit = 12
+                    limit = ITEM_CNT
                 )
             } else {
                 firestoreDataSource.getMyVideoItemsWithKeyword(
@@ -63,7 +64,7 @@ class VideoRepositoryImpl2 @Inject constructor(
                     toSearch = "location_keyword",
                     keyword = query,
                     offset = 0,
-                    limit = 12
+                    limit = ITEM_CNT
                 )
             }
 
@@ -97,7 +98,7 @@ class VideoRepositoryImpl2 @Inject constructor(
                 firestoreDataSource.getMyVideoItems(
                     uid = uid,
                     offset = start,
-                    limit = 12
+                    limit = ITEM_CNT
                 )
             } else {
                 firestoreDataSource.getMyVideoItemsWithKeyword(
@@ -105,7 +106,7 @@ class VideoRepositoryImpl2 @Inject constructor(
                     toSearch = "location_keyword",
                     keyword = query,
                     offset = start,
-                    limit = 12
+                    limit = ITEM_CNT
                 )
             }
 
@@ -288,7 +289,7 @@ class VideoRepositoryImpl2 @Inject constructor(
     ): Resource<List<VideoInfoEntity>> =
         firestoreDataSource.getPublicVideoItemsOrderBy(
             orderBy = sortType,
-            limit = 12,
+            limit = ITEM_CNT,
             offset = if (isFirstPage) 0 else lastOffset,
             latestData = if (isFirstPage) {
                 null
@@ -305,7 +306,7 @@ class VideoRepositoryImpl2 @Inject constructor(
     ): Resource<List<VideoInfoEntity>> =
         firestoreDataSource.getPublicVideoItemsWithKeywordOrderBy(
             orderBy = sortType,
-            limit = 12,
+            limit = ITEM_CNT,
             offset = if (isFirstPage) 0 else othersVideoList.value.size,
             toSearch = "location_keyword",
             keyword = query,
