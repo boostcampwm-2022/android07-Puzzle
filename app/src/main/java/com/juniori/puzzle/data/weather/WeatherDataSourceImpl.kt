@@ -29,7 +29,12 @@ class WeatherDataSourceImpl @Inject constructor(
 
         return try {
             val response = service.getWeather(lat, lon, WEATHER_SERVICE_KEY, language)
-            Resource.Success(response.body()?.toItem() ?: emptyList())
+            val result = response.body()?.toItem() ?: emptyList()
+            if (result.size >= 3) {
+                Resource.Success(result)
+            } else {
+                Resource.Failure(Exception())
+            }
         } catch (e: Exception) {
             Resource.Failure(Exception())
         }

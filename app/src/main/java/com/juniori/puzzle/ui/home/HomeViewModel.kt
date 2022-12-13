@@ -114,14 +114,10 @@ class HomeViewModel @Inject constructor(
             when (val result = getWeatherUseCase(loc.lat, loc.lon)) {
                 is Resource.Success<List<WeatherEntity>> -> {
                     val list = result.result
-                    if (list.size >= 3) {
-                        _weatherMainList.value = list[1]
-                        _weatherList.value = list.subList(2, list.size)
-                        setCurrentAddress(loc.lat, loc.lon)
-                        _uiState.value = Resource.Success(list)
-                    } else {
-                        setWeatherFailTextId(R.string.network_fail)
-                    }
+                    _weatherMainList.value = list[1]
+                    _weatherList.value = list.subList(2, list.size)
+                    setCurrentAddress(loc.lat, loc.lon)
+                    _uiState.value = Resource.Success(list)
                 }
                 is Resource.Failure -> {
                     setWeatherFailTextId(R.string.network_fail)

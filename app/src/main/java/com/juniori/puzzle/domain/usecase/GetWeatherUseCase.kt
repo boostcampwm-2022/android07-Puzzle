@@ -8,5 +8,6 @@ class GetWeatherUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(lat: Double, long: Double) =
         locationRepository.getWeatherInfo(lat, long)
+
 }
 

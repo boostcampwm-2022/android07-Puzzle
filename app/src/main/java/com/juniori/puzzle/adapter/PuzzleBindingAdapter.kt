@@ -1,6 +1,8 @@
 package com.juniori.puzzle.adapter
 
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -66,5 +68,6 @@ fun setDisplayName(view: TextView, name: String) {
         )
     }
 }
+
 
 

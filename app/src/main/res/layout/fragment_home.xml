@@ -312,7 +312,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/large_component_corner_radius"
             android:elevation="2dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="@id/bottom_guideline">
