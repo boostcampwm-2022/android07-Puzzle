@@ -1,3 +1,4 @@
+/*
 package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
@@ -6,7 +7,6 @@ import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
-import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import com.juniori.puzzle.util.SortType
 import javax.inject.Inject
 
@@ -14,21 +14,26 @@ class VideoRepositoryImpl @Inject constructor(
     private val firestoreDataSource: FirestoreDataSource,
     private val storageDataSource: StorageDataSource
 ) : VideoRepository {
-    /** 내 비디오 목록 가져오기
+
+    */
+/** 내 비디오 목록 가져오기
      * @param uid: 사용자 uid
-     * @param index: 가져오기 시작할 바디오 index*/
+     * @param index: 가져오기 시작할 바디오 index*//*
+
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return firestoreDataSource.getMyVideoItems(
             uid = uid,
             offset = index,
-            limit = ITEM_CNT
+            limit = 12
         )
     }
 
-    /** 검색을 통해 내 비디오 목록 가져오기
+    */
+/** 검색을 통해 내 비디오 목록 가져오기
      * @param uid: 사용자 uid
      * @param index: 가져오기 시작할 바디오 index
-     * @param keyword: 검색할 단어 */
+     * @param keyword: 검색할 단어 *//*
+
     override suspend fun getSearchedMyVideoList(
         uid: String,
         index: Int,
@@ -39,13 +44,15 @@ class VideoRepositoryImpl @Inject constructor(
             toSearch = "location_keyword",
             keyword = keyword,
             offset = index,
-            limit = ITEM_CNT
+            limit = 12
         )
     }
 
-    /** 공개 상태인 비디오 목록 가져오기
+    */
+/** 공개 상태인 비디오 목록 가져오기
      * @param index: 가져오기 시작할 바디오 index
-     * @param sortType: 정렬 타입 */
+     * @param sortType: 정렬 타입 *//*
+
     override suspend fun getSocialVideoList(
         index: Int,
         sortType: SortType,
@@ -55,14 +62,16 @@ class VideoRepositoryImpl @Inject constructor(
             orderBy = sortType,
             latestData = latestData,
             offset = index,
-            limit = ITEM_CNT
+            limit = 12
         )
     }
 
-    /** 검색을 통해 공개 상태인 비디오 목록 가져오기
+    */
+/** 검색을 통해 공개 상태인 비디오 목록 가져오기
      * @param index: 가져오기 시작할 바디오 index
      * @param sortType: 정렬 타입
-     * @param keyword: 검색할 단어*/
+     * @param keyword: 검색할 단어*//*
+
     override suspend fun getSearchedSocialVideoList(
         index: Int,
         sortType: SortType,
@@ -75,7 +84,7 @@ class VideoRepositoryImpl @Inject constructor(
             keyword = keyword,
             latestData = latestData,
             offset = index,
-            limit = ITEM_CNT,
+            limit = 12
         )
     }
 
@@ -151,3 +160,4 @@ class VideoRepositoryImpl @Inject constructor(
         return firestoreDataSource.postUserItem(uid, nickname, profileImage)
     }
 }
+*/

@@ -6,25 +6,27 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.ui.mygallery.MyGalleryViewModel
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
-class OtherGalleryAdapter(
+class OthersGalleryAdapter(
     val viewModel: OthersGalleryViewModel,
-    private val onClick: (VideoInfoEntity) -> Unit
-) : ListAdapter<VideoInfoEntity, OtherGalleryAdapter.ViewHolder>(
+    private val onClick: (position: Int) -> Unit
+) : ListAdapter<VideoInfoEntity, OthersGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
 
     class ViewHolder(
         val binding: ItemGalleryRecyclerBinding,
-        val onClick: (VideoInfoEntity) -> Unit
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: VideoInfoEntity) {
+        val onClick: (position: Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
             binding.root.setOnClickListener {
-                onClick(item)
+                onClick(layoutPosition)
             }
+        }
+
+        fun bind(item: VideoInfoEntity) {
             binding.data = item
         }
     }
@@ -39,7 +41,7 @@ class OtherGalleryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         if (position == itemCount - LOADING_FLAG_NUM) {
-            viewModel.getPaging()
+            viewModel.fetchNextVideoPage()
         }
     }
 
