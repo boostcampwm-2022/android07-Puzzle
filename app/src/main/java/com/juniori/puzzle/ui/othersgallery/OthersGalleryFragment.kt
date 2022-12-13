@@ -21,6 +21,8 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.CLICKED_VIDEO_INDEX_KEY
+import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.GALLERY_TYPE_KEY
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.VideoFetchingState
@@ -39,6 +41,7 @@ class OthersGalleryFragment : Fragment() {
             playVideoActivityLauncher.launch(
                 Intent(requireContext(), PlayVideoActivity::class.java).apply {
                     putExtra(CLICKED_VIDEO_INDEX_KEY, clickedIndex)
+                    putExtra(GALLERY_TYPE_KEY, GalleryType.OTHERS)
                 }
             )
         }

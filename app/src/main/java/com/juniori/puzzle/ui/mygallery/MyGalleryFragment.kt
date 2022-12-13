@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentMygalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.VideoFetchingState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -40,6 +41,7 @@ class MyGalleryFragment : Fragment() {
                     PlayVideoActivity.LAST_VIEWED_VIDEO_INDEX_KEY,
                     0
                 ) ?: return@registerForActivityResult
+
                 binding.recycleMyGallery.scrollToPosition(lastViewedPosition)
             }
         }
@@ -64,6 +66,7 @@ class MyGalleryFragment : Fragment() {
             activityResult.launch(
                 Intent(requireContext(), PlayVideoActivity::class.java).apply {
                     putExtra(PlayVideoActivity.CLICKED_VIDEO_INDEX_KEY, clickedIndex)
+                    putExtra(PlayVideoActivity.GALLERY_TYPE_KEY, GalleryType.MINE)
                 }
             )
         }

@@ -5,13 +5,20 @@ import androidx.lifecycle.viewModelScope
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.domain.usecase.ChangeVideoScopeUseCase
+import com.juniori.puzzle.domain.usecase.DeleteVideoUseCase
+import com.juniori.puzzle.domain.usecase.FetchMyNextVideosUseCase
+import com.juniori.puzzle.domain.usecase.FetchOthersNextVideosUseCase
+import com.juniori.puzzle.domain.usecase.GetMyVideosUseCase
+import com.juniori.puzzle.domain.usecase.GetOthersVideosUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoByUidUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
-import com.juniori.puzzle.ui.othersgallery.Repositoryk
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.SortType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,13 +26,19 @@ import javax.inject.Inject
 class PlayVideoViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getUserInfoByUidUseCase: GetUserInfoByUidUseCase,
-    private val repository: Repositoryk
+    private val getMyVideosUseCase: GetMyVideosUseCase,
+    private val getOthersVideosUseCase: GetOthersVideosUseCase,
+    private val fetchMyNextVideosUseCase: FetchMyNextVideosUseCase,
+    private val fetchOthersNextVideosUseCase: FetchOthersNextVideosUseCase,
+    private val deleteVideoUseCase: DeleteVideoUseCase,
+    private val changeVideoScopeUseCase: ChangeVideoScopeUseCase
 ) : ViewModel() {
 
     var currentUserInfo: UserInfoEntity? = getUserInfo()
 
-    val videoListFlow: StateFlow<List<VideoInfoEntity>> =
-        repository.othersVideoList
+    var videoListFlow: StateFlow<List<VideoInfoEntity>> =
+        MutableStateFlow(emptyList<VideoInfoEntity>()).asStateFlow()
+        private set
 
     var currentVideoIndex = 0
         private set
@@ -46,6 +59,8 @@ class PlayVideoViewModel @Inject constructor(
     private var query = ""
     private var sortType = SortType.NEW
 
+    private lateinit var galleryType: GalleryType
+
     private fun getUserInfo(): UserInfoEntity? {
         val resource = getUserInfoUseCase.invoke()
         return if (resource is Resource.Success) {
@@ -55,9 +70,21 @@ class PlayVideoViewModel @Inject constructor(
         }
     }
 
-    fun setData(query: String, sortType: SortType, clickedVideoIndex: Int) {
+    fun setData(
+        query: String,
+        sortType: SortType,
+        clickedVideoIndex: Int,
+        galleryType: GalleryType
+    ) {
+        videoListFlow = if (galleryType == GalleryType.MINE) {
+            getMyVideosUseCase()
+        } else {
+            getOthersVideosUseCase()
+        }
+
         this.query = query
         this.sortType = sortType
+        this.galleryType = galleryType
         syncCurrentVideoIndex(clickedVideoIndex)
     }
 
@@ -70,7 +97,15 @@ class PlayVideoViewModel @Inject constructor(
 
     fun fetchMoreVideos() {
         viewModelScope.launch {
-            repository.fetchOthersNextVideos(query, sortType)
+            if (galleryType == GalleryType.MINE) {
+                fetchMyNextVideosUseCase.invoke(
+                    uid = currentUserInfo?.uid,
+                    start = videoListFlow.value.size,
+                    query = query
+                )
+            } else {
+                fetchOthersNextVideosUseCase.invoke(query, sortType)
+            }
         }
     }
 
@@ -82,11 +117,11 @@ class PlayVideoViewModel @Inject constructor(
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        _deleteFlow.emit(repository.deleteVideo(documentId))
+        _deleteFlow.emit(deleteVideoUseCase.invoke(documentId))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _privacyFlow.emit(Resource.Loading)
-        _privacyFlow.emit(repository.changeVideoScope(documentInfo))
+        _privacyFlow.emit(changeVideoScopeUseCase.invoke(documentInfo))
     }
 }

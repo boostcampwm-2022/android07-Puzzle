@@ -14,6 +14,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.StateManager
@@ -79,9 +80,10 @@ class PlayVideoActivity : AppCompatActivity() {
     private fun sendInitialDataToViewModel() {
         with(intent) {
             viewModel.setData(
-                getStringExtra(QUERY_KEY) ?: "",
-                getSerializableExtra(SORT_TYPE_KEY) as? SortType ?: SortType.NEW,
-                getIntExtra(CLICKED_VIDEO_INDEX_KEY, 0)
+                query = getStringExtra(QUERY_KEY) ?: "",
+                sortType = getSerializableExtra(SORT_TYPE_KEY) as? SortType ?: SortType.NEW,
+                clickedVideoIndex = getIntExtra(CLICKED_VIDEO_INDEX_KEY, 0),
+                galleryType = getSerializableExtra(GALLERY_TYPE_KEY) as? GalleryType ?: return
             )
         }
     }
@@ -257,6 +259,7 @@ class PlayVideoActivity : AppCompatActivity() {
     companion object {
         const val LAST_VIEWED_VIDEO_INDEX_KEY = "LAST_VIEWED_VIDEO_INDEX"
         const val CLICKED_VIDEO_INDEX_KEY = "CLICKED_VIDEO_INDEX"
+        const val GALLERY_TYPE_KEY = "GALLERY_TYPE"
         const val QUERY_KEY = "QUERY"
         const val SORT_TYPE_KEY = "SORT_TYPE"
     }
