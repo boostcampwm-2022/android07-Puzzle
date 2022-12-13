@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.location.LocationManager
-import android.location.LocationProvider
 import androidx.core.location.LocationListenerCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -22,6 +20,7 @@ class LocationDataSourceImpl @Inject constructor(
     @SuppressLint("MissingPermission")
     override fun registerLocationListener(listener: LocationListenerCompat): Boolean {
         return if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
             if (locationListener == null) {
                 locationListener = listener
                 locationManager.requestLocationUpdates(

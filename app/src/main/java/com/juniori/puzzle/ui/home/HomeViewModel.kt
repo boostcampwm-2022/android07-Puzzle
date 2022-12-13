@@ -80,7 +80,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun setCurrentAddress(lat: Double, long: Double) {
-        _currentAddress.value = getAddressUseCase(lat, long)[0].toAddressString()
+        val address = getAddressUseCase(lat, long)
+        if (address.isNotEmpty()) {
+            _currentAddress.value = address[0].toAddressString()
+        }
     }
 
     fun registerListener(listener: LocationListenerCompat) {
