@@ -138,6 +138,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 true
             }
             setNavigationOnClickListener {
+                sendBackCurrentPosition()
                 finish()
             }
         }
@@ -246,14 +247,16 @@ class PlayVideoActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        setResult(
-            RESULT_OK,
-            Intent().apply {
-                this.putExtra(LAST_VIEWED_VIDEO_INDEX_KEY, viewModel.currentVideoIndex)
-            }
-        )
-        super.onDestroy()
+    private fun sendBackCurrentPosition() {
+        val intent = Intent().apply {
+            this.putExtra(LAST_VIEWED_VIDEO_INDEX_KEY, viewModel.currentVideoIndex)
+        }
+        setResult(RESULT_OK, intent)
+    }
+
+    override fun onBackPressed() {
+        sendBackCurrentPosition()
+        super.onBackPressed()
     }
 
     companion object {
