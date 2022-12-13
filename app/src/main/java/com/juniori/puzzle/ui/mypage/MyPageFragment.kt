@@ -9,9 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentMypageBinding
@@ -29,6 +35,27 @@ class MyPageFragment : Fragment() {
     private lateinit var updateActivityLauncher: ActivityResultLauncher<Intent>
     @Inject lateinit var stateManager: StateManager
     private val warningDialog: PuzzleDialog by lazy { PuzzleDialog(requireContext()) }
+
+    private val googleSignInClient by lazy {
+        GoogleSignIn.getClient(
+            requireContext(), GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+        )
+    }
+
+    private val activityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val task: Task<GoogleSignInAccount> =
+                    GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                runCatching {
+                    val account: GoogleSignInAccount = task.getResult(ApiException::class.java)
+                    viewModel.requestWithdraw(account)
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -121,7 +148,8 @@ class MyPageFragment : Fragment() {
     private fun makeWithdrawDialog() {
         warningDialog
             .buildAlertDialog({
-                viewModel.requestWithdraw()
+                val signInIntent = googleSignInClient.signInIntent
+                activityResult.launch(signInIntent)
             },{
 
             }).setMessage(getString(R.string.withdraw_remind))

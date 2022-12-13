@@ -1,5 +1,6 @@
 package com.juniori.puzzle.data.auth
 
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -72,9 +73,21 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun requestWithdraw(): Resource<Unit> {
+    override suspend fun requestWithdraw(acct: GoogleSignInAccount): Resource<Unit> {
         return try {
-            firebaseAuth.currentUser?.delete() ?: throw java.lang.Exception()
+            val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+            firebaseAuth.currentUser?.reauthenticate(credential)?.await()
+
+            firebaseAuth.currentUser?.delete()
+                ?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("Withdrawal", "User account deleted.")
+                    }
+                    else {
+                        Log.d("Withdrawal", "User account NOT deleted.")
+                    }
+                } ?: throw java.lang.Exception()
+
             Resource.Success(Unit)
         }
         catch (e: java.lang.Exception) {

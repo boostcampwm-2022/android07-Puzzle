@@ -2,6 +2,7 @@ package com.juniori.puzzle.ui.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.RequestLogoutUseCase
@@ -68,11 +69,11 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun requestWithdraw() {
+    fun requestWithdraw(acct: GoogleSignInAccount) {
         viewModelScope.launch {
             _requestWithdrawFlow.emit(Resource.Loading)
             withContext(Dispatchers.IO) {
-                _requestWithdrawFlow.emit(requestWithdrawUseCase())
+                _requestWithdrawFlow.emit(requestWithdrawUseCase(acct))
             }
         }
     }
