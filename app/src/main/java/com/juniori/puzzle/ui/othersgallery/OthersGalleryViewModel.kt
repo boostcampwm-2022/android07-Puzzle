@@ -23,10 +23,10 @@ class OthersGalleryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val videoList: StateFlow<List<VideoInfoEntity>> =
-        getOthersVideosUseCase.invoke()
+        getOthersVideosUseCase()
 
     val videoFetchingState: StateFlow<VideoFetchingState> =
-        getVideoFetchingStateUseCase.invoke()
+        getVideoFetchingStateUseCase()
 
     var query = ""
     var sortType = SortType.NEW
@@ -34,7 +34,7 @@ class OthersGalleryViewModel @Inject constructor(
     init {
         if (videoList.value.isEmpty()) {
             viewModelScope.launch {
-                fetchOthersFirstVideosUseCase.invoke(query, sortType)
+                fetchOthersFirstVideosUseCase(query, sortType)
             }
         }
     }
@@ -60,7 +60,7 @@ class OthersGalleryViewModel @Inject constructor(
 
     fun fetchNextVideoPage() {
         viewModelScope.launch {
-            fetchOthersNextVideosUseCase.invoke(query, sortType)
+            fetchOthersNextVideosUseCase(query, sortType)
         }
     }
 

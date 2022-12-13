@@ -117,7 +117,7 @@ class MyGalleryFragment : Fragment() {
                             snackBar?.dismiss()
                         }
 
-                        VideoFetchingState.Loading -> {
+                        VideoFetchingState.LOADING -> {
                             binding.progressMyGallery.isVisible = true
                         }
 

@@ -24,7 +24,7 @@ class VideoSwipePagerAdapter(
         payloads: MutableList<Any>
     ) {
         if (position >= videoInfoList.size - 3) {
-            videoFetchListener.invoke()
+            videoFetchListener()
         }
         super.onBindViewHolder(holder, position, payloads)
     }

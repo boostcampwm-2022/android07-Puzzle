@@ -62,7 +62,7 @@ class PlayVideoViewModel @Inject constructor(
     private lateinit var galleryType: GalleryType
 
     private fun getUserInfo(): UserInfoEntity? {
-        val resource = getUserInfoUseCase.invoke()
+        val resource = getUserInfoUseCase()
         return if (resource is Resource.Success) {
             resource.result
         } else {
@@ -98,13 +98,13 @@ class PlayVideoViewModel @Inject constructor(
     fun fetchMoreVideos() {
         viewModelScope.launch {
             if (galleryType == GalleryType.MINE) {
-                fetchMyNextVideosUseCase.invoke(
+                fetchMyNextVideosUseCase(
                     uid = currentUserInfo?.uid,
                     start = videoListFlow.value.size,
                     query = query
                 )
             } else {
-                fetchOthersNextVideosUseCase.invoke(query, sortType)
+                fetchOthersNextVideosUseCase(query, sortType)
             }
         }
     }
@@ -117,11 +117,11 @@ class PlayVideoViewModel @Inject constructor(
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        _deleteFlow.emit(deleteVideoUseCase.invoke(documentId))
+        _deleteFlow.emit(deleteVideoUseCase(documentId))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _privacyFlow.emit(Resource.Loading)
-        _privacyFlow.emit(changeVideoScopeUseCase.invoke(documentInfo))
+        _privacyFlow.emit(changeVideoScopeUseCase(documentInfo))
     }
 }

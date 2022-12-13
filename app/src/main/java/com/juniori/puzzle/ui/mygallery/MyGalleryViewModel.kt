@@ -25,10 +25,10 @@ class MyGalleryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val videoList: StateFlow<List<VideoInfoEntity>> =
-        getMyVideosUseCase.invoke()
+        getMyVideosUseCase()
 
     val videoFetchingState: StateFlow<VideoFetchingState> =
-        getVideoFetchingStateUseCase.invoke()
+        getVideoFetchingStateUseCase()
 
     private var query = ""
 
@@ -48,14 +48,14 @@ class MyGalleryViewModel @Inject constructor(
     fun getPaging(start: Int) {
         val uid = getUid()
         viewModelScope.launch {
-            fetchMyNextVideosUseCase.invoke(uid, start, query)
+            fetchMyNextVideosUseCase(uid, start, query)
         }
     }
 
     fun getMyData() {
         val uid = getUid()
         viewModelScope.launch {
-            fetchMyFirstVideosUseCase.invoke(uid, query)
+            fetchMyFirstVideosUseCase(uid, query)
         }
     }
 

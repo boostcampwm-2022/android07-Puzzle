@@ -41,7 +41,7 @@ class VideoRepositoryImpl2 @Inject constructor(
     private var pagingEndFlag = false
 
     override suspend fun fetchMyFirstPageVideos(uid: String?, query: String) {
-        if (_myVideoFetchingState.value == VideoFetchingState.Loading) {
+        if (_myVideoFetchingState.value == VideoFetchingState.LOADING) {
             return
         }
 
@@ -51,7 +51,7 @@ class VideoRepositoryImpl2 @Inject constructor(
         if (uid == null) {
             _myVideoFetchingState.value = VideoFetchingState.NETWORK_ERROR_BASE
         } else {
-            _myVideoFetchingState.value = VideoFetchingState.Loading
+            _myVideoFetchingState.value = VideoFetchingState.LOADING
             val data = if (query.isBlank()) {
                 firestoreDataSource.getMyVideoItems(
                     uid = uid,
@@ -86,14 +86,14 @@ class VideoRepositoryImpl2 @Inject constructor(
     }
 
     override suspend fun fetchMyNextVideos(uid: String?, start: Int, query: String) {
-        if (_myVideoFetchingState.value == VideoFetchingState.Loading || pagingEndFlag) {
+        if (_myVideoFetchingState.value == VideoFetchingState.LOADING || pagingEndFlag) {
             return
         }
 
         if (uid == null) {
             _myVideoFetchingState.value = VideoFetchingState.NETWORK_ERROR_BASE
         } else {
-            _myVideoFetchingState.value = VideoFetchingState.Loading
+            _myVideoFetchingState.value = VideoFetchingState.LOADING
             val data = if (query.isBlank()) {
                 firestoreDataSource.getMyVideoItems(
                     uid = uid,
@@ -131,14 +131,14 @@ class VideoRepositoryImpl2 @Inject constructor(
     }
 
     override suspend fun fetchOthersFirstPageVideos(query: String, sortType: SortType) {
-        if (_othersVideoFetchingState.value == VideoFetchingState.Loading) {
+        if (_othersVideoFetchingState.value == VideoFetchingState.LOADING) {
             return
         }
         _othersVideoList.value = emptyList()
         pagingEndFlag = false
         setLastData(Long.MAX_VALUE, Long.MAX_VALUE, 0, sortType)
 
-        _othersVideoFetchingState.value = VideoFetchingState.Loading
+        _othersVideoFetchingState.value = VideoFetchingState.LOADING
         val data = if (query.isBlank()) {
             getBaseData(isFirstPage = true, sortType = sortType)
         } else {
@@ -167,10 +167,10 @@ class VideoRepositoryImpl2 @Inject constructor(
     }
 
     override suspend fun fetchOthersNextVideos(query: String, sortType: SortType) {
-        if (_othersVideoFetchingState.value == VideoFetchingState.Loading || pagingEndFlag) {
+        if (_othersVideoFetchingState.value == VideoFetchingState.LOADING || pagingEndFlag) {
             return
         }
-        _othersVideoFetchingState.value = VideoFetchingState.Loading
+        _othersVideoFetchingState.value = VideoFetchingState.LOADING
         val data = if (query.isBlank()) {
             getBaseData(isFirstPage = false, sortType = sortType)
         } else {
