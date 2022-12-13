@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player.REPEAT_MODE_ONE
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
@@ -37,6 +38,7 @@ class PlayVideoDetailFragment : Fragment() {
     private val viewModel: PlayVideoDetailViewModel by viewModels()
     private var exoPlayer: ExoPlayer? = null
     private lateinit var currentVideoItem: VideoInfoEntity
+    private var currentVolume = 1.0f
 
     @Inject
     lateinit var stateManager: StateManager
@@ -83,6 +85,7 @@ class PlayVideoDetailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.playerView.player?.volume = currentVolume
         if (Build.VERSION.SDK_INT <= 23 || exoPlayer == null) {
             initVideoPlayer(currentVideoItem.videoUrl)
             binding.playerView.onResume()
@@ -91,6 +94,8 @@ class PlayVideoDetailFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        currentVolume = binding.playerView.player?.volume ?: 1.0f
+        binding.playerView.player?.volume = 0f
         if (Build.VERSION.SDK_INT <= 23) {
             binding.playerView.onPause()
             releasePlayer()
@@ -184,6 +189,7 @@ class PlayVideoDetailFragment : Fragment() {
             setMediaSource(
                 ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri))
             )
+            repeatMode = REPEAT_MODE_ONE
             playWhenReady = startAutoPlay
             if (startPosition != C.TIME_UNSET) {
                 seekTo(startPosition)
