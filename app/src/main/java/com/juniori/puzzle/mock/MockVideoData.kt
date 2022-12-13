@@ -22,10 +22,9 @@ fun getVideoListMockData(): List<VideoInfoEntity> {
         VideoInfoEntity("f","fff", "fff_600", imageList[5], true, 0, emptyList(), 104, "동작구", emptyList(), "노랑오리"),
         VideoInfoEntity("a","aaa", "aaa_800", imageList[1], true, 0, emptyList(), 106, "서대문구A", emptyList(), "도시오리"),
         VideoInfoEntity("a","aaa", "aaa_900", imageList[2], false, 0, emptyList(), 106, "서대문구B", emptyList(), "어라?"),
+        VideoInfoEntity("a","aaa", "aaa_950", imageList[3], true, 0, emptyList(), 106, "종로구", emptyList(), "어?"),
+        VideoInfoEntity("a","aaa", "aaa_800", imageList[1], true, 0, emptyList(), 106, "서대문구A", emptyList(), "도시오리"),
+        VideoInfoEntity("a","aaa", "aaa_900", imageList[2], false, 0, emptyList(), 106, "서대문구B", emptyList(), "어라?"),
         VideoInfoEntity("a","aaa", "aaa_950", imageList[3], true, 0, emptyList(), 106, "종로구", emptyList(), "어?")
    )
-}
-
-fun getVideoFileMockData() {
-
 }
