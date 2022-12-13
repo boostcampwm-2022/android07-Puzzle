@@ -8,7 +8,7 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
-        style="@style/Theme.Puzzle.Toolbar"
+        style="@style/Style.Puzzle.Toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_other_gallery"
-                style="@style/Theme.Puzzle.SearchView"
+                style="@style/Style.Puzzle.SearchView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/others_gallery_toolbar_search_weight" />

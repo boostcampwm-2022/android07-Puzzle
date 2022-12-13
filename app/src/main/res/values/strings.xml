@@ -39,6 +39,7 @@
     <string name="green_lean_text">그린 기울기 구하기</string>
     <string name="green_lean_image_description">그린 기울기 구하기 버튼</string>
     <string name="logo_dsecription">퍼즐 로고</string>
+    <string name="location_empty">위치 정보가 없습니다</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">녹화</string>
@@ -78,7 +79,7 @@
     <string name="network_fail">네트워크 통신에 실패했습니다</string>
 
     <!--permission-->
-    <string name="location_permission">위치 권한을 허용해주세요</string>
+    <string name="location_permission">위치 권한을 허용해주세요\n설정->애플리케이션->퍼즐에서\n 위치권한을 허용할 수 있습니다</string>
     <string name="location_service_off">네트워크 및 위치 서비스를 연결해주세요</string>
 
     <!--description-->
@@ -93,7 +94,6 @@
     <string name="playvideo_delete">삭제</string>
 
     <!--mypage-->
-    <string name="search_hint">골프장 검색하기</string>
     <string name="mypage_title">오늘도 한 퍼팅 하셨나요?</string>
     <string name="change_nickname">닉네임 변경</string>
     <string name="logout">로그아웃</string>
@@ -122,7 +122,7 @@
     <string name="gallery_end_paging">더이상 표시할 데이터가 없습니다.</string>
     <string name="gallery_retry">재시도</string>
     <string name="gallery_check">확인</string>
-    <string name="gallery_search_hint">골프장 검색하기</string>
+    <string name="search_hint">골프장 검색하기</string>
 
     <!--play video-->
     <string name="play_share_title">공유하기</string>
