@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class FetchOthersFirstVideosUseCase @Inject constructor(private val videoRepository: VideoRepository) {
     suspend operator fun invoke(query: String, sortType: SortType) {
-        videoRepository.fetchOthersNextVideos(query, sortType)
+        videoRepository.fetchOthersFirstPageVideos(query, sortType)
     }
 }
