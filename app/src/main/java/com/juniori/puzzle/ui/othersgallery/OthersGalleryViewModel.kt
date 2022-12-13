@@ -110,7 +110,7 @@ class OthersGalleryViewModel @Inject constructor(
 
             if (data is Resource.Success) {
                 val result = data.result
-                if (result.isNullOrEmpty().not()) {
+                if (result.isNullOrEmpty().not() ) {
                     result.last().also {
                         setLastData(it.updateTime, it.likedCount.toLong(), result.countWith(it))
                     }
