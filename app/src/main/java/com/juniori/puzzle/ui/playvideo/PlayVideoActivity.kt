@@ -3,7 +3,6 @@ package com.juniori.puzzle.ui.playvideo
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
@@ -15,6 +14,7 @@ import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,22 +34,24 @@ class PlayVideoActivity : AppCompatActivity() {
     private val shareDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
             .buildAlertDialog({
-                viewModel.updateVideoPrivacy(currentVideoItem)
+                viewModel.updateVideoPrivacy(currentVideoItem ?: return@buildAlertDialog)
             }, {
-
             }).setTitle(getString(R.string.play_share_title))
             .setMessage(getString(R.string.play_share_message))
     }
     private val hidingDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
-            .buildAlertDialog({ viewModel.updateVideoPrivacy(currentVideoItem) }, {})
+            .buildAlertDialog({
+                viewModel.updateVideoPrivacy(currentVideoItem ?: return@buildAlertDialog)
+            }, {
+            })
             .setTitle(getString(R.string.play_hiding_title))
             .setMessage(getString(R.string.play_hiding_message))
     }
     private val deleteDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
             .buildAlertDialog({
-                viewModel.deleteVideo(currentVideoItem.documentId)
+                viewModel.deleteVideo(currentVideoItem?.documentId ?: return@buildAlertDialog)
             }, {})
             .setTitle(getString(R.string.play_delete_title))
             .setMessage(getString(R.string.play_delete_message))
@@ -121,16 +123,16 @@ class PlayVideoActivity : AppCompatActivity() {
                     ?: return@setOnMenuItemClickListener true
                 when (currentVideo.isPrivate) {
                     true -> {
-                        shareDialog.show()
+                        shareDialog.showDialog()
                     }
                     false -> {
-                        hidingDialog.show()
+                        hidingDialog.showDialog()
                     }
                 }
                 true
             }
             menu.findItem(R.id.video_delete).setOnMenuItemClickListener {
-                deleteDialog.show()
+                deleteDialog.showDialog()
                 true
             }
             setNavigationOnClickListener {

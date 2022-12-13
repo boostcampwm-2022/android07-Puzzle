@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -36,7 +34,7 @@ class OthersGalleryFragment : Fragment() {
     private var _binding: FragmentOthersgalleryBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val viewModel: OthersGalleryViewModel by viewModels()
-    private val recyclerAdapter: OtherGalleryAdapter by lazy {
+    private val recyclerAdapter: OthersGalleryAdapter by lazy {
         OthersGalleryAdapter(viewModel) { clickedIndex ->
             playVideoActivityLauncher.launch(
                 Intent(requireContext(), PlayVideoActivity::class.java).apply {
@@ -72,7 +70,7 @@ class OthersGalleryFragment : Fragment() {
 
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = object : GridLayoutManager(requireContext(), resources.getInteger(R.integer.grid_column)){
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), resources.getInteger(R.integer.grid_column)) {
                 override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
                     if (lp != null) {
                         if (lp.height < height / 3) {
@@ -170,7 +168,6 @@ class OthersGalleryFragment : Fragment() {
                     if (viewModel.setOrderType(SortType.NEW)) {
                         binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                     }
-
                 }
 
                 1 -> {
@@ -180,9 +177,6 @@ class OthersGalleryFragment : Fragment() {
                 }
             }
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
             popup.dismissPopupList()
         }
 
