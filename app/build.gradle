@@ -6,9 +6,6 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
 }
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 android {
     namespace 'com.juniori.puzzle'
     compileSdk 32
@@ -22,7 +19,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "WEATHER_SERVICE_KEY", properties["WEATHER_SERVICE_KEY"]
     }
 
     buildTypes {
