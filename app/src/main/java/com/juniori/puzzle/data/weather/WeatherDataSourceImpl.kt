@@ -12,6 +12,8 @@ class WeatherDataSourceImpl @Inject constructor(
 ) : WeatherDataSource {
 
     override suspend fun getWeather(lat: Double, lon: Double): Resource<List<WeatherEntity>> {
+        if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return Resource.Failure(Exception())
+
         return try {
             val response = service.getWeather(lat, lon, SERVICE_KEY)
             Resource.Success(response.body()?.toItem() ?: emptyList())

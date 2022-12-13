@@ -39,6 +39,7 @@
     <string name="green_lean_text">Find the Green Slope</string>
     <string name="green_lean_image_description">Find Green Slope Button</string>
     <string name="logo_dsecription">Puzzle Logo</string>
+    <string name="location_empty">No Location Info</string>
 
     <!--acitivty_camera-->
     <string name="camera_capture_start">Recoding</string>
@@ -78,7 +79,7 @@
     <string name="network_fail">Network communication failed.</string>
 
     <!--permission-->
-    <string name="location_permission">Please allow location permission.</string>
+    <string name="location_permission">Please allow location permission.\nYou can allow permission at \nSetting->Application->Puzzle</string>
     <string name="location_service_off">Please connect network and location services.</string>
 
     <!--description-->
@@ -93,7 +94,6 @@
     <string name="playvideo_delete">Delete</string>
 
     <!--mypage-->
-    <string name="gallery_search_hint">search golf course</string>
     <string name="mypage_title">Did you have a good putting today?</string>
     <string name="change_nickname">Change Nickname</string>
     <string name="logout">Logout</string>
