@@ -7,6 +7,6 @@ import javax.inject.Inject
 class RegisterLocationListenerUseCase @Inject constructor(
     private val repository: LocationRepository
 ) {
-    operator fun invoke(listener: LocationListenerCompat) =
+    operator fun invoke(listener: LocationListenerCompat): Boolean =
         repository.registerLocationListener(listener)
 }

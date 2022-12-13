@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.juniori.puzzle.R
 import com.juniori.puzzle.adapter.WeatherRecyclerViewAdapter
 import com.juniori.puzzle.data.Resource
+import com.juniori.puzzle.data.location.LocationInfo
 import com.juniori.puzzle.databinding.FragmentHomeBinding
 import com.juniori.puzzle.ui.sensor.SensorActivity
 import com.juniori.puzzle.util.StateManager
@@ -38,7 +39,8 @@ class HomeFragment : Fragment() {
 
     private val locationListener = object : LocationListenerCompat {
         override fun onLocationChanged(loc: Location) {
-            homeViewModel.getWeather()
+            homeViewModel.cancelTimer()
+            homeViewModel.getWeather(LocationInfo(loc.latitude, loc.longitude))
         }
 
         override fun onProviderDisabled(provider: String) {
@@ -48,22 +50,19 @@ class HomeFragment : Fragment() {
 
         override fun onProviderEnabled(provider: String) {
             super.onProviderEnabled(provider)
-            homeViewModel.getWeather()
+            homeViewModel.showWeather()
         }
     }
 
-    val checkPermission = {
-        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-    }
 
     private val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isPermitted ->
         homeViewModel.setUiState(Resource.Loading)
-        if (isPermitted) {
-            homeViewModel.getWeather()
-        } else {
+        if (isPermitted.not()) {
             homeViewModel.setWeatherInfoText(getString(R.string.location_permission))
+        } else {
+            homeViewModel.registerListener(locationListener)
         }
     }
 
@@ -83,11 +82,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val welcomeTextArray = resources.getStringArray(R.array.welcome_text)
-        checkPermission()
         adapter = WeatherRecyclerViewAdapter()
+        checkPermission()
 
         binding.run {
             weatherRefreshBtn.setOnClickListener {
+                checkPermission()
+            }
+            refreshBtn.setOnClickListener {
                 checkPermission()
             }
 
@@ -104,35 +106,28 @@ class HomeFragment : Fragment() {
                 when (resource) {
                     is Resource.Success -> {
                         stateManager.dismissLoadingDialog()
-                        stateManager.removeNetworkDialog()
-                        binding.weatherLayout.isVisible = true
+                        showWeather()
                     }
                     is Resource.Failure -> {
                         stateManager.dismissLoadingDialog()
-                        stateManager.removeNetworkDialog()
-                        binding.weatherLayout.isVisible = false
-                        stateManager.showNetworkDialog(
-                            binding.homeBottomCardView,
-                            resource.exception.message ?: "네트워크 통신에 실패했습니다",
-                            checkPermission
-                        )
+                        hideWeather(resource.exception.message ?: getString(R.string.network_fail))
                     }
                     is Resource.Loading -> {
                         stateManager.showLoadingDialog()
                     }
                 }
             }
+
+        }
+
+        homeViewModel.weatherFailTextId.observe(viewLifecycleOwner) { id ->
+            homeViewModel.setWeatherInfoText(getString(id))
         }
 
         homeViewModel.run {
             setWelcomeText(welcomeTextArray.random(random))
             setDisplayName()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        homeViewModel.registerListener(locationListener)
     }
 
     override fun onPause() {
@@ -146,4 +141,18 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    private fun checkPermission() =
+        locationPermissionRequest.launch(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+
+    private fun showWeather() {
+        binding.weatherLayout.isVisible = true
+        binding.weatherFailLayout.isVisible = false
+    }
+
+    private fun hideWeather(text: String) {
+        binding.weatherLayout.isVisible = false
+        binding.weatherFailLayout.isVisible = true
+        binding.infoText.text = text
+    }
 }
+

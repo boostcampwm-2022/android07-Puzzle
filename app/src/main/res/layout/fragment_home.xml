@@ -66,12 +66,12 @@
             android:id="@+id/logo_iv"
             android:layout_width="120dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="2:1"
+            android:contentDescription="@string/logo_dsecription"
             android:src="@drawable/home_icon"
+            app:layout_constraintDimensionRatio="2:1"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="@id/home_icon_guideline"
-            android:contentDescription="@string/logo_dsecription" />
+            app:layout_constraintTop_toTopOf="@id/home_icon_guideline" />
 
         <TextView
             android:id="@+id/user_nickname_tv"
@@ -81,19 +81,19 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/text_vertical_margin"
             android:textColor="@color/onPrimary_color"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@id/welcome_text_tv"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
             app:layout_constraintTop_toBottomOf="@id/logo_iv"
+            app:layout_constraintVertical_chainStyle="packed"
             tools:text="000님" />
 
         <TextView
             android:id="@+id/welcome_text_tv"
             style="@style/Theme.Puzzle.TextMedium"
-            android:text="@{vm.welcomeText}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{vm.welcomeText}"
             android:textColor="@color/onPrimary_color"
             app:layout_constraintBottom_toTopOf="@id/bottom_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
@@ -139,38 +139,38 @@
             android:id="@+id/golf_btn_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:paddingVertical="@dimen/text_vertical_margin"
-            android:paddingHorizontal="@dimen/text_horizontal_margin"
             android:background="@drawable/all_search_view_background"
             android:backgroundTint="@color/primary_color"
-            app:layout_constraintTop_toTopOf="@id/home_ground_iv"
+            android:elevation="1dp"
+            android:paddingHorizontal="@dimen/text_horizontal_margin"
+            android:paddingVertical="@dimen/text_vertical_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="@id/home_ground_iv">
 
             <ImageView
                 android:id="@+id/golf_iv"
                 android:layout_width="30dp"
                 android:layout_height="0dp"
+                android:contentDescription="@string/green_lean_image_description"
                 android:elevation="10dp"
                 android:src="@drawable/golf_ball"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="@id/golf_btn_background"
-                android:contentDescription="@string/green_lean_image_description" />
+                app:layout_constraintStart_toStartOf="@id/golf_btn_background" />
 
             <TextView
                 android:id="@+id/golf_btn_text"
+                style="@style/Theme.Puzzle.TextSmall.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:elevation="1dp"
                 android:layout_marginStart="@dimen/text_vertical_margin"
-                style="@style/Theme.Puzzle.TextSmall.Bold"
-                android:textColor="@color/white"
+                android:elevation="1dp"
                 android:text="@string/green_lean_text"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@id/golf_iv"
                 app:layout_constraintStart_toEndOf="@id/golf_iv"
-                app:layout_constraintTop_toTopOf="@id/golf_iv"
-                app:layout_constraintBottom_toBottomOf="@id/golf_iv"/>
+                app:layout_constraintTop_toTopOf="@id/golf_iv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -178,10 +178,10 @@
             android:id="@+id/weather_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large_component_corner_radius"
             android:elevation="2dp"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="@id/start_guideline"
-            android:layout_marginTop="@dimen/large_component_corner_radius"
             app:layout_constraintTop_toTopOf="@id/home_bottom_cardView">
 
             <ImageView
@@ -304,6 +304,70 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/weather_main_icon_iv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/weather_fail_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/large_component_corner_radius"
+            android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
+            app:layout_constraintStart_toStartOf="@id/start_guideline"
+            app:layout_constraintTop_toTopOf="@id/bottom_guideline">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/img_start_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.25" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/img_end_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.75" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:elevation="10dp"
+                app:layout_constraintDimensionRatio="H 2:1"
+                app:layout_constraintEnd_toEndOf="@id/img_end_guideline"
+                app:layout_constraintStart_toStartOf="@id/img_start_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/network_fail" />
+
+            <ImageView
+                android:id="@+id/refresh_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/text_vertical_margin"
+                android:src="@drawable/home_refresh_icon"
+                app:layout_constraintBottom_toBottomOf="@id/info_text"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@id/info_text"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/info_text" />
+
+            <TextView
+                android:id="@+id/info_text"
+                style="@style/Theme.Puzzle.TextMedium.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/text_vertical_margin"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/refresh_btn"
+                app:layout_constraintTop_toBottomOf="@id/animation"
+                tools:text="네트워크를 확인해주세요" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
