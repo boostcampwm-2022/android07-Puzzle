@@ -6,7 +6,7 @@ import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 import kotlin.coroutines.resumeWithException
 
 @SuppressLint("SimpleDateFormat")
@@ -24,14 +24,15 @@ suspend fun <T> Task<T>.await(): T {
 }
 
 fun Address.toAddressString(): String {
-    val list = mutableListOf<String>()
-    if (adminArea != null) list.add(adminArea)
-    if (locality != null) {
+    val list= mutableListOf<String>()
+    if(adminArea !=null) list.add(adminArea)
+    if(locality != null){
         list.add(locality)
-    } else {
+    }
+    else{
         list.add(subLocality)
     }
-    if (thoroughfare != null) {
+    if(thoroughfare!=null){
         list.add(thoroughfare)
     }
 

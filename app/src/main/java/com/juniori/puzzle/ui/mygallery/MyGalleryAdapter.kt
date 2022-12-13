@@ -8,27 +8,24 @@ import com.juniori.puzzle.databinding.ItemGalleryRecyclerBinding
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.util.GalleryDiffCallBack
 
+
 class MyGalleryAdapter(
     val viewModel: MyGalleryViewModel,
-    private val onClick: (position: Int) -> Unit
+    private val onClick: (VideoInfoEntity) -> Unit
 ) : ListAdapter<VideoInfoEntity, MyGalleryAdapter.ViewHolder>(
     GalleryDiffCallBack()
 ) {
 
     class ViewHolder(
         val binding: ItemGalleryRecyclerBinding,
-        val onClick: (position: Int) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener {
-                onClick(layoutPosition)
-            }
-        }
-
+        val onClick: (VideoInfoEntity) -> Unit
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(item: VideoInfoEntity) {
+            binding.root.setOnClickListener {
+                onClick(item)
+            }
             binding.data = item
-            binding.executePendingBindings()
         }
     }
 
@@ -50,4 +47,5 @@ class MyGalleryAdapter(
         const val VISIBLE_ITEM_COUNT = 3
         const val LOADING_FLAG_NUM = 1
     }
+
 }

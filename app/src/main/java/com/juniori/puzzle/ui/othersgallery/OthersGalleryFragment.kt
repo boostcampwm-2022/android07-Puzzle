@@ -1,34 +1,28 @@
 package com.juniori.puzzle.ui.othersgallery
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.databinding.FragmentOthersgalleryBinding
 import com.juniori.puzzle.ui.playvideo.PlayVideoActivity
-import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.CLICKED_VIDEO_INDEX_KEY
-import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.GALLERY_TYPE_KEY
-import com.juniori.puzzle.util.GalleryType
+import com.juniori.puzzle.util.GalleryState
+import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
+import com.juniori.puzzle.util.PlayResultConst.RESULT_TO_PRIVATE
 import com.juniori.puzzle.util.PuzzleDialog
 import com.juniori.puzzle.util.SortType
-import com.juniori.puzzle.util.VideoFetchingState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OthersGalleryFragment : Fragment() {
@@ -36,24 +30,10 @@ class OthersGalleryFragment : Fragment() {
     private var _binding: FragmentOthersgalleryBinding? = null
     private val binding get() = requireNotNull(_binding)
     private val viewModel: OthersGalleryViewModel by viewModels()
-    private val recyclerAdapter: OthersGalleryAdapter by lazy {
-        OthersGalleryAdapter(viewModel) { clickedIndex ->
-            playVideoActivityLauncher.launch(
-                Intent(requireContext(), PlayVideoActivity::class.java).apply {
-                    putExtra(CLICKED_VIDEO_INDEX_KEY, clickedIndex)
-                    putExtra(GALLERY_TYPE_KEY, GalleryType.OTHERS)
-                }
-            )
-        }
-    }
-    private val playVideoActivityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val lastViewedPosition = result.data?.extras?.getInt(
-                    PlayVideoActivity.LAST_VIEWED_VIDEO_INDEX_KEY,
-                    0
-                ) ?: return@registerForActivityResult
-                binding.recycleOtherGallery.scrollToPosition(lastViewedPosition)
+    private val activityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_TO_PRIVATE || it.resultCode == RESULT_DELETE) {
+                viewModel.getMainData()
             }
         }
 
@@ -71,9 +51,19 @@ class OthersGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val recyclerAdapter = OtherGalleryAdapter(viewModel) {
+            activityResult.launch(
+                Intent(
+                    requireContext(),
+                    PlayVideoActivity::class.java
+                ).apply {
+                    this.putExtra(VIDEO_EXTRA_NAME, it)
+                })
+        }
+
         binding.recycleOtherGallery.apply {
             adapter = recyclerAdapter
-            val gridLayoutManager = object : GridLayoutManager(requireContext(), resources.getInteger(R.integer.grid_column)) {
+            val gridLayoutManager = object : GridLayoutManager(requireContext(), resources.getInteger(R.integer.grid_column)){
                 override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
                     if (lp != null) {
                         if (lp.height < height / 3) {
@@ -87,72 +77,74 @@ class OthersGalleryFragment : Fragment() {
         }
 
         binding.otherGallerySwipeRefresh.setOnRefreshListener {
-            viewModel.fetchFirstVideoPage()
+            viewModel.getMainData()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.videoList.collectLatest { videoList ->
-                    binding.otherGallerySwipeRefresh.isRefreshing = false
+        viewModel.list.observe(viewLifecycleOwner) { dataList ->
+            binding.otherGallerySwipeRefresh.isRefreshing = false
 
-                    recyclerAdapter.submitList(videoList)
+            recyclerAdapter.submitList(dataList)
 
-                    binding.textOtherGalleryNotFound.isVisible = videoList.isEmpty()
+            binding.textOtherGalleryNotFound.isVisible = dataList.isEmpty()
+        }
+
+        viewModel.refresh.observe(viewLifecycleOwner) { isRefresh ->
+            binding.progressOtherGallery.isVisible = isRefresh
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                GalleryState.NONE -> {
+                    snackBar?.dismiss()
                 }
-            }
-        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.videoFetchingState.collectLatest { state ->
-                    binding.progressOtherGallery.isVisible = false
-
-                    when (state) {
-                        VideoFetchingState.NONE -> {
-                            snackBar?.dismiss()
-                        }
-
-                        VideoFetchingState.LOADING -> {
-                            binding.progressOtherGallery.isVisible = true
-                        }
-
-                        VideoFetchingState.NO_MORE_VIDEO -> {
-                            snackBar = Snackbar.make(
-                                view,
-                                R.string.gallery_end_paging,
-                                Snackbar.LENGTH_SHORT
-                            ).apply {
-                                setAction(R.string.gallery_check) {
-                                    dismiss()
-                                }
-                            }
-                            snackBar?.show()
-                        }
-
-                        VideoFetchingState.NETWORK_ERROR_PAGING -> {
-                            snackBar = Snackbar.make(
-                                view,
-                                R.string.gallery_paging_error,
-                                Snackbar.LENGTH_INDEFINITE
-                            ).setAction(R.string.gallery_retry) {
-                                viewModel.fetchNextVideoPage()
-                            }
-                            snackBar?.show()
-                        }
-
-                        VideoFetchingState.NETWORK_ERROR_BASE -> {
-                            binding.otherGallerySwipeRefresh.isRefreshing = false
-                            snackBar = Snackbar.make(
-                                view,
-                                R.string.gallery_init_load_error,
-                                Snackbar.LENGTH_INDEFINITE
-                            ).setAction(R.string.gallery_retry) {
-                                viewModel.fetchFirstVideoPage()
-                            }
-                            snackBar?.show()
+                GalleryState.END_PAGING -> {
+                    snackBar = Snackbar.make(
+                        view,
+                        R.string.gallery_end_paging,
+                        Snackbar.LENGTH_SHORT
+                    ).apply {
+                        setAction(R.string.gallery_check) {
+                            dismiss()
                         }
                     }
+
+                    snackBar?.show()
                 }
+
+                GalleryState.NETWORK_ERROR_PAGING -> {
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_paging_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getPaging()
+                            }
+                    snackBar?.show()
+                }
+
+                GalleryState.NETWORK_ERROR_BASE -> {
+                    binding.otherGallerySwipeRefresh.isRefreshing = false
+                    snackBar =
+                        Snackbar.make(
+                            view,
+                            R.string.gallery_init_load_error,
+                            Snackbar.LENGTH_INDEFINITE
+                        )
+                            .setAction(R.string.gallery_retry) {
+                                viewModel.getMainData()
+                            }
+                    snackBar?.show()
+                }
+            }
+
+        }
+
+        viewModel.list.value.also { list ->
+            if (list == null || list.isEmpty()) {
+                viewModel.getMainData()
             }
         }
 
@@ -171,6 +163,7 @@ class OthersGalleryFragment : Fragment() {
                     if (viewModel.setOrderType(SortType.NEW)) {
                         binding.recycleOtherGallery.scrollToPosition(RECYCLER_TOP)
                     }
+
                 }
 
                 1 -> {
@@ -209,6 +202,9 @@ class OthersGalleryFragment : Fragment() {
     }
 
     companion object {
+
         const val RECYCLER_TOP = 0
+        const val VIDEO_EXTRA_NAME = "videoInfo"
+
     }
 }

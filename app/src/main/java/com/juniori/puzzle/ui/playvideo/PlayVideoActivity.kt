@@ -1,58 +1,64 @@
 package com.juniori.puzzle.ui.playvideo
 
-import android.content.Intent
+import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.viewpager2.widget.ViewPager2
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.util.Util
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.ActivityPlayvideoBinding
+import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
-import com.juniori.puzzle.util.GalleryType
+import com.juniori.puzzle.util.PlayResultConst.RESULT_DELETE
+import com.juniori.puzzle.util.PlayResultConst.RESULT_NOTTING
+import com.juniori.puzzle.util.PlayResultConst.RESULT_TO_PRIVATE
 import com.juniori.puzzle.util.PuzzleDialog
-import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class PlayVideoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayvideoBinding
     private val viewModel: PlayVideoViewModel by viewModels()
-    private lateinit var swipePagerAdapter: VideoSwipePagerAdapter
-    private val currentVideoItem: VideoInfoEntity?
-        get() = viewModel.currentVideoFlow.value
-
+    private var exoPlayer: ExoPlayer? = null
+    private lateinit var currentVideoItem: VideoInfoEntity
     private val shareDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
             .buildAlertDialog({
-                viewModel.updateVideoPrivacy(currentVideoItem ?: return@buildAlertDialog)
+                viewModel.updateVideoPrivacy(currentVideoItem)
             }, {
+
             }).setTitle(getString(R.string.play_share_title))
             .setMessage(getString(R.string.play_share_message))
     }
     private val hidingDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
-            .buildAlertDialog({
-                viewModel.updateVideoPrivacy(currentVideoItem ?: return@buildAlertDialog)
-            }, {
-            })
+            .buildAlertDialog({ viewModel.updateVideoPrivacy(currentVideoItem) }, {})
             .setTitle(getString(R.string.play_hiding_title))
             .setMessage(getString(R.string.play_hiding_message))
     }
     private val deleteDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
             .buildAlertDialog({
-                viewModel.deleteVideo(currentVideoItem?.documentId ?: return@buildAlertDialog)
+                viewModel.deleteVideo(currentVideoItem.documentId)
             }, {})
             .setTitle(getString(R.string.play_delete_title))
             .setMessage(getString(R.string.play_delete_message))
@@ -63,67 +69,224 @@ class PlayVideoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPlayvideoBinding.inflate(layoutInflater).apply {
-            vm = viewModel
-            lifecycleOwner = this@PlayVideoActivity
-        }
+        binding = ActivityPlayvideoBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
 
         stateManager.createLoadingDialog(binding.activityPlayVideo)
         setContentView(binding.root)
 
-        sendInitialDataToViewModel()
-        initializeSwipeViewPager()
+        currentVideoItem = intent.extras?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
+
+        viewModel.getPublisherInfo(currentVideoItem.ownerUid)
+        viewModel.initVideoFlow(currentVideoItem)
         setItemOnClickListener()
         initCollector()
-    }
 
-    private fun sendInitialDataToViewModel() {
-        with(intent) {
-            viewModel.setData(
-                query = getStringExtra(QUERY_KEY) ?: "",
-                sortType = getSerializableExtra(SORT_TYPE_KEY) as? SortType ?: SortType.NEW,
-                clickedVideoIndex = getIntExtra(CLICKED_VIDEO_INDEX_KEY, 0),
-                galleryType = getSerializableExtra(GALLERY_TYPE_KEY) as? GalleryType ?: return
-            )
+        if (savedInstanceState != null) {
+            startAutoPlay = savedInstanceState.getBoolean(KEY_AUTO_PLAY)
+            startPosition = savedInstanceState.getLong(KEY_POSITION)
+        } else {
+            clearStartPosition()
         }
     }
 
-    private fun initializeSwipeViewPager() {
-        swipePagerAdapter = VideoSwipePagerAdapter(this) {
-            viewModel.fetchMoreVideos()
+    override fun onStart() {
+        super.onStart()
+        if (Build.VERSION.SDK_INT > 23) {
+            initVideoPlayer(currentVideoItem.videoUrl)
+            binding.playerView.onResume()
         }
-        binding.swipedVideoPlayerPager.apply {
-            adapter = swipePagerAdapter
+    }
 
-            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    viewModel.syncCurrentVideoIndex(position)
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT <= 23 || exoPlayer == null) {
+            initVideoPlayer(currentVideoItem.videoUrl)
+            binding.playerView.onResume()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (Build.VERSION.SDK_INT <= 23) {
+            binding.playerView.onPause()
+            releasePlayer()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (Build.VERSION.SDK_INT > 23) {
+            binding.playerView.onPause()
+            releasePlayer()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        updateStartPosition()
+        outState.putBoolean(KEY_AUTO_PLAY, startAutoPlay)
+        outState.putLong(KEY_POSITION, startPosition)
+    }
+
+    private fun initCollector() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getLoginInfoFlow.collectLatest { resource ->
+                    if (resource is Resource.Success) {
+                        currentUserInfo = resource.result
+                        viewModel.setCurrentLikeStatus(currentVideoItem, currentUserInfo.uid)
+                        setMenuItems()
+                    }
                 }
-            })
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.likeState.collectLatest { isLikedVideo ->
+                    binding.buttonLike.setIconResource(
+                        if (isLikedVideo) {
+                            R.drawable.play_like_selected
+                        } else {
+                            R.drawable.play_like_not_selected
+                        }
+                    )
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getPublisherInfoFlow.collectLatest { resource ->
+                    if (resource is Resource.Success) {
+                        publisherUserInfo = resource.result
+                        binding.materialToolbar.title = publisherUserInfo.nickname
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteFlow.collectLatest { resource ->
+                    if (resource != null) {
+                        when (resource) {
+                            is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
+                                setResult(RESULT_DELETE)
+                                finish()
+                            }
+                            is Resource.Loading -> {
+                                stateManager.showLoadingDialog()
+                            }
+                            is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
+                                resource.exception.printStackTrace()
+                                Snackbar.make(
+                                    binding.root,
+                                    "동영상 삭제에 실패했습니다.",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.videoFlow.collectLatest { resource ->
+                    if (resource != null) {
+                        when (resource) {
+                            is Resource.Success -> {
+                                stateManager.dismissLoadingDialog()
+                                currentVideoItem = resource.result
+                                if(currentVideoItem.isPrivate){
+                                    setResult(RESULT_TO_PRIVATE)
+                                }else{
+                                    setResult(RESULT_NOTTING)
+                                }
+                                setMenuItems()
+                            }
+                            is Resource.Loading -> {
+                                stateManager.showLoadingDialog()
+                            }
+                            is Resource.Failure -> {
+                                stateManager.dismissLoadingDialog()
+                                resource.exception.printStackTrace()
+                                Snackbar.make(
+                                    binding.root,
+                                    "동영상 공유상태 전환에 실패했습니다.",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun setMenuItems(currentUserId: String, videoOwnerId: String) {
-        if (currentUserId == videoOwnerId) {
+    private fun initVideoPlayer(uri: String) {
+        val factory = DefaultHttpDataSource.Factory().apply {
+            setUserAgent(Util.getUserAgent(this@PlayVideoActivity, applicationInfo.name))
+        }
+        exoPlayer = ExoPlayer.Builder(this).build().apply {
+            setMediaSource(
+                ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri))
+            )
+            playWhenReady = startAutoPlay
+            if (startPosition != C.TIME_UNSET) {
+                seekTo(startPosition)
+            }
+            prepare()
+            binding.playerView.player = this
+        }
+    }
+
+    private fun updateStartPosition() {
+        exoPlayer?.run {
+            startAutoPlay = playWhenReady
+            startPosition = 0L.coerceAtLeast(contentPosition)
+        }
+    }
+
+    private fun clearStartPosition() {
+        startAutoPlay = true
+        startPosition = C.TIME_UNSET
+    }
+
+    private fun releasePlayer() {
+        exoPlayer?.let { player ->
+            updateStartPosition()
+            player.release()
+            exoPlayer = null
+            binding.playerView.player = null
+        }
+    }
+
+    private fun setMenuItems() {
+        if (currentUserInfo.uid == currentVideoItem.ownerUid) {
             binding.materialToolbar.menu.findItem(R.id.video_privacy).title =
-                if (currentVideoItem?.isPrivate ?: return) {
+                if (currentVideoItem.isPrivate) {
                     getString(R.string.playvideo_to_public)
                 } else {
                     getString(R.string.playvideo_to_private)
                 }
-        }
-        binding.materialToolbar.menu.forEach {
-            it.isVisible = currentUserId == videoOwnerId
+        } else {
+            binding.materialToolbar.menu.forEach {
+                it.isVisible = false
+            }
         }
     }
 
     private fun setItemOnClickListener() {
         with(binding.materialToolbar) {
             menu.findItem(R.id.video_privacy).setOnMenuItemClickListener {
-                val currentVideo = viewModel.currentVideoFlow.value
-                    ?: return@setOnMenuItemClickListener true
-                when (currentVideo.isPrivate) {
+                when (currentVideoItem.isPrivate) {
                     true -> {
                         shareDialog.showDialog()
                     }
@@ -141,126 +304,29 @@ class PlayVideoActivity : AppCompatActivity() {
                 finish()
             }
         }
-    }
-
-    private fun initCollector() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.currentVideoFlow.collectLatest { videoInfo ->
-                    setMenuItems(
-                        currentUserId = viewModel.currentUserInfo?.uid ?: return@collectLatest,
-                        videoOwnerId = videoInfo?.ownerUid ?: return@collectLatest
-                    )
-                    viewModel.getPublisherInfo(videoInfo.ownerUid)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.videoListFlow.collectLatest { videoList ->
-                    swipePagerAdapter.updateVideoInfoList(videoList)
-
-                    // 처음에 클릭된 영상의 index로 ViewPager의 position를 이동시키기 위함
-                    if (binding.swipedVideoPlayerPager.currentItem != viewModel.currentVideoIndex) {
-                        binding.swipedVideoPlayerPager.setCurrentItem(
-                            viewModel.currentVideoIndex,
-                            false
-                        )
+        with(binding) {
+            buttonComment.setOnClickListener {
+                PlayVideoBottomSheet().apply {
+                    arguments = Bundle().apply {
+                        putParcelable(VIDEO_EXTRA_NAME, currentVideoItem)
+                        putParcelable(PUBLISHER_EXTRA_NAME, publisherUserInfo)
                     }
-                }
+                }.show(supportFragmentManager, null)
+            }
+            buttonLike.setOnClickListener {
+                viewModel.changeLikeStatus(currentVideoItem, currentUserInfo.uid)
             }
         }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getPublisherInfoFlow.collectLatest { resource ->
-                    if (resource is Resource.Success) {
-                        val publisherUserInfo = resource.result
-                        binding.materialToolbar.title = publisherUserInfo.nickname
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.deleteFlow.collectLatest { resource ->
-                    if (resource == null) return@collectLatest
-                    when (resource) {
-                        is Resource.Success -> {
-                            stateManager.dismissLoadingDialog()
-                            with(viewModel) {
-                                swipePagerAdapter.notifyItemRemoved(currentVideoIndex)
-                                if (currentVideoIndex == videoListFlow.value.size) {
-                                    syncCurrentVideoIndex(currentVideoIndex - 1)
-                                } else {
-                                    syncCurrentVideoIndex(currentVideoIndex)
-                                }
-                            }
-                        }
-                        is Resource.Loading -> {
-                            stateManager.showLoadingDialog()
-                        }
-                        is Resource.Failure -> {
-                            stateManager.dismissLoadingDialog()
-                            resource.exception.printStackTrace()
-                            Snackbar.make(
-                                binding.root,
-                                "동영상 삭제에 실패했습니다.",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.privacyFlow.collectLatest { resource ->
-                    if (resource == null) return@collectLatest
-                    when (resource) {
-                        is Resource.Success -> {
-                            stateManager.dismissLoadingDialog()
-                            setMenuItems(
-                                currentUserId = viewModel.currentUserInfo?.uid ?: return@collectLatest,
-                                videoOwnerId = resource.result.ownerUid
-                            )
-                        }
-                        is Resource.Loading -> {
-                            stateManager.showLoadingDialog()
-                        }
-                        is Resource.Failure -> {
-                            stateManager.dismissLoadingDialog()
-                            resource.exception.printStackTrace()
-                            Snackbar.make(
-                                binding.root,
-                                "동영상 공유상태 전환에 실패했습니다.",
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        setResult(
-            RESULT_OK,
-            Intent().apply {
-                this.putExtra(LAST_VIEWED_VIDEO_INDEX_KEY, viewModel.currentVideoIndex)
-            }
-        )
-        super.onDestroy()
     }
 
     companion object {
-        const val LAST_VIEWED_VIDEO_INDEX_KEY = "LAST_VIEWED_VIDEO_INDEX"
-        const val CLICKED_VIDEO_INDEX_KEY = "CLICKED_VIDEO_INDEX"
-        const val GALLERY_TYPE_KEY = "GALLERY_TYPE"
-        const val QUERY_KEY = "QUERY"
-        const val SORT_TYPE_KEY = "SORT_TYPE"
+        lateinit var publisherUserInfo: UserInfoEntity
+        lateinit var currentUserInfo: UserInfoEntity
+        private var startAutoPlay: Boolean = true
+        private var startPosition: Long = C.TIME_UNSET
+        private const val VIDEO_EXTRA_NAME = "videoInfo"
+        private const val PUBLISHER_EXTRA_NAME = "publisherInfo"
+        private const val KEY_POSITION = "position"
+        private const val KEY_AUTO_PLAY = "auto_play"
     }
 }

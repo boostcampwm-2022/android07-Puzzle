@@ -1,4 +1,3 @@
-/*
 package com.juniori.puzzle.data.video
 
 import com.juniori.puzzle.data.Resource
@@ -10,7 +9,6 @@ import javax.inject.Inject
 
 class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<VideoInfoEntity>) :
     VideoRepository {
-
     override suspend fun getMyVideoList(uid: String, index: Int): Resource<List<VideoInfoEntity>> {
         return Resource.Success(
             videoList.filter { videoInfoEntity -> videoInfoEntity.ownerUid == uid }
@@ -88,4 +86,4 @@ class VideoRepositoryMockImpl @Inject constructor(private val videoList: List<Vi
     override suspend fun updateServerNickname(userInfoEntity: UserInfoEntity): Resource<UserInfoEntity> {
         TODO("Not yet implemented")
     }
-}*/
+}

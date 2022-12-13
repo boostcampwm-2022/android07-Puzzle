@@ -1,5 +1,6 @@
 package com.juniori.puzzle.util
 
+
 import com.juniori.puzzle.data.firebase.dto.BooleanFieldFilter
 import com.juniori.puzzle.data.firebase.dto.BooleanValue
 import com.juniori.puzzle.data.firebase.dto.CompositeFilter
