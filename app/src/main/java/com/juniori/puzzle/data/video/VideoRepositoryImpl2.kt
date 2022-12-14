@@ -6,7 +6,7 @@ import com.juniori.puzzle.data.firebase.StorageDataSource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.repository.VideoRepository
-import com.juniori.puzzle.util.PagingConst
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.PagingConst.ITEM_CNT
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.VideoFetchingState
@@ -71,7 +71,7 @@ class VideoRepositoryImpl2 @Inject constructor(
             if (data is Resource.Success) {
                 val result = data.result
                 if (result.isEmpty().not()) {
-                    if (result.size < PagingConst.ITEM_CNT) {
+                    if (result.size < ITEM_CNT) {
                         pagingEndFlag = true
                     }
                     _myVideoList.value = result
@@ -205,24 +205,30 @@ class VideoRepositoryImpl2 @Inject constructor(
     }
 
     override suspend fun changeVideoScope(
-        documentInfo: VideoInfoEntity
+        documentInfo: VideoInfoEntity,
+        galleryType: GalleryType
     ): Resource<VideoInfoEntity> {
         val changeResult = firestoreDataSource.changeVideoItemPrivacy(documentInfo)
         if (changeResult is Resource.Success) {
             val updatedVideoInfo = changeResult.result
-            updateVideoList(_othersVideoList, updatedVideoInfo)
+            updateVideoList(galleryType, updatedVideoInfo)
         }
         return changeResult
     }
 
-    override suspend fun deleteVideo(documentId: String): Resource<Unit> {
+    override suspend fun deleteVideo(documentId: String, galleryType: GalleryType): Resource<Unit> {
         return if (
             storageDataSource.deleteVideo(documentId).isSuccess &&
             storageDataSource.deleteThumbnail(documentId).isSuccess
         ) {
             firestoreDataSource.deleteVideoItem(documentId).also { deletionResource ->
                 if (deletionResource is Resource.Success) {
-                    _othersVideoList.value = _othersVideoList.value.filterNot { videoInfo ->
+                    val videoListFlow = if (galleryType == GalleryType.MINE) {
+                        _myVideoList
+                    } else {
+                        _othersVideoList
+                    }
+                    videoListFlow.value = videoListFlow.value.filterNot { videoInfo ->
                         videoInfo.documentId == documentId
                     }
                 }
@@ -235,12 +241,18 @@ class VideoRepositoryImpl2 @Inject constructor(
     override suspend fun updateLikeStatus(
         documentInfo: VideoInfoEntity,
         uid: String,
-        isLiked: Boolean
+        isLiked: Boolean,
+        galleryType: GalleryType
     ): Resource<VideoInfoEntity> {
         return if (isLiked) {
             firestoreDataSource.removeVideoItemLike(documentInfo, uid)
         } else {
             firestoreDataSource.addVideoItemLike(documentInfo, uid)
+        }.also { updatedResource ->
+            if (updatedResource is Resource.Success) {
+                val updatedVideoInfo = updatedResource.result
+                updateVideoList(galleryType, updatedVideoInfo)
+            }
         }
     }
 
@@ -343,9 +355,10 @@ class VideoRepositoryImpl2 @Inject constructor(
     }
 
     private fun updateVideoList(
-        listFlow: MutableStateFlow<List<VideoInfoEntity>>,
+        galleryType: GalleryType,
         updatedVideoInfo: VideoInfoEntity
     ) {
+        val listFlow = if (galleryType == GalleryType.MINE) _myVideoList else _othersVideoList
         listFlow.value = listFlow.value.map { videoInfo ->
             if (videoInfo.documentId == updatedVideoInfo.documentId) {
                 updatedVideoInfo

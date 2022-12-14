@@ -117,11 +117,11 @@ class PlayVideoViewModel @Inject constructor(
 
     fun deleteVideo(documentId: String) = viewModelScope.launch {
         _deleteFlow.emit(Resource.Loading)
-        _deleteFlow.emit(deleteVideoUseCase(documentId))
+        _deleteFlow.emit(deleteVideoUseCase(documentId, galleryType))
     }
 
     fun updateVideoPrivacy(documentInfo: VideoInfoEntity) = viewModelScope.launch {
         _privacyFlow.emit(Resource.Loading)
-        _privacyFlow.emit(changeVideoScopeUseCase(documentInfo))
+        _privacyFlow.emit(changeVideoScopeUseCase(documentInfo, galleryType))
     }
 }

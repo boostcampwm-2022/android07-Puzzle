@@ -24,6 +24,8 @@ import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.databinding.FragmentPlayvideoDetailBinding
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.ui.playvideo.PlayVideoActivity.Companion.GALLERY_TYPE_KEY
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.StateManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -61,6 +63,9 @@ class PlayVideoDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         currentVideoItem = arguments?.get(VIDEO_EXTRA_NAME) as VideoInfoEntity
+        (arguments?.get(GALLERY_TYPE_KEY) as? GalleryType)?.let { galleryType ->
+            viewModel.setGalleryType(galleryType)
+        }
 
         viewModel.getPublisherInfo(currentVideoItem.ownerUid)
         viewModel.initVideoFlow(currentVideoItem)
@@ -219,6 +224,7 @@ class PlayVideoDetailFragment : Fragment() {
             binding.playerView.player = null
         }
     }
+
     private fun setItemOnClickListener() {
         with(binding) {
             buttonComment.setOnClickListener {
@@ -245,9 +251,16 @@ class PlayVideoDetailFragment : Fragment() {
         private const val KEY_POSITION = "position"
         private const val KEY_AUTO_PLAY = "auto_play"
 
-        fun newInstance(currentVideo: VideoInfoEntity): PlayVideoDetailFragment =
-            PlayVideoDetailFragment().apply {
-                arguments = bundleOf(VIDEO_EXTRA_NAME to currentVideo)
+        fun newInstance(
+            currentVideo: VideoInfoEntity,
+            galleryType: GalleryType
+        ): PlayVideoDetailFragment {
+            return PlayVideoDetailFragment().apply {
+                arguments = bundleOf(
+                    VIDEO_EXTRA_NAME to currentVideo,
+                    GALLERY_TYPE_KEY to galleryType
+                )
             }
+        }
     }
 }

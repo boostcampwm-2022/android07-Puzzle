@@ -8,6 +8,7 @@ import com.juniori.puzzle.domain.entity.VideoInfoEntity
 import com.juniori.puzzle.domain.usecase.GetUserInfoByUidUseCase
 import com.juniori.puzzle.domain.usecase.GetUserInfoUseCase
 import com.juniori.puzzle.domain.usecase.UpdateLikeStatusUseCase
+import com.juniori.puzzle.util.GalleryType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,8 +34,14 @@ class PlayVideoDetailViewModel @Inject constructor(
     val likeState: StateFlow<Boolean>
         get() = _likeState
 
+    private lateinit var galleryType: GalleryType
+
     init {
         _getLoginInfoFlow.value = getUserInfoUseCase()
+    }
+
+    fun setGalleryType(galleryType: GalleryType) {
+        this.galleryType = galleryType
     }
 
     fun initVideoFlow(currentVideo: VideoInfoEntity) {
@@ -58,7 +65,8 @@ class PlayVideoDetailViewModel @Inject constructor(
     fun changeLikeStatus(currentVideo: VideoInfoEntity, currentUid: String) {
         viewModelScope.launch {
             _videoFlow.emit(Resource.Loading)
-            val result = updateLikeStatusUseCase(currentVideo, currentUid, likeState.value)
+            val result =
+                updateLikeStatusUseCase(currentVideo, currentUid, likeState.value, galleryType)
             if (result is Resource.Success) {
                 _videoFlow.emit(result)
                 _likeState.emit(likeState.value.not())
