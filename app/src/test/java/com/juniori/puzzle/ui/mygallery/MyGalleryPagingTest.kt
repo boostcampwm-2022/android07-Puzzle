@@ -121,7 +121,7 @@ class MyGalleryPagingTest {
         mockMyGalleryViewModel.getPaging(3)
         delay(PAGING_DELAY)
 
-        Assert.assertEquals(36, mockMyGalleryViewModel.list.getOrAwaitValue().size)
+        Assert.assertEquals(18, mockMyGalleryViewModel.list.getOrAwaitValue().size)
     }
 
     @Test
@@ -142,7 +142,7 @@ class MyGalleryPagingTest {
         mockMyGalleryViewModel.getPaging(3)
         delay(PAGING_DELAY)
 
-        Assert.assertEquals(36, mockMyGalleryViewModel.list.getOrAwaitValue().size)
+        Assert.assertEquals(6, mockMyGalleryViewModel.list.getOrAwaitValue().size)
     }
 
     @Test
@@ -168,7 +168,7 @@ class MyGalleryPagingTest {
     }
 
     @Test
-    fun pagingWithFailureEmptyDataTest(): Unit = runBlocking {
+    fun pagingWithEmptyDataSameIndexTest(): Unit = runBlocking {
         Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
         Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(firstVideoList))
         Mockito.`when`(mockGetMyVideoListUseCase("aaa", 1))
@@ -186,11 +186,11 @@ class MyGalleryPagingTest {
         mockMyGalleryViewModel.getPaging(2)
         delay(PAGING_DELAY)
 
-        Assert.assertEquals(24, mockMyGalleryViewModel.list.getOrAwaitValue().size)
+        Assert.assertEquals(12, mockMyGalleryViewModel.list.getOrAwaitValue().size)
     }
 
     @Test
-    fun emptyPagingDataTest(): Unit = runBlocking {
+    fun pagingWithEmptyDataSkippingIndexTest(): Unit = runBlocking {
         Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
         Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(firstVideoList))
         Mockito.`when`(mockGetMyVideoListUseCase("aaa", 1)).thenReturn(Resource.Success(emptyList()))
@@ -204,7 +204,7 @@ class MyGalleryPagingTest {
         mockMyGalleryViewModel.getPaging(2)
         delay(PAGING_DELAY)
 
-        Assert.assertEquals(18, mockMyGalleryViewModel.list.getOrAwaitValue().size)
+        Assert.assertEquals(12, mockMyGalleryViewModel.list.getOrAwaitValue().size)
     }
 
     @Test
@@ -242,7 +242,7 @@ class MyGalleryPagingTest {
         mockMyGalleryViewModel.getPaging(2)
         delay(PAGING_DELAY)
 
-        Assert.assertEquals(18, mockMyGalleryViewModel.list.getOrAwaitValue().size)
+        Assert.assertEquals(12, mockMyGalleryViewModel.list.getOrAwaitValue().size)
     }
 
     @Test
