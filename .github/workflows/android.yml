@@ -32,7 +32,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build
-      run: ./gradlew build
+      run: ./gradlew build --stacktrace
       
     - name: UnitTest
       run: ./gradlew testDebugUnitTest
