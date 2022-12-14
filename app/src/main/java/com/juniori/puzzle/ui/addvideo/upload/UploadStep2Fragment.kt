@@ -173,6 +173,10 @@ class UploadStep2Fragment : Fragment() {
             binding.root,
             feedbackText,
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).apply {
+            setAction(R.string.gallery_check) {
+                dismiss()
+            }
+        }.show()
     }
 }
