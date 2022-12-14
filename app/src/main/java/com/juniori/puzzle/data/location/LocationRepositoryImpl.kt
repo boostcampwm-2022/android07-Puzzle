@@ -12,16 +12,12 @@ class LocationRepositoryImpl @Inject constructor(
     private val locationDataSource: LocationDataSource,
     private val weatherDataSource: WeatherDataSource,
 ) : LocationRepository {
-    override fun registerLocationListener(listener: LocationListenerCompat) {
-        locationDataSource.registerLocationListener(listener)
+    override fun registerLocationListener(listener: LocationListenerCompat): Boolean {
+        return locationDataSource.registerLocationListener(listener)
     }
 
     override fun unregisterLocationListener() {
         locationDataSource.unregisterLocationListener()
-    }
-
-    override fun getLocationInfo(): Pair<Double, Double> {
-        return locationDataSource.getLatestLocation()
     }
 
     override fun getAddressInfo(lat: Double, long: Double): List<Address> {

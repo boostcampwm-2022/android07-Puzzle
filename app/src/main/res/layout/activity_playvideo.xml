@@ -18,7 +18,7 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/materialToolbar"
-            style="@style/Theme.Puzzle.PlayToolbar"
+            style="@style/Style.Puzzle.PlayToolbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_like"
-            style="@style/Theme.Puzzle.Button.Inplayvideo"
+            style="@style/Style.Puzzle.Button.Inplayvideo"
             setLikeCount="@{vm.videoFlow}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_comment"
-            style="@style/Theme.Puzzle.Button.Inplayvideo"
+            style="@style/Style.Puzzle.Button.Inplayvideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/play_comment_icon"

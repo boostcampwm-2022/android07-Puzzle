@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".PuzzleApp"
@@ -25,17 +25,13 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.sensor.SensorActivity"
-            android:theme="@style/Theme.Puzzle"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.Puzzle" />
         <activity
             android:name=".ui.playvideo.PlayVideoActivity"
             android:exported="false"
-            android:theme="@style/Theme.Puzzle">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Puzzle" />
         <activity
             android:name=".ui.mypage.UpdateNicknameActivity"
             android:exported="false"
@@ -43,28 +39,21 @@
         <activity
             android:name=".ui.addvideo.camera.CameraActivity"
             android:exported="true"
-            android:theme="@style/Theme.Puzzle">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:theme="@style/Theme.Puzzle" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
-            android:theme="@style/LoginTheme">
+            android:theme="@style/Theme.Puzzle.LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
