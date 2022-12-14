@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.juniori.puzzle.R
 import com.juniori.puzzle.data.Resource
@@ -175,6 +173,10 @@ class UploadStep2Fragment : Fragment() {
             binding.root,
             feedbackText,
             Snackbar.LENGTH_SHORT
-        ).show()
+        ).apply {
+            setAction(R.string.gallery_check) {
+                dismiss()
+            }
+        }.show()
     }
 }

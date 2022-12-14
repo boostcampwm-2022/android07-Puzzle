@@ -52,7 +52,8 @@ class OthersGalleryFragment : Fragment() {
                 val lastViewedPosition = result.data?.extras?.getInt(
                     PlayVideoActivity.LAST_VIEWED_VIDEO_INDEX_KEY,
                     0
-                ) ?: return@registerForActivityResult
+                )
+                    ?: return@registerForActivityResult
                 binding.recycleOtherGallery.scrollToPosition(lastViewedPosition)
             }
         }

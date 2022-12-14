@@ -3,6 +3,7 @@ package com.juniori.puzzle.domain.repository
 import com.juniori.puzzle.data.Resource
 import com.juniori.puzzle.domain.entity.UserInfoEntity
 import com.juniori.puzzle.domain.entity.VideoInfoEntity
+import com.juniori.puzzle.util.GalleryType
 import com.juniori.puzzle.util.SortType
 import com.juniori.puzzle.util.VideoFetchingState
 import kotlinx.coroutines.flow.StateFlow
@@ -21,13 +22,17 @@ interface VideoRepository {
     suspend fun fetchOthersFirstPageVideos(query: String, sortType: SortType)
     suspend fun fetchOthersNextVideos(query: String, sortType: SortType)
 
-    suspend fun changeVideoScope(documentInfo: VideoInfoEntity): Resource<VideoInfoEntity>
-    suspend fun deleteVideo(documentId: String): Resource<Unit>
+    suspend fun changeVideoScope(
+        documentInfo: VideoInfoEntity,
+        galleryType: GalleryType
+    ): Resource<VideoInfoEntity>
+    suspend fun deleteVideo(documentId: String, galleryType: GalleryType): Resource<Unit>
 
     suspend fun updateLikeStatus(
         documentInfo: VideoInfoEntity,
         uid: String,
-        isLiked: Boolean
+        isLiked: Boolean,
+        galleryType: GalleryType
     ): Resource<VideoInfoEntity>
 
     suspend fun uploadVideo(

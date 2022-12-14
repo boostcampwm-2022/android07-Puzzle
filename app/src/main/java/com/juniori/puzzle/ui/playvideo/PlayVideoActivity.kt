@@ -31,6 +31,7 @@ class PlayVideoActivity : AppCompatActivity() {
     private lateinit var swipePagerAdapter: VideoSwipePagerAdapter
     private val currentVideoItem: VideoInfoEntity?
         get() = viewModel.currentVideoFlow.value
+    private lateinit var galleryType: GalleryType
 
     private val shareDialog: PuzzleDialog by lazy {
         PuzzleDialog(this)
@@ -79,17 +80,19 @@ class PlayVideoActivity : AppCompatActivity() {
 
     private fun sendInitialDataToViewModel() {
         with(intent) {
+            galleryType = getSerializableExtra(GALLERY_TYPE_KEY) as? GalleryType ?: GalleryType.OTHERS
+
             viewModel.setData(
                 query = getStringExtra(QUERY_KEY) ?: "",
                 sortType = getSerializableExtra(SORT_TYPE_KEY) as? SortType ?: SortType.NEW,
                 clickedVideoIndex = getIntExtra(CLICKED_VIDEO_INDEX_KEY, 0),
-                galleryType = getSerializableExtra(GALLERY_TYPE_KEY) as? GalleryType ?: return
+                galleryType = galleryType
             )
         }
     }
 
     private fun initializeSwipeViewPager() {
-        swipePagerAdapter = VideoSwipePagerAdapter(this) {
+        swipePagerAdapter = VideoSwipePagerAdapter(this, galleryType) {
             viewModel.fetchMoreVideos()
         }
         binding.swipedVideoPlayerPager.apply {
@@ -138,6 +141,7 @@ class PlayVideoActivity : AppCompatActivity() {
                 true
             }
             setNavigationOnClickListener {
+                sendBackCurrentPosition()
                 finish()
             }
         }
@@ -246,14 +250,16 @@ class PlayVideoActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        setResult(
-            RESULT_OK,
-            Intent().apply {
-                this.putExtra(LAST_VIEWED_VIDEO_INDEX_KEY, viewModel.currentVideoIndex)
-            }
-        )
-        super.onDestroy()
+    private fun sendBackCurrentPosition() {
+        val intent = Intent().apply {
+            this.putExtra(LAST_VIEWED_VIDEO_INDEX_KEY, viewModel.currentVideoIndex)
+        }
+        setResult(RESULT_OK, intent)
+    }
+
+    override fun onBackPressed() {
+        sendBackCurrentPosition()
+        super.onBackPressed()
     }
 
     companion object {
