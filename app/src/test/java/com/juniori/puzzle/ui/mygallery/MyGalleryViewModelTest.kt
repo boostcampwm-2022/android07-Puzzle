@@ -57,7 +57,7 @@ class MyGalleryViewModelTest {
     }
 
     @Test
-    fun getNormalFirstDataWithoutQueryTest(): Unit = runBlocking {
+    fun getNormalFirstDataWithoutQueryAndPagingTest(): Unit = runBlocking {
         Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
         Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(mockVideoList))
 
@@ -112,32 +112,6 @@ class MyGalleryViewModelTest {
         mockMyGalleryViewModel.getMyData()
 
         assertEquals(GalleryState.NETWORK_ERROR_BASE, mockMyGalleryViewModel.state.getOrAwaitValue())
-    }
-
-    @Test
-    fun endPagingTest(): Unit = runBlocking {
-        Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
-        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(mockVideoList))
-        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 1)).thenReturn(Resource.Success(emptyList()))
-
-        mockMyGalleryViewModel.setQueryText(null)
-        mockMyGalleryViewModel.getMyData()
-        mockMyGalleryViewModel.getPaging(1)
-
-        assertEquals(GalleryState.END_PAGING, mockMyGalleryViewModel.state.getOrAwaitValue())
-    }
-
-    @Test
-    fun normalPagingTest(): Unit = runBlocking {
-        Mockito.`when`(mockGetUserInfoUseCase()).thenReturn(Resource.Success(mockUserEntity))
-        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 0)).thenReturn(Resource.Success(mockVideoList))
-        Mockito.`when`(mockGetMyVideoListUseCase("aaa", 1)).thenReturn(Resource.Success(mockVideoList))
-
-        mockMyGalleryViewModel.setQueryText(null)
-        mockMyGalleryViewModel.getMyData()
-        mockMyGalleryViewModel.getPaging(1)
-
-        assertEquals(mockVideoList + mockVideoList, mockMyGalleryViewModel.list.getOrAwaitValue())
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
