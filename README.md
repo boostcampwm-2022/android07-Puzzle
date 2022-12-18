@@ -6,7 +6,10 @@
 
 
 # 프로젝트 개요
-- 간직하고 싶은 퍼팅의 순간을 짧은 동영상으로 모아보거나 다른 사람들과 공유할 수 있습니다.
+
+### 간직하고 싶은 나만의 퍼팅 모음
+
+골프에서 짧지만 중요한 순간 중 하나인 퍼팅을 기록해 다른 사람과 공유하고 볼 수 있는 공간을 제공합니다.
 
 # 주요 기능
 
@@ -22,10 +25,20 @@
 
 ### 나의 갤러리 
 
+|초기 화면|공유 상태 전환|삭제하기|
+|:--:|:--:|:--:|
+|<img src = "https://user-images.githubusercontent.com/76525173/208299534-1ea40299-7467-48c5-88bc-36d1882ab053.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299356-16a279a6-bd5e-4cab-9592-3b33812103f1.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299363-a3e97aa0-585e-468e-8032-e690a8ef6f04.gif" width="288" height="640">|
+
 - 나의 퍼팅 동영상을 볼 수 있습니다.
 - 검색을 통해 원하는 골프장의 영상만 모아 볼 수 있습니다.
+- 영상을 삭제할 수 있습니다.
+- 영상을 나만 볼수도, 다른 사람들에게 보여줄수도 있습니다.
 
 ### 다른 사람 갤러리
+
+|초기 화면|검색|
+|:--:|:--:|
+|<img src = "https://user-images.githubusercontent.com/76525173/208299891-6a9a0629-1dc3-4f72-b61e-28a2ee9e3307.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299897-fd0848e7-f4a0-4a1f-83bf-c7794bd94d1c.gif" width="288" height="640">|
 
 - 다른 사람의 퍼팅 동영상을 볼 수 있습니다.
 - 검색을 통해 원하는 골프장의 영상만 모아 볼 수 있습니다.
