@@ -66,6 +66,10 @@
 
 ### 마이페이지
 
+|닉네임 변경|로그아웃 및 회원탈퇴|
+|:--:|:--:|
+|<img src = "https://user-images.githubusercontent.com/76525173/208301130-63bcb2ca-a112-4a55-9fe7-8403a6808fb0.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208301166-f9049e8a-6e76-4888-abfe-7637a9182223.gif" width="288" height="640">|
+
 - 닉네임을 변경할 수 있습니다.
 - 로그아웃, 탈퇴를 할 수 있습니다.
 
