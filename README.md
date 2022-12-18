@@ -38,7 +38,7 @@
 
 |초기 화면|검색|
 |:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208299891-6a9a0629-1dc3-4f72-b61e-28a2ee9e3307.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299897-fd0848e7-f4a0-4a1f-83bf-c7794bd94d1c.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208299891-6a9a0629-1dc3-4f72-b61e-28a2ee9e3307.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300760-be516294-7510-494d-a8a3-41addfd4b605.gif" width="288" height="640">|
 
 - 다른 사람의 퍼팅 동영상을 볼 수 있습니다.
 - 검색을 통해 원하는 골프장의 영상만 모아 볼 수 있습니다.
@@ -55,6 +55,11 @@
 - 스와이프를 해서 간편하게 다른 영상으로 넘어갈수 있습니다.
 
 ### 촬영
+![업로드-갤러리 선택](https://user-images.githubusercontent.com/76525173/208300826-517369c0-306b-4cf1-ac7a-8c349f5cad73.gif)
+
+|갤러리 선택 후 업로드|촬영 후 업로드|
+|:--:|:--:|
+|<img src = "https://user-images.githubusercontent.com/76525173/208300826-517369c0-306b-4cf1-ac7a-8c349f5cad73.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300845-b734908b-01e0-4a1e-a39d-a97fc414b767.gif" width="288" height="640">|
 
 - 앱 내에서 직접 영상을 찍을 수 있습니다.
 - 갤러리에서 원하는 동영상을 선택해 올릴 수 있습니다.
@@ -65,22 +70,9 @@
 - 닉네임을 변경할 수 있습니다.
 - 로그아웃, 탈퇴를 할 수 있습니다.
 
-# 기술적 도전
+# 기술적 도전 및 이슈
 
 [기술적 도전 보러가기](https://github.com/boostcampwm-2022/android07-Puzzle/wiki/%EA%B8%B0%EC%88%A0-%EC%A1%B0%EC%82%AC)
-
-# 기술적 이슈
-
-### 페이징
-
-### 아키텍쳐
-
-### Exoplayer
-
-
-
-# 데모 영상
-
 
 # 팀원 소개
 |K002|K043|K052|K059|K060|
