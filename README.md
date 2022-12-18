@@ -12,9 +12,13 @@
 
 ### 홈
 
+|초기 화면|그린 기울기 구하기|
+|:--:|:--:|
+|<img src = "https://user-images.githubusercontent.com/76525173/208298249-90bf9202-cefc-4905-9ac4-3fd31b409e50.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208298315-5580e933-611c-4baf-808c-8d30357fa08f.gif" width="288" height="640">|
+
+- 환영 문구가 매번 달라집니다.
 - 현재 위치의 날씨를 볼 수 있습니다.
 - 그린 기울기 구하기를 통해 원하는 위치의 땅의 높낮이를 알 수 있습니다.
-
 
 ### 나의 갤러리 
 
