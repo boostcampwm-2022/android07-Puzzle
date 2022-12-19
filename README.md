@@ -17,7 +17,7 @@
 
 |초기 화면|그린 기울기 구하기|
 |:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208298249-90bf9202-cefc-4905-9ac4-3fd31b409e50.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208298315-5580e933-611c-4baf-808c-8d30357fa08f.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208298249-90bf9202-cefc-4905-9ac4-3fd31b409e50.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208298315-5580e933-611c-4baf-808c-8d30357fa08f.gif" width="252" height="560">|
 
 - 환영 문구가 매번 달라집니다.
 - 현재 위치의 날씨를 볼 수 있습니다.
@@ -27,7 +27,7 @@
 
 |초기 화면|공유 상태 전환|삭제하기|
 |:--:|:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208299534-1ea40299-7467-48c5-88bc-36d1882ab053.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299356-16a279a6-bd5e-4cab-9592-3b33812103f1.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208299363-a3e97aa0-585e-468e-8032-e690a8ef6f04.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208299534-1ea40299-7467-48c5-88bc-36d1882ab053.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208299356-16a279a6-bd5e-4cab-9592-3b33812103f1.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208299363-a3e97aa0-585e-468e-8032-e690a8ef6f04.gif" width="252" height="560">|
 
 - 나의 퍼팅 동영상을 볼 수 있습니다.
 - 검색을 통해 원하는 골프장의 영상만 모아 볼 수 있습니다.
@@ -38,7 +38,7 @@
 
 |초기 화면|검색|
 |:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208299891-6a9a0629-1dc3-4f72-b61e-28a2ee9e3307.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300760-be516294-7510-494d-a8a3-41addfd4b605.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208299891-6a9a0629-1dc3-4f72-b61e-28a2ee9e3307.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208300760-be516294-7510-494d-a8a3-41addfd4b605.gif" width="252" height="560">|
 
 - 다른 사람의 퍼팅 동영상을 볼 수 있습니다.
 - 검색을 통해 원하는 골프장의 영상만 모아 볼 수 있습니다.
@@ -48,7 +48,7 @@
 
 |영상 조회 및 좋아요|영상 정보 조회|스와이프|
 |:--:|:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208300367-8499d7b4-a4e6-4b31-8257-3096688d14ba.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300360-0ded01dc-d053-4593-b245-e6bcdb6ade04.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300327-a02709f4-561e-4b3d-b154-00a835b14877.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208300367-8499d7b4-a4e6-4b31-8257-3096688d14ba.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208300360-0ded01dc-d053-4593-b245-e6bcdb6ade04.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208300327-a02709f4-561e-4b3d-b154-00a835b14877.gif" width="252" height="560">|
 
 - 해당 영상에 좋아요를 누를 수 있습니다.
 - 해당 영상의 정보를 볼 수 있습니다.
@@ -58,7 +58,7 @@
 
 |갤러리 선택 후 업로드|촬영 후 업로드|
 |:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208300826-517369c0-306b-4cf1-ac7a-8c349f5cad73.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208300845-b734908b-01e0-4a1e-a39d-a97fc414b767.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208300826-517369c0-306b-4cf1-ac7a-8c349f5cad73.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208300845-b734908b-01e0-4a1e-a39d-a97fc414b767.gif" width="252" height="560">|
 
 - 앱 내에서 직접 영상을 찍을 수 있습니다.
 - 갤러리에서 원하는 동영상을 선택해 올릴 수 있습니다.
@@ -68,7 +68,7 @@
 
 |닉네임 변경|로그아웃 및 회원탈퇴|
 |:--:|:--:|
-|<img src = "https://user-images.githubusercontent.com/76525173/208301130-63bcb2ca-a112-4a55-9fe7-8403a6808fb0.gif" width="288" height="640">|<img src = "https://user-images.githubusercontent.com/76525173/208301166-f9049e8a-6e76-4888-abfe-7637a9182223.gif" width="288" height="640">|
+|<img src = "https://user-images.githubusercontent.com/76525173/208301130-63bcb2ca-a112-4a55-9fe7-8403a6808fb0.gif" width="252" height="560">|<img src = "https://user-images.githubusercontent.com/76525173/208301166-f9049e8a-6e76-4888-abfe-7637a9182223.gif" width="252" height="560">|
 
 - 닉네임을 변경할 수 있습니다.
 - 로그아웃, 탈퇴를 할 수 있습니다.
