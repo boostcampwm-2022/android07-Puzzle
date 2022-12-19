@@ -155,3 +155,7 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin
 /app/src/main/java/com/juniori/puzzle/util/Const.kt
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
